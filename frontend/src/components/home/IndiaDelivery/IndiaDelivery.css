@@ -1,0 +1,194 @@
+.india-delivery-section {
+  position: relative;
+  background-color: #0B0D11;
+  padding: 100px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.india-container {
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+}
+
+.india-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 56px;
+  align-items: center;
+}
+
+.india-content-pane {
+  display: flex;
+  flex-direction: column;
+}
+
+.india-headline {
+  margin-bottom: 20px;
+}
+
+.india-lead {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.india-entity-tag {
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 12px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 32px;
+  width: fit-content;
+}
+
+.entity-tag-label {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+}
+
+.entity-tag-val {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.india-action-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* Map Pane */
+.india-map-pane {
+  display: flex;
+  justify-content: center;
+}
+
+.map-visual-box {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  background-color: #0E1015;
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.85);
+}
+
+.abstract-india-svg {
+  width: 100%;
+  height: auto;
+  max-height: 400px;
+}
+
+.map-badge-corner {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.all-india-tag {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: var(--accent-acid-lime);
+}
+
+.all-india-sub {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+/* 4 Pillars Grid */
+.pillars-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.pillar-card {
+  background-color: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  transition: all var(--transition-medium);
+}
+
+.pillar-card:hover {
+  background-color: rgba(255, 255, 255, 0.04);
+  border-color: var(--border-medium);
+  transform: translateY(-3px);
+}
+
+.pillar-icon-box {
+  width: 46px;
+  height: 46px;
+  border-radius: var(--radius-sm);
+  background-color: rgba(157, 220, 255, 0.08);
+  border: 1px solid rgba(157, 220, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-ice-blue);
+  margin-bottom: 20px;
+}
+
+.pillar-title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.pillar-sub {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--accent-ice-blue);
+  margin-bottom: 12px;
+}
+
+.pillar-desc {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+@media (max-width: 1080px) {
+  .pillars-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 860px) {
+  .india-grid {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+  .pillars-grid {
+    grid-template-columns: 1fr;
+  }
+  .india-action-row {
+    flex-direction: column;
+    width: 100%;
+  }
+  .india-action-row a {
+    width: 100%;
+  }
+}

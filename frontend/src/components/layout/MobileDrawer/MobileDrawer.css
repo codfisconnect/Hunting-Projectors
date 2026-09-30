@@ -1,0 +1,205 @@
+.mobile-drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 1000;
+  display: flex;
+  justify-content: flex-end;
+  animation: overlayFadeIn 0.25s ease-out;
+}
+
+.mobile-drawer-panel {
+  width: 100%;
+  max-width: 440px;
+  height: 100%;
+  background-color: #0E1015;
+  border-left: 1px solid var(--border-medium);
+  display: flex;
+  flex-direction: column;
+  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.8);
+  animation: drawerSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow-y: auto;
+}
+
+.mobile-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 24px 20px 24px;
+  border-bottom: 1px solid var(--border-subtle);
+  position: sticky;
+  top: 0;
+  background-color: #0E1015;
+  z-index: 10;
+}
+
+.drawer-close-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.drawer-close-btn:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+.mobile-drawer-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.drawer-section-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 14px;
+}
+
+.drawer-nav-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.drawer-nav-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 16px;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  transition: all var(--transition-fast);
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.drawer-nav-link:hover,
+.drawer-nav-link.active {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+}
+
+.drawer-link-tag {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background-color: rgba(157, 220, 255, 0.12);
+  color: var(--accent-ice-blue);
+  margin-left: auto;
+  margin-right: 12px;
+}
+
+.drawer-link-arrow {
+  color: var(--text-muted);
+  transition: transform var(--transition-fast);
+}
+
+.drawer-nav-link:hover .drawer-link-arrow {
+  transform: translateX(4px);
+  color: var(--text-primary);
+}
+
+.drawer-actions-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.drawer-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+}
+
+.drawer-action-btn.primary {
+  background-color: var(--text-primary);
+  color: var(--bg-primary);
+}
+
+.drawer-action-btn.whatsapp {
+  background-color: #25D366;
+  color: #04250E;
+}
+
+.drawer-action-btn.outline {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  border: 1px solid var(--border-medium);
+}
+
+.dot-online {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #064E1C;
+}
+
+.drawer-entity-card {
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 18px;
+}
+
+.entity-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--accent-ice-blue);
+  margin-bottom: 8px;
+}
+
+.entity-text {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin-bottom: 10px;
+}
+
+.entity-location {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+@keyframes overlayFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes drawerSlideIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}

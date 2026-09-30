@@ -1,0 +1,355 @@
+.product-details-page {
+  background-color: var(--bg-primary);
+  min-height: 100vh;
+  padding: 30px 0 100px 0;
+}
+
+.details-container {
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+}
+
+/* Breadcrumb */
+.details-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  flex-wrap: wrap;
+}
+
+.back-catalog-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent-ice-blue);
+  font-weight: 700;
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+
+.back-catalog-btn:hover {
+  color: #FFFFFF;
+}
+
+.breadcrumb-divider {
+  color: rgba(255, 255, 255, 0.15);
+}
+
+.breadcrumb-category {
+  color: var(--text-secondary);
+}
+
+.breadcrumb-current {
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+/* Showcase Grid */
+.details-showcase-grid {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 48px;
+  align-items: flex-start;
+}
+
+.details-left-visual {
+  position: sticky;
+  top: 96px;
+}
+
+.details-right-purchase {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Narrative Section */
+.details-narrative-section {
+  padding: 48px 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.narrative-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 56px;
+}
+
+.narrative-desc-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.narrative-para {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+
+.narrative-recommend-box {
+  background-color: #0E1015;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  margin-top: 16px;
+}
+
+.rec-box-title {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--accent-ice-blue);
+  display: block;
+  margin-bottom: 12px;
+}
+
+.rec-tags-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.rec-use-chip {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-primary);
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+}
+
+.narrative-features-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.features-col-title {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin-bottom: 24px;
+}
+
+.features-items-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.feature-item-card {
+  display: flex;
+  gap: 16px;
+  background-color: #0E1015;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+}
+
+.feature-icon-bullet {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: rgba(200, 255, 56, 0.1);
+  color: var(--accent-acid-lime);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.feature-item-title {
+  font-family: var(--font-display);
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 4px;
+}
+
+.feature-item-desc {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+/* Warranty Banner */
+.details-warranty-support-banner {
+  background-color: #0D0F14;
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-xl);
+  padding: 48px;
+}
+
+.warranty-banner-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+
+.warranty-banner-desc {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 12px 0 24px 0;
+}
+
+.warranty-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.w-check-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.88rem;
+  color: var(--text-primary);
+}
+
+.w-icon {
+  color: var(--accent-acid-lime);
+  flex-shrink: 0;
+}
+
+.warranty-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.warranty-entity-card {
+  background-color: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.w-entity-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  letter-spacing: 0.12em;
+}
+
+.w-entity-name {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #FFFFFF;
+}
+
+.w-entity-loc {
+  font-size: 0.85rem;
+  color: var(--accent-ice-blue);
+  margin-bottom: 12px;
+}
+
+.w-hours-block,
+.w-contact-phone {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 10px;
+}
+
+.w-hours-block strong,
+.w-contact-phone strong {
+  color: #FFFFFF;
+  font-family: var(--font-mono);
+}
+
+/* FAQ section */
+.details-faqs-section {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  padding: 48px 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.details-faq-header {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.details-faq-wrapper {
+  max-width: 860px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Related */
+.details-related-section {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding-top: 48px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.related-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+/* Not found */
+.product-not-found-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120px 24px;
+  text-align: center;
+  gap: 16px;
+}
+
+.product-not-found-container h2 {
+  font-size: 2rem;
+  color: #FFFFFF;
+}
+
+@media (max-width: 1080px) {
+  .details-showcase-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .details-left-visual {
+    position: static;
+  }
+  .warranty-banner-grid {
+    grid-template-columns: 1fr;
+  }
+  .related-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .narrative-grid {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+  .related-cards-grid {
+    grid-template-columns: 1fr;
+  }
+  .details-warranty-support-banner {
+    padding: 24px;
+  }
+}

@@ -1,0 +1,214 @@
+.about-page {
+  background-color: var(--bg-primary);
+  min-height: 100vh;
+  padding-bottom: 100px;
+}
+
+.about-hero-section {
+  padding: 90px 0 60px 0;
+  border-bottom: 1px solid var(--border-subtle);
+  background: radial-gradient(circle at 50% 20%, #151822 0%, #08090B 80%);
+}
+
+.about-hero-headline {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 6.5vw, 5.5rem);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  color: #FFFFFF;
+  margin-top: 16px;
+}
+
+.about-gradient-line {
+  background: linear-gradient(180deg, #FFFFFF 0%, #8EA0B8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.about-hero-lead {
+  font-size: 1.15rem;
+  color: var(--text-secondary);
+  max-width: 680px;
+  margin: 20px auto 0 auto;
+  line-height: 1.6;
+}
+
+/* Narrative */
+.about-narrative-section {
+  padding: 80px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.about-narrative-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 40px;
+}
+
+.about-narrative-block {
+  background-color: #0E1015;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 36px;
+  display: flex;
+  flex-direction: column;
+  transition: border-color var(--transition-fast);
+}
+
+.about-narrative-block:hover {
+  border-color: var(--border-medium);
+}
+
+.about-block-tag {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.16em;
+  color: var(--accent-ice-blue);
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.about-block-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin-bottom: 14px;
+}
+
+.about-narrative-block p {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  margin-bottom: 12px;
+}
+
+/* Entity Section */
+.about-entity-section {
+  padding: 80px 0 0 0;
+}
+
+.about-entity-card {
+  background-color: #0C0E13;
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-xl);
+  padding: 56px;
+  display: grid;
+  grid-template-columns: 1.2fr 1.3fr;
+  gap: 60px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.9);
+}
+
+.entity-left-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.entity-desc {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin: 12px 0 24px 0;
+}
+
+.entity-formal-box {
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 24px;
+}
+
+.formal-name {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin-bottom: 4px;
+}
+
+.formal-loc {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--accent-ice-blue);
+  margin-bottom: 16px;
+}
+
+.formal-address-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 12px;
+}
+
+.entity-right-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.entity-right-heading {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--accent-acid-lime);
+  margin-bottom: 24px;
+}
+
+.entity-benefits-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-bottom: 32px;
+}
+
+.entity-benefits-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.b-icon {
+  color: var(--accent-acid-lime);
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+.entity-benefits-list li div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.entity-benefits-list strong {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  color: #FFFFFF;
+}
+
+.entity-benefits-list span {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.entity-actions-group {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 960px) {
+  .about-narrative-grid {
+    grid-template-columns: 1fr;
+  }
+  .about-entity-card {
+    grid-template-columns: 1fr;
+    padding: 32px 24px;
+    gap: 40px;
+  }
+}

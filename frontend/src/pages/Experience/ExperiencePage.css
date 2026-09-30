@@ -1,0 +1,124 @@
+.experience-page {
+  background-color: var(--bg-primary);
+  min-height: 100vh;
+}
+
+.experience-hero {
+  padding: 80px 0 40px 0;
+  border-bottom: 1px solid var(--border-subtle);
+  background: radial-gradient(circle at 50% 20%, #151822 0%, #08090B 80%);
+}
+
+.experience-hero-desc {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  max-width: 720px;
+  margin: 16px auto 0 auto;
+  line-height: 1.6;
+}
+
+/* 360 Section */
+.experience-360-section {
+  padding: 80px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.exp-360-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-bottom: 36px;
+}
+
+.exp-sub {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  max-width: 680px;
+  margin-top: 8px;
+}
+
+.exp-360-wrapper {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Visit card */
+.experience-visit-section {
+  padding: 100px 0;
+}
+
+.visit-card {
+  background-color: #0E1015;
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-xl);
+  padding: 48px;
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8);
+}
+
+.visit-icon-box {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background-color: rgba(157, 220, 255, 0.08);
+  border: 1px solid rgba(157, 220, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-ice-blue);
+  flex-shrink: 0;
+}
+
+.visit-content {
+  flex: 1;
+}
+
+.visit-title {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin-bottom: 8px;
+}
+
+.visit-desc {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.visit-location-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--accent-acid-lime);
+  background-color: rgba(200, 255, 56, 0.08);
+  border: 1px solid rgba(200, 255, 56, 0.2);
+  padding: 5px 12px;
+  border-radius: var(--radius-xs);
+}
+
+.visit-actions {
+  flex-shrink: 0;
+}
+
+@media (max-width: 960px) {
+  .visit-card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 32px 24px;
+  }
+  .visit-actions {
+    width: 100%;
+  }
+  .visit-actions .btn-primary {
+    width: 100%;
+  }
+}

@@ -1,0 +1,148 @@
+.product-connectivity-section {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding: 48px 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.connectivity-header {
+  max-width: 680px;
+}
+
+.connectivity-sub {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-top: 8px;
+}
+
+.connectivity-diagram-card {
+  background-color: #0E1015;
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-xl);
+  padding: 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+/* Ports Visual */
+.ports-visual-chassis {
+  background-color: #080A0D;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  display: flex;
+  justify-content: center;
+}
+
+.chassis-bracket {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.port-pin-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.pin-title {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+
+.hdmi-slot {
+  width: 52px;
+  height: 20px;
+  background-color: #161A22;
+  border: 1px solid #454D5E;
+  border-radius: 2px;
+}
+
+.hdmi-slot.gold {
+  border-color: #D4AF37;
+  box-shadow: 0 0 8px rgba(212, 175, 55, 0.2);
+}
+
+.usb-slot.blue {
+  width: 44px;
+  height: 18px;
+  background-color: #0077CC;
+  border-radius: 2px;
+}
+
+.optical-slot.red {
+  width: 32px;
+  height: 26px;
+  background-color: #1A1C24;
+  border: 1px solid #FF3B30;
+  border-radius: 4px;
+}
+
+.lan-slot {
+  width: 36px;
+  height: 28px;
+  background-color: #181C26;
+  border: 1px solid #525C6E;
+  border-radius: 3px;
+}
+
+.power-slot {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #08090C;
+  border: 2px solid #586175;
+}
+
+/* Detail list */
+.ports-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.port-desc-item {
+  display: flex;
+  gap: 16px;
+}
+
+.port-icon-circle {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background-color: rgba(157, 220, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-ice-blue);
+  flex-shrink: 0;
+}
+
+.port-item-name {
+  font-family: var(--font-display);
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 4px;
+}
+
+.port-item-spec {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+@media (max-width: 768px) {
+  .ports-detail-grid {
+    grid-template-columns: 1fr;
+  }
+}

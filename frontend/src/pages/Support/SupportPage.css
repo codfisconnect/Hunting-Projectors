@@ -1,0 +1,339 @@
+.support-page {
+  background-color: var(--bg-primary);
+  min-height: 100vh;
+  padding: 40px 0 100px 0;
+}
+
+.support-container {
+  display: flex;
+  flex-direction: column;
+  gap: 64px;
+}
+
+.support-hero {
+  max-width: 740px;
+  margin: 0 auto;
+}
+
+.support-hero-desc {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-top: 14px;
+  margin-bottom: 24px;
+}
+
+.support-quick-contact-pills {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.quick-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  background-color: #0E1015;
+  border: 1px solid var(--border-subtle);
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  transition: all var(--transition-fast);
+}
+
+.quick-pill:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+}
+
+.quick-pill.whatsapp {
+  border-color: rgba(37, 211, 102, 0.3);
+  color: #79E8A2;
+}
+
+/* 4 Pillars */
+.support-pillars-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.support-pillar-card {
+  background-color: #0E1015;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all var(--transition-fast);
+}
+
+.support-pillar-card:hover {
+  border-color: var(--border-medium);
+  transform: translateY(-3px);
+}
+
+.sp-icon-box {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  background-color: rgba(157, 220, 255, 0.08);
+  border: 1px solid rgba(157, 220, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-ice-blue);
+  margin-bottom: 20px;
+}
+
+.sp-title {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin-bottom: 8px;
+}
+
+.sp-desc {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 24px;
+  flex: 1;
+}
+
+.sp-link,
+.sp-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--accent-ice-blue);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.sp-link:hover,
+.sp-link-btn:hover {
+  color: #FFFFFF;
+  transform: translateX(3px);
+}
+
+/* Track Order Card */
+.track-order-card {
+  background-color: #0C0E13;
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-xl);
+  padding: 40px;
+  display: grid;
+  grid-template-columns: 1.1fr 1.3fr;
+  gap: 40px;
+  align-items: center;
+}
+
+.track-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.track-title {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin-bottom: 8px;
+}
+
+.track-desc {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.track-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.track-input-wrap {
+  display: flex;
+  gap: 10px;
+}
+
+.track-input {
+  flex: 1;
+  background-color: #080A0D;
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  color: #FFFFFF;
+  outline: none;
+}
+
+.track-input:focus {
+  border-color: var(--accent-ice-blue);
+}
+
+.track-btn {
+  white-space: nowrap;
+}
+
+.track-feedback-box {
+  background-color: rgba(52, 199, 89, 0.08);
+  border: 1px solid rgba(52, 199, 89, 0.25);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.82rem;
+  color: #B2F2C5;
+  line-height: 1.45;
+}
+
+.track-ok-icon {
+  color: var(--status-success);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* Downloads */
+.downloads-section {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.downloads-header {
+  max-width: 680px;
+}
+
+.downloads-sub {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin-top: 8px;
+}
+
+.downloads-list-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.download-row-card {
+  background-color: #0E1015;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  transition: border-color var(--transition-fast);
+}
+
+.download-row-card:hover {
+  border-color: var(--border-medium);
+}
+
+.download-type-pill {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--accent-ice-blue);
+  background-color: rgba(157, 220, 255, 0.08);
+  padding: 4px 10px;
+  border-radius: var(--radius-xs);
+  flex-shrink: 0;
+}
+
+.download-info {
+  flex: 1;
+}
+
+.download-item-title {
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin-bottom: 2px;
+}
+
+.download-meta {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-muted);
+}
+
+.download-btn-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xs);
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.download-btn-pill:hover {
+  background-color: var(--text-primary);
+  color: var(--bg-primary);
+}
+
+/* FAQ */
+.support-faq-section {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 60px;
+}
+
+.support-faq-box {
+  max-width: 860px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+@media (max-width: 1080px) {
+  .support-pillars-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .downloads-list-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .support-pillars-grid {
+    grid-template-columns: 1fr;
+  }
+  .track-order-card {
+    grid-template-columns: 1fr;
+    padding: 24px;
+  }
+  .track-input-wrap {
+    flex-direction: column;
+  }
+  .download-row-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

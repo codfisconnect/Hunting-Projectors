@@ -1,0 +1,229 @@
+.enquiry-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(5, 6, 8, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  z-index: 1050;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  animation: overlayFadeIn 0.2s ease-out;
+  overflow-y: auto;
+}
+
+.enquiry-modal-card {
+  width: 100%;
+  max-width: 660px;
+  background-color: #0F1218;
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.95);
+  overflow: hidden;
+  animation: modalScaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.enquiry-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 24px 28px;
+  background-color: #12151D;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.enquiry-header-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  color: var(--accent-ice-blue);
+  margin-bottom: 6px;
+}
+
+.enquiry-modal-title {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.enquiry-modal-subtitle {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+.enquiry-close-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.enquiry-close-btn:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+  color: var(--text-primary);
+}
+
+.enquiry-modal-body {
+  padding: 28px;
+}
+
+.enquiry-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-field label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+  background-color: #0A0C10;
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  color: var(--text-primary);
+  transition: border-color var(--transition-fast);
+  outline: none;
+}
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+  border-color: var(--accent-ice-blue);
+  box-shadow: 0 0 0 1px var(--accent-ice-blue);
+}
+
+.form-field select option {
+  background-color: #141720;
+  color: #FFFFFF;
+}
+
+.form-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.form-submit-btn {
+  width: 100%;
+}
+
+.form-entity-footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 6px;
+  justify-content: center;
+}
+
+/* Success View */
+.enquiry-success-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 20px 0;
+  gap: 16px;
+}
+
+.success-icon-wrap {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: rgba(52, 199, 89, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.success-icon {
+  color: var(--status-success);
+}
+
+.enquiry-success-view h4 {
+  font-size: 1.4rem;
+  color: var(--text-primary);
+}
+
+.success-msg {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  max-width: 480px;
+  line-height: 1.5;
+}
+
+.success-ref-card {
+  background-color: #0A0C10;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 12px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ref-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+}
+
+.ref-code {
+  font-family: var(--font-mono);
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--accent-acid-lime);
+}
+
+.success-instant-ctas {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 420px;
+  margin-top: 8px;
+}
+
+@media (max-width: 600px) {
+  .form-grid-2,
+  .form-actions {
+    grid-template-columns: 1fr;
+  }
+}
