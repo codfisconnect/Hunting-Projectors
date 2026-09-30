@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { MessageCircle } from 'lucide-react';
+import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { WishlistProvider } from './context/WishlistContext';
 import { AnnouncementBar } from './components/layout/AnnouncementBar/AnnouncementBar';
@@ -28,9 +29,10 @@ export const App: React.FC = () => {
 
   return (
     <BrowserRouter>
-      <CartProvider>
-        <WishlistProvider>
-          <div className="hunting-app-root">
+      <AuthProvider>
+        <CartProvider>
+          <WishlistProvider>
+            <div className="hunting-app-root">
             
             {/* 1. Top Announcement Bar */}
             <AnnouncementBar />
@@ -102,7 +104,8 @@ export const App: React.FC = () => {
           </div>
         </WishlistProvider>
       </CartProvider>
-    </BrowserRouter>
+    </AuthProvider>
+  </BrowserRouter>
   );
 };
 

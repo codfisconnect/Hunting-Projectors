@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Send, CheckCircle, MessageCircle, Phone, ShieldCheck } from 'lucide-react';
-import { products } from '../../../data/products';
+import { getProducts } from '../../../services/productService';
+import { Product } from '../../../types/product';
 import { submitEnquiry } from '../../../services/enquiryService';
 import { EnquiryFormData, EnquirySubmissionResult } from '../../../types/enquiry';
 import { siteConfig, getWhatsAppLink, getPhoneLink } from '../../../data/siteContent';
@@ -17,12 +18,13 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
   onClose,
   initialProduct,
 }) => {
+  const [catalog, setCatalog] = useState<Product[]>([]);
   const [formData, setFormData] = useState<EnquiryFormData>({
     fullName: '',
     phoneNumber: '',
     email: '',
     city: 'Chennai',
-    productName: initialProduct || products[0].name,
+    productName: initialProduct || '',
     preferredContact: 'whatsapp',
     message: '',
     enquiryType: 'product-demo',
@@ -37,6 +39,17 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
       if (initialProduct) {
         setFormData(prev => ({ ...prev, productName: initialProduct }));
       }
+      getProducts()
+        .then(res => {
+          if (res.products.length > 0) {
+            setCatalog(res.products);
+            setFormData(prev => ({
+              ...prev,
+              productName: prev.productName || res.products[0].name,
+            }));
+          }
+        })
+        .catch(err => console.warn('EnquiryModal products load:', err));
     } else {
       document.body.style.overflow = '';
       setResult(null);
@@ -198,7 +211,7 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
                     value={formData.productName}
                     onChange={e => setFormData({ ...formData, productName: e.target.value })}
                   >
-                    {products.map(p => (
+                    {catalog.map(p => (
                       <option key={p.id} value={p.name}>
                         {p.name} ({p.specifications.resolution} • ₹{p.price.toLocaleString('en-IN')})
                       </option>

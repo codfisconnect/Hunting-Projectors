@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Sparkles } from 'lucide-react';
-import { products } from '../../../data/products';
+import { getProducts } from '../../../services/productService';
+import { Product } from '../../../types/product';
 import { ProductCard } from '../../product/ProductCard/ProductCard';
 import './FeaturedProducts.css';
 
@@ -10,8 +11,25 @@ interface FeaturedProductsProps {
 }
 
 export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ onOpenEnquiry }) => {
-  // Display the primary flagship models
-  const featuredList = products.slice(0, 3);
+  const [featuredList, setFeaturedList] = useState<Product[]>([]);
+
+  useEffect(() => {
+    let isMounted = true;
+    getProducts({ limit: 6 })
+      .then(res => {
+        if (isMounted) {
+          const sorted = [...res.products].sort((a, b) => (b.isFlagship ? 1 : 0) - (a.isFlagship ? 1 : 0));
+          setFeaturedList(sorted.slice(0, 3));
+        }
+      })
+      .catch(err => {
+        console.warn('Failed to load featured products from API:', err);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   return (
     <section className="featured-products-section" aria-label="Featured Hunting Projectors">
@@ -31,7 +49,7 @@ export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ onOpenEnquir
           </div>
 
           <Link to="/products" className="btn-secondary featured-all-link">
-            <span>VIEW ALL 5 MODELS</span>
+            <span>VIEW ALL MODELS</span>
             <ArrowRight size={16} />
           </Link>
         </div>

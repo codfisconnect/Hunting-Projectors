@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Search, Heart, ShoppingBag, Menu, X, MessageSquare } from 'lucide-react';
+import { Search, Heart, ShoppingBag, Menu, X, MessageSquare, User as UserIcon } from 'lucide-react';
 import { useCart } from '../../../context/CartContext';
 import { useWishlist } from '../../../context/WishlistContext';
+import { useAuth } from '../../../context/AuthContext';
 import { siteConfig } from '../../../data/siteContent';
 import './Navbar.css';
 
@@ -21,6 +22,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
+  const { user } = useAuth();
   const { totalItems, setIsCartOpen } = useCart();
   const { wishlist, setIsWishlistOpen } = useWishlist();
 
@@ -111,6 +113,16 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span className="action-badge">{totalItems}</span>
             )}
           </button>
+
+          {/* Account */}
+          <Link
+            to={user ? "/account" : "/login"}
+            className="action-btn"
+            aria-label={user ? "Client Account" : "Sign In"}
+            title={user ? `Signed in as ${user.fullName}` : "Client Sign In"}
+          >
+            <UserIcon size={19} color={user ? "var(--accent-acid-lime)" : "currentColor"} />
+          </Link>
 
           {/* Direct Enquiry / WhatsApp CTA */}
           <button

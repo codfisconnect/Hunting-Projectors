@@ -1,4 +1,7 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api';
+const API_BASE_URL = 
+  import.meta.env.VITE_API_URL || 
+  import.meta.env.VITE_API_BASE_URL || 
+  'http://localhost:4000/api';
 
 export class ApiError extends Error {
   public status: number;
@@ -13,10 +16,14 @@ export class ApiError extends Error {
 export async function fetchJson<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const url = `${API_BASE_URL}${endpoint.startsWith('/') ? '' : '/'}${endpoint}`;
 
+  const token = typeof window !== 'undefined' ? localStorage.getItem('hunting_auth_token') : null;
+  const authHeader: Record<string, string> = token ? { Authorization: `Bearer ${token}` } : {};
+
   try {
     const response = await fetch(url, {
       headers: {
         'Content-Type': 'application/json',
+        ...authHeader,
         ...options?.headers,
       },
       ...options,

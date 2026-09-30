@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { X, Phone, MessageSquare, ArrowRight, ShieldCheck, MapPin } from 'lucide-react';
+import { X, Phone, MessageSquare, ArrowRight, ShieldCheck, MapPin, User as UserIcon } from 'lucide-react';
+import { useAuth } from '../../../context/AuthContext';
 import { siteConfig, getWhatsAppLink, getPhoneLink } from '../../../data/siteContent';
 import './MobileDrawer.css';
 
@@ -16,6 +17,7 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({
   onOpenEnquiry,
 }) => {
   const location = useLocation();
+  const { user } = useAuth();
 
   // Close drawer on route change
   useEffect(() => {
@@ -39,10 +41,12 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({
   if (!isOpen) return null;
 
   const links = [
-    { label: 'ALL PROJECTORS', path: '/products', tag: '5 Models' },
+    { label: 'ALL PROJECTORS', path: '/products', tag: 'All Models' },
     { label: 'EXPERIENCE & SHOWROOM', path: '/experience', tag: 'Interactive' },
     { label: 'PROJECTOR FINDER', path: '/projector-finder', tag: 'Quiz' },
     { label: 'COMPARE SPECIFICATIONS', path: '/compare', tag: 'Side-by-side' },
+    { label: user ? 'CLIENT ACCOUNT' : 'CLIENT SIGN IN', path: user ? '/account' : '/login', tag: user ? 'Active' : undefined },
+    ...(user ? [{ label: 'MY HARDWARE ORDERS', path: '/orders', tag: 'Orders' }] : []),
     { label: 'ABOUT HUNTING', path: '/about' },
     { label: 'SUPPORT & SERVICE', path: '/support' },
     { label: 'CONTACT US', path: '/contact' },

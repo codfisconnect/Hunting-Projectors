@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { 
   SlidersHorizontal, 
@@ -6,11 +6,12 @@ import {
   X, 
   ArrowUpDown, 
   Sparkles, 
-  Grid3X3, 
-  LayoutGrid 
+  AlertCircle,
+  RefreshCw
 } from 'lucide-react';
-import { products } from '../../data/products';
-import { categories } from '../../data/categories';
+import { getProducts, getCategories } from '../../services/productService';
+import { Product, ProductPagination } from '../../types/product';
+import { Category } from '../../types/category';
 import { ProductCard } from '../../components/product/ProductCard/ProductCard';
 import './ProductsPage.css';
 
@@ -21,42 +22,151 @@ interface ProductsPageProps {
 export const ProductsPage: React.FC<ProductsPageProps> = ({ onOpenEnquiry }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   
-  // Filter state
+  // Data State
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [pagination, setPagination] = useState<ProductPagination>({ total: 0, limit: 20, offset: 0 });
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Filter state from query params or defaults
   const initialCategory = searchParams.get('category') || 'all';
+  const initialSearch = searchParams.get('q') || '';
   const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory);
-  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState<string>(initialSearch);
+  const [debouncedSearch, setDebouncedSearch] = useState<string>(initialSearch);
   const [resolutionFilter, setResolutionFilter] = useState<string>('all');
   const [brightnessFilter, setBrightnessFilter] = useState<string>('all');
   const [maxPrice, setMaxPrice] = useState<number>(160000);
   const [sortBy, setSortBy] = useState<'featured' | 'price-asc' | 'price-desc' | 'rating'>('featured');
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
+  const debounceTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   useEffect(() => {
     document.title = 'EXPLORE PROJECTORS — Hunting 4K Laser & Cinema Lineup';
     window.scrollTo(0, 0);
   }, []);
 
-  // Update selected category when query parameter changes
+  // Debounce search query input (300ms)
+  useEffect(() => {
+    if (debounceTimeout.current) {
+      clearTimeout(debounceTimeout.current);
+    }
+    debounceTimeout.current = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+    }, 300);
+
+    return () => {
+      if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
+    };
+  }, [searchQuery]);
+
+  // Load Categories on Mount from PostgreSQL backend
+  useEffect(() => {
+    let isMounted = true;
+    getCategories()
+      .then(cats => {
+        if (isMounted) setCategories(cats);
+      })
+      .catch(err => {
+        console.warn('Failed to load categories from backend:', err);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // Sync selectedCategory if URL parameter changes
   useEffect(() => {
     const cat = searchParams.get('category');
-    if (cat) {
+    if (cat && cat !== selectedCategory) {
       setSelectedCategory(cat);
     }
   }, [searchParams]);
 
-  const handleCategoryChange = (catId: string) => {
-    setSelectedCategory(catId);
-    if (catId === 'all') {
+  // Fetch Products from PostgreSQL backend whenever filters change
+  const fetchCatalog = () => {
+    setLoading(true);
+    setError(null);
+
+    const apiCategory = selectedCategory !== 'all' ? selectedCategory : undefined;
+    const apiQ = debouncedSearch.trim().length > 0 ? debouncedSearch.trim() : undefined;
+    const apiMaxPrice = maxPrice < 160000 ? maxPrice : undefined;
+
+    // Backend resolution filter mapping
+    let apiResolution: string | undefined = undefined;
+    if (resolutionFilter === '4k') {
+      apiResolution = '4K';
+    } else if (resolutionFilter === '1080p') {
+      apiResolution = '1080p';
+    }
+
+    // Backend brightness/lumens mapping
+    let apiBrightness: string | undefined = undefined;
+    if (brightnessFilter === 'over-3000') {
+      apiBrightness = '3,';
+    } else if (brightnessFilter === 'under-1000') {
+      apiBrightness = '800';
+    }
+
+    getProducts({
+      category: apiCategory,
+      searchQuery: apiQ,
+      maxPrice: apiMaxPrice,
+      resolution: apiResolution,
+      brightness: apiBrightness,
+      sortBy,
+      limit: 50,
+      offset: 0,
+    })
+      .then(result => {
+        let list = result.products;
+
+        // Client-side refinement for complex brightness range if needed
+        if (brightnessFilter === '1000-3000') {
+          list = list.filter(p => {
+            const lumens = parseInt(p.specifications.brightness.replace(/\D/g, ''), 10) || 0;
+            return lumens >= 1000 && lumens <= 3000;
+          });
+        }
+
+        setProducts(list);
+        setPagination({
+          total: result.pagination.total,
+          limit: result.pagination.limit,
+          offset: result.pagination.offset,
+        });
+      })
+      .catch(err => {
+        console.error('Catalog fetch error:', err);
+        setError(err instanceof Error ? err.message : 'Unable to connect to product catalog');
+        setProducts([]);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    fetchCatalog();
+  }, [selectedCategory, debouncedSearch, resolutionFilter, brightnessFilter, maxPrice, sortBy]);
+
+  const handleCategoryChange = (catSlug: string) => {
+    setSelectedCategory(catSlug);
+    if (catSlug === 'all') {
       searchParams.delete('category');
       setSearchParams(searchParams);
     } else {
-      setSearchParams({ category: catId });
+      setSearchParams({ category: catSlug });
     }
   };
 
   const handleResetFilters = () => {
     setSelectedCategory('all');
     setSearchQuery('');
+    setDebouncedSearch('');
     setResolutionFilter('all');
     setBrightnessFilter('all');
     setMaxPrice(160000);
@@ -64,54 +174,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ onOpenEnquiry }) => 
     setSearchParams({});
   };
 
-  // Filtered & Sorted products computation
-  const filteredProducts = useMemo(() => {
-    return products.filter(p => {
-      // Category filter
-      if (selectedCategory !== 'all' && p.category !== selectedCategory) {
-        return false;
-      }
-
-      // Search query filter
-      if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase().trim();
-        const matches = 
-          p.name.toLowerCase().includes(q) ||
-          p.subtitle.toLowerCase().includes(q) ||
-          p.specifications.resolution.toLowerCase().includes(q) ||
-          p.specifications.brightness.toLowerCase().includes(q) ||
-          p.categoryLabel.toLowerCase().includes(q);
-        if (!matches) return false;
-      }
-
-      // Resolution filter
-      if (resolutionFilter !== 'all') {
-        if (!p.specifications.resolution.toLowerCase().includes(resolutionFilter.toLowerCase())) {
-          return false;
-        }
-      }
-
-      // Brightness filter
-      if (brightnessFilter !== 'all') {
-        const lumens = parseInt(p.specifications.brightness.replace(/\D/g, ''), 10) || 0;
-        if (brightnessFilter === 'under-1000' && lumens >= 1000) return false;
-        if (brightnessFilter === '1000-3000' && (lumens < 1000 || lumens > 3000)) return false;
-        if (brightnessFilter === 'over-3000' && lumens <= 3000) return false;
-      }
-
-      // Max price
-      if (p.price > maxPrice) {
-        return false;
-      }
-
-      return true;
-    }).sort((a, b) => {
-      if (sortBy === 'price-asc') return a.price - b.price;
-      if (sortBy === 'price-desc') return b.price - a.price;
-      if (sortBy === 'rating') return b.rating - a.rating;
-      return (b.isFlagship ? 1 : 0) - (a.isFlagship ? 1 : 0);
-    });
-  }, [selectedCategory, searchQuery, resolutionFilter, brightnessFilter, maxPrice, sortBy]);
+  const totalCatalogCount = categories.reduce((sum, c) => sum + (c.count ?? c._count?.products ?? 0), 0);
 
   return (
     <div className="products-page">
@@ -190,7 +253,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ onOpenEnquiry }) => 
                   onClick={() => handleCategoryChange('all')}
                 >
                   <span>All Models</span>
-                  <span className="chip-count">{products.length}</span>
+                  <span className="chip-count">{totalCatalogCount || products.length}</span>
                 </button>
                 {categories.map(cat => (
                   <button
@@ -201,7 +264,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ onOpenEnquiry }) => 
                   >
                     <span>{cat.name}</span>
                     <span className="chip-count">
-                      {products.filter(p => p.category === cat.slug).length}
+                      {cat.count ?? cat._count?.products ?? 0}
                     </span>
                   </button>
                 ))}
@@ -295,7 +358,13 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ onOpenEnquiry }) => 
                   <span>FILTERS</span>
                 </button>
                 <span className="results-count">
-                  SHOWING <strong>{filteredProducts.length}</strong> {filteredProducts.length === 1 ? 'PROJECTOR' : 'PROJECTORS'}
+                  {loading ? (
+                    'SEARCHING CATALOG...'
+                  ) : (
+                    <>
+                      SHOWING <strong>{products.length}</strong> {products.length === 1 ? 'PROJECTOR' : 'PROJECTORS'}
+                    </>
+                  )}
                 </span>
               </div>
 
@@ -317,8 +386,33 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ onOpenEnquiry }) => 
               </div>
             </div>
 
-            {/* Product Cards Grid */}
-            {filteredProducts.length === 0 ? (
+            {/* Loading State */}
+            {loading && (
+              <div className="products-empty-state">
+                <RefreshCw size={24} className="animate-spin text-accent" />
+                <h4 style={{ marginTop: '16px' }}>Loading Projector Catalog</h4>
+                <p>Retrieving latest models and specifications from Hunting database...</p>
+              </div>
+            )}
+
+            {/* Error State */}
+            {!loading && error && (
+              <div className="products-empty-state">
+                <AlertCircle size={28} color="#FF5A79" />
+                <h4 style={{ marginTop: '12px' }}>Catalog Connection Error</h4>
+                <p>{error}</p>
+                <button 
+                  type="button" 
+                  className="btn-primary" 
+                  onClick={fetchCatalog}
+                >
+                  TRY AGAIN
+                </button>
+              </div>
+            )}
+
+            {/* Empty State */}
+            {!loading && !error && products.length === 0 && (
               <div className="products-empty-state">
                 <h4>No Projectors Match Your Filter Criteria</h4>
                 <p>Try expanding your budget slider or clearing the resolution filter.</p>
@@ -330,9 +424,12 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ onOpenEnquiry }) => 
                   RESET ALL FILTERS
                 </button>
               </div>
-            ) : (
+            )}
+
+            {/* Product Cards Grid */}
+            {!loading && !error && products.length > 0 && (
               <div className="catalog-cards-grid">
-                {filteredProducts.map(product => (
+                {products.map(product => (
                   <ProductCard
                     key={product.id}
                     product={product}

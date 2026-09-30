@@ -1,64 +1,107 @@
-export interface CategoryItem {
-  id: string;
-  slug: string;
+import { prisma } from '../config/database.js';
+
+export interface CreateCategoryDTO {
   name: string;
-  subtitle: string;
-  description: string;
-  count: number;
-  featuredSpecs: string[];
+  slug: string;
+  subtitle?: string;
+  description?: string;
+  featuredSpecs?: string[];
+  isActive?: boolean;
 }
 
-const mockCategories: CategoryItem[] = [
-  {
-    id: 'laser-4k',
-    slug: 'laser-4k',
-    name: '4K Laser Cinema',
-    subtitle: 'Flagship Optical Engineering',
-    description: 'Ultra-high-definition cinematic laser projectors engineered for dedicated theater rooms, unmatched contrast, and true-to-life DCI-P3 color reproduction.',
-    count: 3,
-    featuredSpecs: ['True 4K UHD', 'ALPD 4.0 Laser', '3,500 ANSI Lumens'],
-  },
-  {
-    id: 'ultra-short-throw',
-    slug: 'ultra-short-throw',
-    name: 'Ultra Short Throw (UST)',
-    subtitle: '150" Display From Inches Away',
-    description: 'Triple-laser ultra-short-throw systems that sit right beneath your screen or wall, completely replacing conventional televisions with zero ceiling wiring.',
-    count: 2,
-    featuredSpecs: ['0.21:1 Throw Ratio', 'ALR Screen Ready', 'Integrated Dolby Atmos'],
-  },
-  {
-    id: 'home-cinema',
-    slug: 'home-cinema',
-    name: 'Home Cinema Master',
-    subtitle: 'Immersive Living Room Entertainment',
-    description: 'High-brightness intelligent home cinema projectors engineered for everyday living room enjoyment, ambient light rejection, and low-latency sports streaming.',
-    count: 4,
-    featuredSpecs: ['Native 1080p / 4K Support', 'HDR10+ Dynamic', 'Intelligent Auto-Keystone'],
-  },
-  {
-    id: 'smart-portable',
-    slug: 'smart-portable',
-    name: 'Smart Portable & Outdoor',
-    subtitle: 'Cinema Everywhere You Travel',
-    description: 'Compact, grab-and-go projectors with built-in high-fidelity audio, Android TV / Smart OS, dual-band Wi-Fi, and instant laser autofocus for outdoor nights.',
-    count: 3,
-    featuredSpecs: ['Ultra-Compact Chassis', 'Omnidirectional Sound', 'Instant Optical Autofocus'],
-  },
-  {
-    id: 'commercial-gaming',
-    slug: 'commercial-gaming',
-    name: 'High-Refresh Gaming & Commercial',
-    subtitle: '240Hz Speed & High-Lumen Precision',
-    description: 'Low-input-lag high-refresh-rate projection systems engineered for competitive console gaming, corporate auditoriums, and high-ambient venues.',
-    count: 2,
-    featuredSpecs: ['240Hz High Refresh', '4.2ms Low Latency', 'High-Lumen Daylight Engine'],
-  },
-];
+export interface UpdateCategoryDTO {
+  name?: string;
+  slug?: string;
+  subtitle?: string;
+  description?: string;
+  featuredSpecs?: string[];
+  isActive?: boolean;
+}
 
 export class CategoryService {
-  async getAllCategories(): Promise<CategoryItem[]> {
-    return mockCategories;
+  async getAllCategories(includeInactive = false) {
+    const categories = await prisma.category.findMany({
+      where: includeInactive ? {} : { isActive: true },
+      include: {
+        _count: {
+          select: { products: true },
+        },
+      },
+      orderBy: { createdAt: 'asc' },
+    });
+
+    return categories.map(cat => ({
+      id: cat.id,
+      slug: cat.slug,
+      name: cat.name,
+      subtitle: cat.subtitle,
+      description: cat.description,
+      featuredSpecs: cat.featuredSpecs,
+      isActive: cat.isActive,
+      productsCount: cat._count.products,
+      createdAt: cat.createdAt,
+      updatedAt: cat.updatedAt,
+    }));
+  }
+
+  async getCategoryBySlugOrId(identifier: string) {
+    return prisma.category.findFirst({
+      where: {
+        OR: [
+          { id: identifier },
+          { slug: identifier },
+        ],
+      },
+      include: {
+        _count: {
+          select: { products: true },
+        },
+      },
+    });
+  }
+
+  async getCategoryBySlug(slug: string) {
+    return prisma.category.findUnique({
+      where: { slug },
+      include: {
+        _count: {
+          select: { products: true },
+        },
+      },
+    });
+  }
+
+  async createCategory(data: CreateCategoryDTO) {
+    return prisma.category.create({
+      data: {
+        name: data.name.trim(),
+        slug: data.slug.trim().toLowerCase(),
+        subtitle: data.subtitle?.trim() || '',
+        description: data.description?.trim() || '',
+        featuredSpecs: data.featuredSpecs || [],
+        isActive: data.isActive ?? true,
+      },
+    });
+  }
+
+  async updateCategory(id: string, data: UpdateCategoryDTO) {
+    return prisma.category.update({
+      where: { id },
+      data: {
+        ...(data.name && { name: data.name.trim() }),
+        ...(data.slug && { slug: data.slug.trim().toLowerCase() }),
+        ...(data.subtitle !== undefined && { subtitle: data.subtitle.trim() }),
+        ...(data.description !== undefined && { description: data.description.trim() }),
+        ...(data.featuredSpecs !== undefined && { featuredSpecs: data.featuredSpecs }),
+        ...(data.isActive !== undefined && { isActive: data.isActive }),
+      },
+    });
+  }
+
+  async deleteCategory(id: string) {
+    return prisma.category.delete({
+      where: { id },
+    });
   }
 }
 

@@ -1,13 +1,36 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Sliders, Check } from 'lucide-react';
-import { products } from '../../../data/products';
+import { getProducts } from '../../../services/productService';
+import { Product } from '../../../types/product';
 import './ProductReveal.css';
 
 export const ProductReveal: React.FC = () => {
   const [activeFrame, setActiveFrame] = useState(0);
+  const [flagship, setFlagship] = useState<Product | null>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
-  const flagship = products[0]; // Hunting Vision X1
+
+  useEffect(() => {
+    let isMounted = true;
+    getProducts({ flagship: true, limit: 1 })
+      .then(res => {
+        if (isMounted && res.products.length > 0) {
+          setFlagship(res.products[0]);
+        }
+      })
+      .catch(err => {
+        console.warn('ProductReveal flagship fetch error:', err);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const heroImg = flagship?.images?.hero || '/assets/products/hunting-vision-x1-hero.svg';
+  const angledImg = flagship?.images?.angled || '/assets/products/hunting-vision-x1-angled.svg' || heroImg;
+  const backImg = flagship?.images?.backPorts || '/assets/products/hunting-vision-x1-back.svg' || heroImg;
+  const ambientImg = flagship?.images?.ambient || '/assets/products/hunting-vision-x1-ambient.svg' || heroImg;
 
   const frames = [
     {
@@ -15,7 +38,7 @@ export const ProductReveal: React.FC = () => {
       title: 'SEE MORE.',
       subtitle: '8.3 Million Pixel Surgical Detail',
       desc: 'High-purity multi-element optical glass lenses eliminate spherical aberration for razor-sharp corners.',
-      image: flagship.images.hero,
+      image: heroImg,
       badge: 'OPTICAL ARCHITECTURE',
       angle: '0° FRONT FACING',
     },
@@ -24,7 +47,7 @@ export const ProductReveal: React.FC = () => {
       title: 'FEEL MORE.',
       subtitle: 'Acoustically Tuned Neodymium Cavity',
       desc: 'Dual 12W stereo drivers housed in an unibody anodized aluminum chamber for room-filling low-end rumble.',
-      image: flagship.images.angled || flagship.images.hero,
+      image: angledImg,
       badge: 'SPATIAL ACOUSTICS',
       angle: '30° OBLIQUE',
     },
@@ -33,7 +56,7 @@ export const ProductReveal: React.FC = () => {
       title: 'LIVE MORE.',
       subtitle: 'Lossless HDMI 2.1 & Gigabit Streaming',
       desc: 'Full bandwidth eARC pass-through, high-speed USB 3.0, and optical Toslink audio bypass for flagship home theaters.',
-      image: flagship.images.backPorts || flagship.images.hero,
+      image: backImg,
       badge: 'CONNECTIVITY SUITE',
       angle: '180° REAR PORTS',
     },
@@ -42,7 +65,7 @@ export const ProductReveal: React.FC = () => {
       title: 'HUNTING.',
       subtitle: 'The Direct Brand Philosophy',
       desc: 'Direct manufacturer and brand supply from Chennai, Tamil Nadu. Designed without compromise for India’s finest spaces.',
-      image: flagship.images.ambient || flagship.images.hero,
+      image: ambientImg,
       badge: 'BRAND CREED',
       angle: '315° AMBIENT CINEMA',
     },
@@ -121,8 +144,8 @@ export const ProductReveal: React.FC = () => {
             </div>
 
             <div className="reveal-action-row">
-              <Link to={`/products/${flagship.slug}`} className="btn-primary">
-                <span>VIEW {flagship.name.toUpperCase()}</span>
+              <Link to={flagship ? `/products/${flagship.slug}` : '/products'} className="btn-primary">
+                <span>VIEW {flagship ? flagship.name.toUpperCase() : 'FLAGSHIP'}</span>
                 <ArrowRight size={16} />
               </Link>
               <Link to="/products" className="btn-secondary">

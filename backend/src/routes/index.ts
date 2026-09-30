@@ -3,9 +3,21 @@ import productRoutes from './productRoutes.js';
 import categoryRoutes from './categoryRoutes.js';
 import enquiryRoutes from './enquiryRoutes.js';
 import reviewRoutes from './reviewRoutes.js';
+import authRoutes from './authRoutes.js';
+import customerRoutes from './customerRoutes.js';
+import addressRoutes from './addressRoutes.js';
+import cartRoutes from './cartRoutes.js';
+import wishlistRoutes from './wishlistRoutes.js';
+import orderRoutes from './orderRoutes.js';
 
 const router = Router();
 
+router.use('/auth', authRoutes);
+router.use('/customers', customerRoutes);
+router.use('/addresses', addressRoutes);
+router.use('/cart', cartRoutes);
+router.use('/wishlist', wishlistRoutes);
+router.use('/orders', orderRoutes);
 router.use('/products', productRoutes);
 router.use('/categories', categoryRoutes);
 router.use('/enquiries', enquiryRoutes);

@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { HuntingShowroom } from '../../components/showroom/HuntingShowroom/HuntingShowroom';
 import { CinemaExperience } from '../../components/home/CinemaExperience/CinemaExperience';
 import { ProductViewer360 } from '../../components/product/ProductViewer/ProductViewer360';
-import { products } from '../../data/products';
+import { getProducts } from '../../services/productService';
+import { Product } from '../../types/product';
 import { Sparkles, Eye, ShieldCheck, MapPin } from 'lucide-react';
 import { siteConfig } from '../../data/siteContent';
 import './ExperiencePage.css';
@@ -12,12 +13,27 @@ interface ExperiencePageProps {
 }
 
 export const ExperiencePage: React.FC<ExperiencePageProps> = ({ onOpenEnquiry }) => {
+  const [flagship, setFlagship] = useState<Product | null>(null);
+
   useEffect(() => {
     document.title = 'EXPERIENCE HUNTING — Interactive Digital Showroom & 360 Cinema Simulation';
     window.scrollTo(0, 0);
-  }, []);
 
-  const flagship = products[0]; // Hunting Vision X1
+    let isMounted = true;
+    getProducts({ flagship: true, limit: 1 })
+      .then(res => {
+        if (isMounted && res.products.length > 0) {
+          setFlagship(res.products[0]);
+        }
+      })
+      .catch(err => {
+        console.warn('ExperiencePage flagship fetch:', err);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   return (
     <div className="experience-page">
@@ -49,14 +65,20 @@ export const ExperiencePage: React.FC<ExperiencePageProps> = ({ onOpenEnquiry })
             <button 
               type="button" 
               className="btn-primary"
-              onClick={() => onOpenEnquiry(flagship.name)}
+              onClick={() => onOpenEnquiry(flagship?.name)}
             >
               REQUEST LIVE CHENNAI DEMO
             </button>
           </div>
 
           <div className="exp-360-wrapper">
-            <ProductViewer360 product={flagship} />
+            {flagship ? (
+              <ProductViewer360 product={flagship} />
+            ) : (
+              <div style={{ padding: '80px 20px', textAlign: 'center', color: 'var(--text-secondary)' }}>
+                Loading flagship 360° inspection lab...
+              </div>
+            )}
           </div>
         </div>
       </section>

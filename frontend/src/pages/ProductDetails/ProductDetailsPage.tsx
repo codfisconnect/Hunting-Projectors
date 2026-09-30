@@ -11,7 +11,8 @@ import {
   HelpCircle,
   Sparkles
 } from 'lucide-react';
-import { getProductBySlug, getRelatedProducts } from '../../data/products';
+import { getProductBySlug, getRelatedProducts } from '../../services/productService';
+import { Product } from '../../types/product';
 import { faqs } from '../../data/faqs';
 import { ProductGalleryViewer } from '../../components/product/ProductGallery/ProductGalleryViewer';
 import { ProductPurchasePanel } from '../../components/product/ProductPurchasePanel/ProductPurchasePanel';
@@ -32,21 +33,59 @@ export const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ onOpenEn
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
 
-  const product = slug ? getProductBySlug(slug) : undefined;
-  const relatedProducts = slug ? getRelatedProducts(slug, 3) : [];
+  const [product, setProduct] = useState<Product | null>(null);
+  const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (product) {
-      document.title = `${product.name} — Hunting Projectors`;
-      window.scrollTo(0, 0);
-    }
-  }, [product, slug]);
+    if (!slug) return;
+    let isMounted = true;
+    setLoading(true);
+    setError(null);
+    window.scrollTo(0, 0);
 
-  if (!product) {
+    getProductBySlug(slug)
+      .then(async (prod) => {
+        if (!isMounted) return;
+        setProduct(prod);
+        document.title = `${prod.name} — Hunting Projectors`;
+        try {
+          const related = await getRelatedProducts(slug, 3);
+          if (isMounted) setRelatedProducts(related);
+        } catch {
+          // non-critical related products failure
+        }
+      })
+      .catch((err) => {
+        if (!isMounted) return;
+        console.error('Failed to load product by slug:', err);
+        setError(err instanceof Error ? err.message : 'Projector model not found');
+        setProduct(null);
+      })
+      .finally(() => {
+        if (isMounted) setLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [slug]);
+
+  if (loading) {
+    return (
+      <div className="product-not-found-container">
+        <h2>Loading Projector Specifications...</h2>
+        <p>Connecting to Hunting database for optical hardware specifications.</p>
+      </div>
+    );
+  }
+
+  if (!product || error) {
     return (
       <div className="product-not-found-container">
         <h2>Projector Model Not Found</h2>
-        <p>The requested Hunting model may have been moved or updated.</p>
+        <p>{error || 'The requested Hunting model may have been moved or updated.'}</p>
         <Link to="/products" className="btn-primary">
           BROWSE ALL PROJECTORS
         </Link>

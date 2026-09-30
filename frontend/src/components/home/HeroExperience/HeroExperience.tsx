@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Play, ChevronDown, Sparkles } from 'lucide-react';
-import { products } from '../../../data/products';
+import { getProducts } from '../../../services/productService';
+import { Product } from '../../../types/product';
 import { siteConfig } from '../../../data/siteContent';
 import './HeroExperience.css';
 
@@ -11,9 +12,25 @@ interface HeroExperienceProps {
 
 export const HeroExperience: React.FC<HeroExperienceProps> = ({ onOpenEnquiry }) => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [flagship, setFlagship] = useState<Product | null>(null);
   const heroRef = useRef<HTMLDivElement>(null);
 
-  const flagship = products[0]; // Hunting Vision X1
+  useEffect(() => {
+    let isMounted = true;
+    getProducts({ flagship: true, limit: 1 })
+      .then(res => {
+        if (isMounted && res.products.length > 0) {
+          setFlagship(res.products[0]);
+        }
+      })
+      .catch(err => {
+        console.warn('HeroExperience flagship fetch fallback:', err);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -81,8 +98,8 @@ export const HeroExperience: React.FC<HeroExperienceProps> = ({ onOpenEnquiry })
             }}
           >
             <img 
-              src={flagship.images.hero} 
-              alt="Hunting Vision X1 Flagship Projector" 
+              src={flagship?.images?.hero || '/assets/products/hunting-vision-x1-hero.svg'} 
+              alt={flagship?.name || "Hunting Flagship Projector"} 
               className="hero-projector-img"
               draggable={false}
             />

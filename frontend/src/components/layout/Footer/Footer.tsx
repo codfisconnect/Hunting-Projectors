@@ -74,10 +74,11 @@ export const Footer: React.FC = () => {
             <h4 className="footer-heading">EXPLORE</h4>
             <ul className="footer-links">
               <li><Link to="/products">All Projectors</Link></li>
-              <li><Link to="/products?category=laser-4k">4K Laser Cinema</Link></li>
-              <li><Link to="/products?category=ultra-short-throw">Ultra Short Throw (UST)</Link></li>
-              <li><Link to="/products?category=home-cinema">Home Cinema Master</Link></li>
-              <li><Link to="/products?category=smart-portable">Smart Portable</Link></li>
+              <li><Link to="/products?category=home-cinema">Home Cinema</Link></li>
+              <li><Link to="/products?category=gaming">Gaming & High Refresh</Link></li>
+              <li><Link to="/products?category=smart-projectors">Smart Projectors</Link></li>
+              <li><Link to="/products?category=portable">Portable</Link></li>
+              <li><Link to="/products?category=business">Business & Commercial</Link></li>
               <li><Link to="/experience">Interactive Showroom</Link></li>
               <li><Link to="/projector-finder">Find Your Projector</Link></li>
               <li><Link to="/compare">Compare Models</Link></li>

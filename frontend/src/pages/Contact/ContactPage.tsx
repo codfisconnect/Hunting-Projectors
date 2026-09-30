@@ -10,19 +10,21 @@ import {
   CheckCircle,
   Sparkles
 } from 'lucide-react';
-import { products } from '../../data/products';
+import { getProducts } from '../../services/productService';
+import { Product } from '../../types/product';
 import { submitEnquiry } from '../../services/enquiryService';
 import { EnquiryFormData, EnquirySubmissionResult } from '../../types/enquiry';
 import { siteConfig, getWhatsAppLink, getPhoneLink, getEmailLink } from '../../data/siteContent';
 import './ContactPage.css';
 
 export const ContactPage: React.FC = () => {
+  const [catalog, setCatalog] = useState<Product[]>([]);
   const [formData, setFormData] = useState<EnquiryFormData>({
     fullName: '',
     phoneNumber: '',
     email: '',
     city: 'Chennai',
-    productName: products[0].name,
+    productName: '',
     preferredContact: 'whatsapp',
     message: '',
     enquiryType: 'product-demo',
@@ -34,6 +36,23 @@ export const ContactPage: React.FC = () => {
   useEffect(() => {
     document.title = 'CONTACT & SHOWROOM — Hunting Projectors Chennai';
     window.scrollTo(0, 0);
+
+    let isMounted = true;
+    getProducts()
+      .then(res => {
+        if (isMounted && res.products.length > 0) {
+          setCatalog(res.products);
+          setFormData(prev => ({
+            ...prev,
+            productName: prev.productName || res.products[0].name
+          }));
+        }
+      })
+      .catch(err => console.warn('ContactPage products load:', err));
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -249,7 +268,7 @@ export const ContactPage: React.FC = () => {
                         value={formData.productName}
                         onChange={e => setFormData({ ...formData, productName: e.target.value })}
                       >
-                        {products.map(p => (
+                        {catalog.map(p => (
                           <option key={p.id} value={p.name}>
                             {p.name} ({p.categoryLabel} • ₹{p.price.toLocaleString('en-IN')})
                           </option>

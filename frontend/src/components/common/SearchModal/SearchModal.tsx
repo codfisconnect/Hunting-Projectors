@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, X, ArrowRight } from 'lucide-react';
-import { products } from '../../../data/products';
+import { getProducts } from '../../../services/productService';
 import { Product } from '../../../types/product';
 import './SearchModal.css';
 
@@ -13,17 +13,24 @@ interface SearchModalProps {
 export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<Product[]>([]);
+  const [featuredList, setFeaturedList] = useState<Product[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
       setTimeout(() => inputRef.current?.focus(), 80);
+      getProducts({ limit: 4 })
+        .then(res => setFeaturedList(res.products.slice(0, 3)))
+        .catch(err => console.warn('Could not load featured search starters:', err));
     } else {
       document.body.style.overflow = '';
       setQuery('');
       setResults([]);
+      setIsSearching(false);
     }
     return () => {
       document.body.style.overflow = '';
@@ -31,22 +38,37 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
   }, [isOpen]);
 
   useEffect(() => {
-    const trimmed = query.trim().toLowerCase();
+    const trimmed = query.trim();
     if (!trimmed) {
       setResults([]);
+      setIsSearching(false);
       return;
     }
 
-    const filtered = products.filter(p => 
-      p.name.toLowerCase().includes(trimmed) ||
-      p.subtitle.toLowerCase().includes(trimmed) ||
-      p.categoryLabel.toLowerCase().includes(trimmed) ||
-      p.specifications.resolution.toLowerCase().includes(trimmed) ||
-      p.specifications.brightness.toLowerCase().includes(trimmed) ||
-      p.recommendedUse.some(u => u.toLowerCase().includes(trimmed))
-    );
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
 
-    setResults(filtered);
+    setIsSearching(true);
+    debounceRef.current = setTimeout(() => {
+      getProducts({ searchQuery: trimmed })
+        .then(res => {
+          setResults(res.products);
+        })
+        .catch(err => {
+          console.error('Search error:', err);
+          setResults([]);
+        })
+        .finally(() => {
+          setIsSearching(false);
+        });
+    }, 250);
+
+    return () => {
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+      }
+    };
   }, [query]);
 
   if (!isOpen) return null;
@@ -117,7 +139,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
             <div className="search-starter-state">
               <span className="starter-title">FEATURED HUNTING MODELS</span>
               <div className="starter-models-grid">
-                {products.slice(0, 3).map(p => (
+                {featuredList.map(p => (
                   <div 
                     key={p.id} 
                     className="starter-model-card"

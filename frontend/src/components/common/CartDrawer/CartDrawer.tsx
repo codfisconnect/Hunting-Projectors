@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { X, Trash2, Plus, Minus, ArrowRight, MessageCircle, ShoppingBag } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { X, Trash2, Plus, Minus, ArrowRight, MessageCircle, ShoppingBag, ShieldCheck } from 'lucide-react';
 import { useCart } from '../../../context/CartContext';
 import { siteConfig } from '../../../data/siteContent';
 import './CartDrawer.css';
@@ -9,6 +10,7 @@ interface CartDrawerProps {
 }
 
 export const CartDrawer: React.FC<CartDrawerProps> = ({ onOpenEnquiry }) => {
+  const navigate = useNavigate();
   const {
     cart,
     isCartOpen,
@@ -148,6 +150,19 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onOpenEnquiry }) => {
             </p>
 
             <div className="cart-action-buttons">
+              <button 
+                type="button" 
+                className="btn-primary"
+                style={{ width: '100%', marginBottom: '8px', padding: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+                onClick={() => {
+                  setIsCartOpen(false);
+                  navigate('/checkout');
+                }}
+              >
+                <ShieldCheck size={18} />
+                <span>PROCEED TO CHECKOUT</span>
+              </button>
+
               <button 
                 type="button" 
                 className="cart-btn-whatsapp" 

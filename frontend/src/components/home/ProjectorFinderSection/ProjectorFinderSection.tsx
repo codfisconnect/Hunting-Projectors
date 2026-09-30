@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Film, 
@@ -13,7 +13,7 @@ import {
   ShoppingBag,
   ExternalLink
 } from 'lucide-react';
-import { products } from '../../../data/products';
+import { getProducts } from '../../../services/productService';
 import { Product } from '../../../types/product';
 import { useCart } from '../../../context/CartContext';
 import './ProjectorFinderSection.css';
@@ -31,7 +31,27 @@ export const ProjectorFinderSection: React.FC<ProjectorFinderSectionProps> = ({
   const [watching, setWatching] = useState<string>('movies');
   const [space, setSpace] = useState<string>('medium');
   const [budget, setBudget] = useState<string>('30k-50k');
+  const [catalog, setCatalog] = useState<Product[]>([]);
   const { addToCart } = useCart();
+
+  useEffect(() => {
+    let isMounted = true;
+    getProducts()
+      .then(res => {
+        if (isMounted && res.products.length > 0) {
+          setCatalog(res.products);
+        }
+      })
+      .catch(err => {
+        console.warn('Finder products load:', err);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const activePool = catalog;
 
   // Watch Options
   const watchingOptions = [
@@ -60,23 +80,24 @@ export const ProjectorFinderSection: React.FC<ProjectorFinderSectionProps> = ({
   // Smart Recommendation Engine
   const calculateMatch = (): Product[] => {
     if (watching === 'outdoor' || budget === '5k-15k') {
-      return [products.find(p => p.id === 'hunting-neo-air') || products[3]];
+      const match = activePool.find(p => p.slug === 'hunting-h200' || p.category === 'portable') || activePool[activePool.length - 1];
+      return [match];
     }
     if (watching === 'gaming' || watching === 'business' || budget === '50k-80k') {
-      return [products.find(p => p.id === 'hunting-horizon-max') || products[4]];
+      const match = activePool.find(p => p.slug === 'hunting-h700' || p.category === 'gaming') || activePool[1] || activePool[0];
+      return [match];
     }
     if (budget === '80k-plus' || space === 'large') {
-      if (space === 'small') {
-        return [products.find(p => p.id === 'hunting-ultra-pro') || products[2]];
-      }
-      return [products.find(p => p.id === 'hunting-cinema-x4') || products[1]];
+      const match = activePool.find(p => p.slug === 'hunting-h900' || p.isFlagship) || activePool[0];
+      return [match];
     }
-    // Default Flagship Home Cinema
-    return [products.find(p => p.id === 'hunting-vision-x1') || products[0]];
+    // Default Flagship / Core Cinema
+    const match = activePool.find(p => p.slug === 'hunting-h500' || p.isBestSeller) || activePool[0];
+    return [match];
   };
 
   const matchedProducts = calculateMatch();
-  const primaryMatch = matchedProducts[0];
+  const primaryMatch = matchedProducts[0] || activePool[0];
 
   const handleReset = () => {
     setStep(1);
@@ -253,9 +274,14 @@ export const ProjectorFinderSection: React.FC<ProjectorFinderSectionProps> = ({
                 </button>
               </div>
 
-              <div className="result-card-inner">
-                {/* Product Showcase */}
-                <div className="result-visual-stage">
+              {!primaryMatch ? (
+                <div style={{ padding: '60px 20px', textAlign: 'center', color: 'var(--text-secondary)' }}>
+                  Analyzing catalog for optimal match...
+                </div>
+              ) : (
+                <div className="result-card-inner">
+                  {/* Product Showcase */}
+                  <div className="result-visual-stage">
                   <div className="result-ambient-disc" />
                   <img 
                     src={primaryMatch.images.hero} 
@@ -323,6 +349,7 @@ export const ProjectorFinderSection: React.FC<ProjectorFinderSectionProps> = ({
                   </div>
                 </div>
               </div>
+              )}
 
             </div>
           )}

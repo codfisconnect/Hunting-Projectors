@@ -9,7 +9,7 @@ import {
   ArrowRight,
   Sparkles
 } from 'lucide-react';
-import { products } from '../../data/products';
+import { getProducts } from '../../services/productService';
 import { Product } from '../../types/product';
 import { useCart } from '../../context/CartContext';
 import './ComparePage.css';
@@ -19,22 +19,34 @@ interface ComparePageProps {
 }
 
 export const ComparePage: React.FC<ComparePageProps> = ({ onOpenEnquiry }) => {
-  // Default compare with 3 flagship models
-  const [selectedIds, setSelectedIds] = useState<string[]>([
-    'hunting-vision-x1',
-    'hunting-cinema-x4',
-    'hunting-ultra-pro',
-  ]);
-
+  const [productsList, setProductsList] = useState<Product[]>([]);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const { addToCart } = useCart();
 
   useEffect(() => {
     document.title = 'COMPARE PROJECTORS — Hunting 4K Optical Comparison';
     window.scrollTo(0, 0);
+
+    let isMounted = true;
+    getProducts()
+      .then(res => {
+        if (!isMounted) return;
+        setProductsList(res.products);
+        if (res.products.length > 0) {
+          setSelectedIds(res.products.slice(0, 3).map(p => p.id));
+        }
+      })
+      .catch(err => {
+        console.warn('Failed to load products for comparison:', err);
+      });
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const selectedProducts: Product[] = selectedIds
-    .map(id => products.find(p => p.id === id))
+    .map(id => productsList.find(p => p.id === id))
     .filter((p): p is Product => p !== undefined);
 
   const handleRemove = (id: string) => {
@@ -55,7 +67,7 @@ export const ComparePage: React.FC<ComparePageProps> = ({ onOpenEnquiry }) => {
     });
   };
 
-  const availableToAdd = products.filter(p => !selectedIds.includes(p.id));
+  const availableToAdd = productsList.filter(p => !selectedIds.includes(p.id));
 
   // Comparison Rows
   const specRows = [
@@ -109,7 +121,7 @@ export const ComparePage: React.FC<ComparePageProps> = ({ onOpenEnquiry }) => {
                     onChange={e => handleSelectSlotChange(idx, e.target.value)}
                     className="slot-swap-select"
                   >
-                    {products.map(prod => (
+                    {productsList.map(prod => (
                       <option key={prod.id} value={prod.id}>
                         {prod.name}
                       </option>

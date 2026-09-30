@@ -15,6 +15,11 @@ import { ShippingPage } from '../pages/Shipping/ShippingPage';
 import { RefundPage } from '../pages/Refund/RefundPage';
 import { PrivacyPage } from '../pages/Privacy/PrivacyPage';
 import { TermsPage } from '../pages/Terms/TermsPage';
+import { LoginPage } from '../pages/Auth/LoginPage';
+import { RegisterPage } from '../pages/Auth/RegisterPage';
+import { AccountPage } from '../pages/Account/AccountPage';
+import { CheckoutPage } from '../pages/Checkout/CheckoutPage';
+import { OrdersPage } from '../pages/Orders/OrdersPage';
 
 interface AppRoutesProps {
   onOpenEnquiry: (productName?: string) => void;
@@ -38,6 +43,14 @@ export const AppRoutes: React.FC<AppRoutesProps> = ({ onOpenEnquiry }) => {
       <Route path="/refund" element={<RefundPage />} />
       <Route path="/privacy" element={<PrivacyPage />} />
       <Route path="/terms" element={<TermsPage />} />
+      
+      {/* Customer Commerce Routes */}
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
+      <Route path="/account" element={<AccountPage />} />
+      <Route path="/checkout" element={<CheckoutPage />} />
+      <Route path="/orders" element={<OrdersPage />} />
+
       {/* Catch-all */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

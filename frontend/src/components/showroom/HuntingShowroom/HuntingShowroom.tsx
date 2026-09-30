@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Sofa, Film, Gamepad2, Info, Eye } from 'lucide-react';
-import { products } from '../../../data/products';
+import { getProducts } from '../../../services/productService';
+import { Product } from '../../../types/product';
 import './HuntingShowroom.css';
 
 interface HuntingShowroomProps {
@@ -28,6 +29,26 @@ interface EnvironmentData {
 
 export const HuntingShowroom: React.FC<HuntingShowroomProps> = ({ onOpenEnquiry }) => {
   const [activeEnv, setActiveEnv] = useState<EnvironmentKey>('living-room');
+  const [catalog, setCatalog] = useState<Product[]>([]);
+
+  React.useEffect(() => {
+    let isMounted = true;
+    getProducts()
+      .then(res => {
+        if (isMounted) setCatalog(res.products);
+      })
+      .catch(err => {
+        console.warn('Showroom products load:', err);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const livingModel = catalog.find(p => p.slug === 'hunting-h500') || catalog[0];
+  const cinemaModel = catalog.find(p => p.slug === 'hunting-h900') || catalog[1] || catalog[0];
+  const gamingModel = catalog.find(p => p.slug === 'hunting-h700') || catalog[2] || catalog[0];
 
   const environments: Record<EnvironmentKey, EnvironmentData> = {
     'living-room': {
@@ -35,9 +56,9 @@ export const HuntingShowroom: React.FC<HuntingShowroomProps> = ({ onOpenEnquiry 
       label: 'LIVING ROOM',
       subtitle: 'Daylight & Ambient Light Rejection',
       icon: <Sofa size={16} />,
-      recommendedModel: 'Hunting Vision X1',
-      recommendedModelSlug: 'hunting-vision-x1',
-      recommendedImage: products[0].images.hero,
+      recommendedModel: livingModel?.name || 'Hunting H500',
+      recommendedModelSlug: livingModel?.slug || 'hunting-h500',
+      recommendedImage: livingModel?.images.hero || '/assets/products/hunting-cinema-x4-hero.svg',
       projectionScreenRatio: '16:9 4K HDR',
       screenSize: '100" – 120"',
       ambientLightLevel: 'Moderate Daylight / Evening Lamps',
@@ -51,9 +72,9 @@ export const HuntingShowroom: React.FC<HuntingShowroomProps> = ({ onOpenEnquiry 
       label: 'HOME CINEMA',
       subtitle: 'Reference Black Levels & Pure Laser Contrast',
       icon: <Film size={16} />,
-      recommendedModel: 'Hunting Cinema X4 Laser',
-      recommendedModelSlug: 'hunting-cinema-x4',
-      recommendedImage: products[1].images.hero,
+      recommendedModel: cinemaModel?.name || 'Hunting H900 Flagship',
+      recommendedModelSlug: cinemaModel?.slug || 'hunting-h900',
+      recommendedImage: cinemaModel?.images.hero || '/assets/products/hunting-vision-x1-hero.svg',
       projectionScreenRatio: '2.39:1 Anamorphic Scope',
       screenSize: '130" – 150"',
       ambientLightLevel: 'Pitch Dark / Controlled Screening Room',
@@ -65,11 +86,11 @@ export const HuntingShowroom: React.FC<HuntingShowroomProps> = ({ onOpenEnquiry 
     'gaming': {
       id: 'gaming',
       label: 'GAMING RIG',
-      subtitle: '240Hz High Refresh & 4.2ms Low Latency',
+      subtitle: '240Hz High Refresh & Low Latency',
       icon: <Gamepad2 size={16} />,
-      recommendedModel: 'Hunting Horizon Max',
-      recommendedModelSlug: 'hunting-horizon-max',
-      recommendedImage: products[4].images.hero,
+      recommendedModel: gamingModel?.name || 'Hunting H700 Gaming',
+      recommendedModelSlug: gamingModel?.slug || 'hunting-h700',
+      recommendedImage: gamingModel?.images.hero || '/assets/products/hunting-horizon-max-hero.svg',
       projectionScreenRatio: '21:9 Ultrawide Sim',
       screenSize: '100" High Refresh',
       ambientLightLevel: 'LED Bias Mood Lighting',
