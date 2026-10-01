@@ -100,6 +100,7 @@ export class OrderService {
       subtotal,
       discount,
       shipping,
+      shippingAmount: shipping,
       total
     };
   }
@@ -116,8 +117,9 @@ export class OrderService {
     // Resolve Shipping Address
     let addressData: any = null;
 
-    if (data.addressId) {
-      const dbAddress = await addressService.getAddressById(userId, data.addressId);
+    const targetAddressId = data.addressId || (data as any).shippingAddressId;
+    if (targetAddressId) {
+      const dbAddress = await addressService.getAddressById(userId, targetAddressId);
       addressData = {
         fullName: dbAddress.fullName,
         phoneNumber: dbAddress.phoneNumber,
