@@ -20,6 +20,7 @@ import { RegisterPage } from '../pages/Auth/RegisterPage';
 import { AccountPage } from '../pages/Account/AccountPage';
 import { CheckoutPage } from '../pages/Checkout/CheckoutPage';
 import { OrdersPage } from '../pages/Orders/OrdersPage';
+import { AdminDashboardPage } from '../pages/Admin/AdminDashboardPage';
 
 interface AppRoutesProps {
   onOpenEnquiry: (productName?: string) => void;
@@ -50,6 +51,9 @@ export const AppRoutes: React.FC<AppRoutesProps> = ({ onOpenEnquiry }) => {
       <Route path="/account" element={<AccountPage />} />
       <Route path="/checkout" element={<CheckoutPage />} />
       <Route path="/orders" element={<OrdersPage />} />
+
+      {/* Admin Command Center */}
+      <Route path="/admin" element={<AdminDashboardPage />} />
 
       {/* Catch-all */}
       <Route path="*" element={<Navigate to="/" replace />} />

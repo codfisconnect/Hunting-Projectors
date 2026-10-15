@@ -9,9 +9,11 @@ import addressRoutes from './addressRoutes.js';
 import cartRoutes from './cartRoutes.js';
 import wishlistRoutes from './wishlistRoutes.js';
 import orderRoutes from './orderRoutes.js';
+import adminRoutes from './adminRoutes.js';
 
 const router = Router();
 
+router.use('/admin', adminRoutes);
 router.use('/auth', authRoutes);
 router.use('/customers', customerRoutes);
 router.use('/addresses', addressRoutes);
