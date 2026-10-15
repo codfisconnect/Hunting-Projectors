@@ -1,6 +1,8 @@
 import { fetchJson, ApiError } from './api';
 import { Product, ProductFilterOptions, ProductPagination, ProductSpecification, ProductImage } from '../types/product';
 import { Category } from '../types/category';
+import { products as fallbackProducts } from '../data/products';
+import { categories as fallbackCategories } from '../data/categories';
 
 /**
  * Normalizes backend Prisma/PostgreSQL product representation into typed frontend Product model.
@@ -232,51 +234,99 @@ export async function getProducts(filters?: ProductFilterOptions): Promise<Produ
     params.append('offset', String(filters.offset));
   }
 
-  const queryStr = params.toString() ? `?${params.toString()}` : '';
-  const response = await fetchJson<{
-    success: boolean;
-    data: any[];
-    pagination?: ProductPagination;
-  }>(`/products${queryStr}`);
+  try {
+    const queryStr = params.toString() ? `?${params.toString()}` : '';
+    const response = await fetchJson<{
+      success: boolean;
+      data: any[];
+      pagination?: ProductPagination;
+    }>(`/products${queryStr}`);
 
-  const rawList = Array.isArray(response.data) ? response.data : [];
-  const products = rawList.map(normalizeProduct);
-  const pagination: ProductPagination = response.pagination || {
-    total: products.length,
-    limit: filters?.limit ?? products.length,
-    offset: filters?.offset ?? 0,
-  };
+    const rawList = Array.isArray(response.data) ? response.data : [];
+    const products = rawList.map(normalizeProduct);
+    const pagination: ProductPagination = response.pagination || {
+      total: products.length,
+      limit: filters?.limit ?? products.length,
+      offset: filters?.offset ?? 0,
+    };
 
-  return { products, pagination };
+    return { products, pagination };
+  } catch (err) {
+    console.warn('API /products unavailable, using fallback verified catalog data:', err);
+    let filtered = [...fallbackProducts];
+
+    if (filters?.category && filters.category !== 'all') {
+      filtered = filtered.filter(p => p.category === filters.category);
+    }
+    if (filters?.searchQuery && filters.searchQuery.trim().length > 0) {
+      const q = filters.searchQuery.trim().toLowerCase();
+      filtered = filtered.filter(p => p.name.toLowerCase().includes(q) || p.subtitle.toLowerCase().includes(q));
+    }
+    if (filters?.maxPrice !== undefined) {
+      filtered = filtered.filter(p => p.price <= filters.maxPrice!);
+    }
+    if (filters?.flagship) {
+      filtered = filtered.filter(p => p.isFlagship);
+    }
+    if (filters?.limit) {
+      filtered = filtered.slice(0, filters.limit);
+    }
+
+    return {
+      products: filtered,
+      pagination: {
+        total: filtered.length,
+        limit: filters?.limit ?? filtered.length,
+        offset: 0,
+      },
+    };
+  }
 }
 
 /**
  * Fetches a single product by its unique slug from PostgreSQL backend.
  */
 export async function getProductBySlug(slug: string): Promise<Product> {
-  const response = await fetchJson<{
-    success: boolean;
-    data: any;
-  }>(`/products/${encodeURIComponent(slug)}`);
+  try {
+    const response = await fetchJson<{
+      success: boolean;
+      data: any;
+    }>(`/products/${encodeURIComponent(slug)}`);
 
-  if (!response.data) {
-    throw new ApiError(404, `Product '${slug}' not found`);
+    if (response.data) {
+      return normalizeProduct(response.data);
+    }
+  } catch (err) {
+    console.warn(`API /products/${slug} unavailable, checking fallback catalog:`, err);
   }
 
-  return normalizeProduct(response.data);
+  const found = fallbackProducts.find(p => p.slug === slug);
+  if (found) {
+    return found;
+  }
+
+  throw new ApiError(404, `Product '${slug}' not found`);
 }
 
 /**
  * Fetches all categories from PostgreSQL backend with live product counts.
  */
 export async function getCategories(): Promise<Category[]> {
-  const response = await fetchJson<{
-    success: boolean;
-    data: any[];
-  }>('/categories');
+  try {
+    const response = await fetchJson<{
+      success: boolean;
+      data: any[];
+    }>('/categories');
 
-  const rawList = Array.isArray(response.data) ? response.data : [];
-  return rawList.map(normalizeCategory);
+    const rawList = Array.isArray(response.data) ? response.data : [];
+    if (rawList.length > 0) {
+      return rawList.map(normalizeCategory);
+    }
+  } catch (err) {
+    console.warn('API /categories unavailable, using fallback categories:', err);
+  }
+
+  return fallbackCategories;
 }
 
 /**
