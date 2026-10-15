@@ -14,8 +14,10 @@ export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Redirect to requested page (e.g. /checkout) or /account
-  const from = (location.state as any)?.from?.pathname || '/account';
+  // Redirect to requested page (e.g. ?redirect=/admin, location.state?.from, or /account)
+  const searchParams = new URLSearchParams(location.search);
+  const redirectParam = searchParams.get('redirect');
+  const from = redirectParam || (location.state as any)?.from?.pathname || '/account';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
