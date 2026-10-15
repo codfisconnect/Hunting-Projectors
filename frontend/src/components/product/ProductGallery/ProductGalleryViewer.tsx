@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Sliders, Image as ImageIcon, Box } from 'lucide-react';
+import { Image as ImageIcon, Box } from 'lucide-react';
 import { Product } from '../../../types/product';
-import { ProductViewer360 } from '../ProductViewer/ProductViewer360';
 import './ProductGalleryViewer.css';
 
 interface ProductGalleryViewerProps {
@@ -9,7 +8,7 @@ interface ProductGalleryViewerProps {
 }
 
 export const ProductGalleryViewer: React.FC<ProductGalleryViewerProps> = ({ product }) => {
-  const [activeTab, setActiveTab] = useState<'360' | 'gallery' | 'ambient'>('360');
+  const [activeTab, setActiveTab] = useState<'gallery' | 'ambient'>('gallery');
   const [selectedGalleryImg, setSelectedGalleryImg] = useState<string>(product.images.hero);
 
   return (
@@ -17,15 +16,6 @@ export const ProductGalleryViewer: React.FC<ProductGalleryViewerProps> = ({ prod
       
       {/* Tab Switcher */}
       <div className="gallery-tabs-bar">
-        <button
-          type="button"
-          className={`gallery-tab-btn ${activeTab === '360' ? 'active' : ''}`}
-          onClick={() => setActiveTab('360')}
-        >
-          <Sliders size={14} />
-          <span>INTERACTIVE 360° VIEWER</span>
-        </button>
-
         <button
           type="button"
           className={`gallery-tab-btn ${activeTab === 'gallery' ? 'active' : ''}`}
@@ -52,10 +42,6 @@ export const ProductGalleryViewer: React.FC<ProductGalleryViewerProps> = ({ prod
 
       {/* Main View Area */}
       <div className="gallery-main-stage">
-        {activeTab === '360' && (
-          <ProductViewer360 product={product} />
-        )}
-
         {activeTab === 'gallery' && (
           <div className="gallery-static-view">
             <div className="gallery-large-display">

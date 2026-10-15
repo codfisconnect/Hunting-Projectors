@@ -2,27 +2,25 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Sparkles, 
-  ChevronLeft, 
-  ChevronRight, 
-  CheckCircle2, 
-  ShieldCheck, 
   ArrowRight, 
-  Sliders, 
   Tv, 
   Sun, 
   Clock, 
-  Maximize, 
   BatteryCharging, 
+  ShieldCheck, 
   Cpu, 
+  CheckCircle2, 
   MapPin, 
-  Info,
-  Layers,
-  ZoomIn
+  Eye, 
+  SlidersHorizontal,
+  ChevronRight,
+  Maximize2
 } from 'lucide-react';
 import { SHOWROOM_WARRIOR_MODELS, ShowroomProduct } from '../../data/showroomProducts';
 import { getProducts } from '../../services/productService';
 import { Product } from '../../types/product';
 import { siteConfig } from '../../data/siteContent';
+import { CinemaExperience } from '../../components/home/CinemaExperience/CinemaExperience';
 import './ExperiencePage.css';
 
 interface ExperiencePageProps {
@@ -30,12 +28,12 @@ interface ExperiencePageProps {
 }
 
 export const ExperiencePage: React.FC<ExperiencePageProps> = ({ onOpenEnquiry }) => {
-  const [selectedId, setSelectedId] = useState<string>('warrior-001');
   const [catalog, setCatalog] = useState<Product[]>([]);
-  const [isPosterEnlarged, setIsPosterEnlarged] = useState<boolean>(false);
+  const [activeModelId, setActiveModelId] = useState<string>('warrior-001');
+  const [viewMode, setViewMode] = useState<'clean' | 'poster'>('clean');
 
   useEffect(() => {
-    document.title = 'THE HUNTING SHOWROOM — Explore Model Warrior 001, 002 & 003';
+    document.title = 'Experience Cinema Differently — Hunting Projectors Showroom';
     window.scrollTo(0, 0);
 
     let isMounted = true;
@@ -44,7 +42,7 @@ export const ExperiencePage: React.FC<ExperiencePageProps> = ({ onOpenEnquiry })
         if (isMounted) setCatalog(res.products);
       })
       .catch(err => {
-        console.warn('Showroom catalog fetch warning:', err);
+        console.warn('Experience page catalog fetch:', err);
       });
 
     return () => {
@@ -52,467 +50,290 @@ export const ExperiencePage: React.FC<ExperiencePageProps> = ({ onOpenEnquiry })
     };
   }, []);
 
-  const currentIndex = SHOWROOM_WARRIOR_MODELS.findIndex(p => p.id === selectedId);
-  const activeProduct: ShowroomProduct = SHOWROOM_WARRIOR_MODELS[currentIndex] || SHOWROOM_WARRIOR_MODELS[0];
+  const activeShowroomProduct: ShowroomProduct = 
+    SHOWROOM_WARRIOR_MODELS.find(p => p.id === activeModelId) || SHOWROOM_WARRIOR_MODELS[0];
 
-  // Look up matched catalog product if available
-  const matchedCatalogProduct = catalog.find(p => p.slug === activeProduct.catalogSlug);
-
-  const handlePrev = () => {
-    const nextIdx = (currentIndex - 1 + SHOWROOM_WARRIOR_MODELS.length) % SHOWROOM_WARRIOR_MODELS.length;
-    setSelectedId(SHOWROOM_WARRIOR_MODELS[nextIdx].id);
-  };
-
-  const handleNext = () => {
-    const nextIdx = (currentIndex + 1) % SHOWROOM_WARRIOR_MODELS.length;
-    setSelectedId(SHOWROOM_WARRIOR_MODELS[nextIdx].id);
-  };
+  // Matched API product data
+  const matchedCatalogProduct = catalog.find(p => p.slug === activeShowroomProduct.catalogSlug);
 
   return (
-    <div className="experience-page showroom-page">
-      
-      {/* SECTION A — Compact Showroom Hero */}
-      <section className="showroom-hero-section text-center">
-        <div className="container">
-          <span className="eyebrow showroom-eyebrow">
-            <Sparkles size={13} className="eyebrow-icon" />
-            THE HUNTING SHOWROOM
-          </span>
-          <h1 className="showroom-main-headline">Meet your next projector.</h1>
-          <p className="showroom-hero-desc">
-            Explore the flagship Warrior series engineered for immense cinematic scale, vivid high-contrast optics, and seamless wireless entertainment.
-          </p>
+    <div className="experience-page">
 
-          {/* Compact Product Quick Switcher Pill Bar */}
-          <div className="showroom-quick-pills" role="tablist" aria-label="Projector model selector">
-            {SHOWROOM_WARRIOR_MODELS.map((item, idx) => {
-              const isSelected = item.id === activeProduct.id;
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  role="tab"
-                  aria-selected={isSelected}
-                  className={`showroom-pill-btn ${isSelected ? 'active' : ''}`}
-                  onClick={() => setSelectedId(item.id)}
-                  style={{
-                    '--pill-accent': item.themeColor
-                  } as React.CSSProperties}
-                >
-                  <span className="pill-index">0{idx + 1}</span>
-                  <span className="pill-name">{item.name}</span>
-                </button>
-              );
-            })}
+      {/* 1. HERO SECTION */}
+      <section className="experience-hero-cinematic">
+        <div className="hero-radial-backdrop" aria-hidden="true" />
+        <div className="container hero-content-grid">
+          
+          <div className="hero-text-block">
+            <span className="eyebrow hero-eyebrow">
+              <Sparkles size={13} className="eyebrow-sparkle" />
+              THE HUNTING EXPERIENCE
+            </span>
+            <h1 className="hero-heading">Experience Cinema Differently.</h1>
+            <p className="hero-subtext">
+              Discover projectors designed to bring the big-screen experience home.
+            </p>
+
+            <div className="hero-cta-group">
+              <Link to="/products" className="btn-primary hero-primary-btn">
+                <span>Explore Projectors</span>
+                <ArrowRight size={16} />
+              </Link>
+              <button
+                type="button"
+                className="btn-secondary hero-secondary-btn"
+                onClick={() => {
+                  const target = document.getElementById('warrior-showcase');
+                  target?.scrollIntoView({ behavior: 'smooth' });
+                }}
+              >
+                <span>View Warrior Series</span>
+              </button>
+            </div>
+
+            <div className="hero-specs-strip">
+              <div className="hero-spec-item">
+                <span className="hero-spec-val">Up to 300"</span>
+                <span className="hero-spec-lbl">Screen Scale</span>
+              </div>
+              <div className="hero-spec-divider" />
+              <div className="hero-spec-item">
+                <span className="hero-spec-val">True 4K & HDR10</span>
+                <span className="hero-spec-lbl">Optical Engine</span>
+              </div>
+              <div className="hero-spec-divider" />
+              <div className="hero-spec-item">
+                <span className="hero-spec-val">Pan-India</span>
+                <span className="hero-spec-lbl">Doorstep Delivery</span>
+              </div>
+            </div>
           </div>
+
+          <div className="hero-visual-stage">
+            <div className="hero-projector-frame">
+              <img
+                src="/assets/products/hunting-cinema-x4-hero.svg"
+                alt="Hunting Flagship Cinema Projector"
+                className="hero-projector-img"
+                loading="eager"
+              />
+              <div className="hero-optical-beam" aria-hidden="true" />
+              <div className="hero-chassis-shadow" aria-hidden="true" />
+            </div>
+            <div className="hero-lens-badge">
+              <span className="lens-badge-dot" />
+              <span>Precision Optical Glass • Laser Clarified</span>
+            </div>
+          </div>
+
         </div>
       </section>
 
-      {/* SECTION B — Main Interactive Product Stage */}
-      <section 
-        className="showroom-stage-section" 
-        style={{
-          '--stage-ambient': activeProduct.ambientGlow,
-          '--stage-accent': activeProduct.themeColor
-        } as React.CSSProperties}
-      >
+      {/* 2. FEATURED PROJECTOR SHOWCASE */}
+      <section id="warrior-showcase" className="showcase-section" aria-label="Featured Projector Showcase">
         <div className="container-wide">
           
-          <div className="showroom-stage-wrapper">
-            
-            {/* Stage Backdrop & Subtle Radial Glow */}
-            <div className="stage-ambient-glow" aria-hidden="true" />
-
-            {/* Stage Header Info Bar */}
-            <div className="stage-top-meta">
-              <div className="stage-meta-left">
-                <span className="stage-badge-pill" style={{ borderColor: activeProduct.themeColor, color: activeProduct.themeColor }}>
-                  {activeProduct.badge}
-                </span>
-                <span className="stage-model-code">{activeProduct.code}</span>
-              </div>
-
-              <div className="stage-navigation-arrows">
-                <button
-                  type="button"
-                  className="stage-nav-btn"
-                  onClick={handlePrev}
-                  aria-label="Previous projector"
-                  title="Previous model"
-                >
-                  <ChevronLeft size={18} />
-                </button>
-                <span className="stage-nav-counter">
-                  0{currentIndex + 1} / 0{SHOWROOM_WARRIOR_MODELS.length}
-                </span>
-                <button
-                  type="button"
-                  className="stage-nav-btn"
-                  onClick={handleNext}
-                  aria-label="Next projector"
-                  title="Next model"
-                >
-                  <ChevronRight size={18} />
-                </button>
-              </div>
-            </div>
-
-            {/* Center Stage Presentation Canvas */}
-            <div className="stage-center-display">
-              
-              <div className="stage-artwork-frame">
-                <img
-                  src={activeProduct.posterImage}
-                  alt={`${activeProduct.name} official artwork`}
-                  className="stage-poster-img"
-                  loading="eager"
-                  onClick={() => setIsPosterEnlarged(true)}
-                  title="Click to view full poster artwork"
-                />
-
-                <button
-                  type="button"
-                  className="stage-artwork-zoom-trigger"
-                  onClick={() => setIsPosterEnlarged(true)}
-                  aria-label="Enlarge campaign artwork"
-                >
-                  <ZoomIn size={15} />
-                  <span>Enlarge Artwork</span>
-                </button>
-              </div>
-
-              {/* Stage Identity Panel */}
-              <div className="stage-identity-card">
-                <div className="stage-identity-header">
-                  <h2 className="stage-product-title">{activeProduct.name}</h2>
-                  <p className="stage-product-headline">{activeProduct.headline}</p>
-                </div>
-
-                {/* API Price or Verified Launch Price */}
-                <div className="stage-pricing-block">
-                  <div className="stage-price-group">
-                    <span className="price-tag-label">SPECIAL LAUNCH PRICE</span>
-                    <div className="price-amount-row">
-                      <span className="price-currency">₹</span>
-                      <span className="price-value">
-                        {matchedCatalogProduct?.price 
-                          ? matchedCatalogProduct.price.toLocaleString('en-IN') 
-                          : (activeProduct.id === 'warrior-003' ? '55,000' : '22,000')}
-                      </span>
-                      <span className="price-tax-badge">INC. GST</span>
-                    </div>
-                  </div>
-                  <div className="stage-stock-status">
-                    <span className="stock-dot" />
-                    <span>In Stock • Ready to Ship</span>
-                  </div>
-                </div>
-
-                {/* Quick Key Metrics Ticker */}
-                <div className="stage-key-metrics-grid">
-                  <div className="metric-chip">
-                    <Tv size={16} className="metric-icon" />
-                    <div className="metric-text-group">
-                      <span className="metric-label">Max Canvas</span>
-                      <span className="metric-val">{activeProduct.specs.screenScale}</span>
-                    </div>
-                  </div>
-
-                  <div className="metric-chip">
-                    <Sun size={16} className="metric-icon" />
-                    <div className="metric-text-group">
-                      <span className="metric-label">Luminance</span>
-                      <span className="metric-val">{activeProduct.specs.brightness}</span>
-                    </div>
-                  </div>
-
-                  <div className="metric-chip">
-                    <Clock size={16} className="metric-icon" />
-                    <div className="metric-text-group">
-                      <span className="metric-label">Lamp Reliability</span>
-                      <span className="metric-val">{activeProduct.specs.lampLife}</span>
-                    </div>
-                  </div>
-
-                  <div className="metric-chip">
-                    <BatteryCharging size={16} className="metric-icon" />
-                    <div className="metric-text-group">
-                      <span className="metric-label">Continuous Runtime</span>
-                      <span className="metric-val">{activeProduct.specs.soundOrBattery}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Primary Action Buttons */}
-                <div className="stage-actions-row">
-                  {matchedCatalogProduct ? (
-                    <Link
-                      to={`/products/${matchedCatalogProduct.slug}`}
-                      className="btn-primary stage-cta-btn"
-                    >
-                      <span>VIEW FULL SPECIFICATIONS</span>
-                      <ArrowRight size={16} />
-                    </Link>
-                  ) : (
-                    <Link
-                      to="/products"
-                      className="btn-primary stage-cta-btn"
-                    >
-                      <span>EXPLORE PROJECTOR CATALOG</span>
-                      <ArrowRight size={16} />
-                    </Link>
-                  )}
-
-                  <button
-                    type="button"
-                    className="btn-secondary stage-enquiry-btn"
-                    onClick={() => onOpenEnquiry(activeProduct.name)}
-                  >
-                    ENQUIRE ABOUT {activeProduct.name.toUpperCase()}
-                  </button>
-                </div>
-
-                {/* Honest Catalog Matching Notice */}
-                <div className="stage-disclaimer-note">
-                  <Info size={13} className="info-icon" />
-                  <span>
-                    Official Hunting campaign artwork. {matchedCatalogProduct ? `Cross-referenced with catalog model ${matchedCatalogProduct.name}.` : 'Verified manufacturer technical specifications shown below.'}
-                  </span>
-                </div>
-
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-      </section>
-
-      {/* SECTION C — Product Selector Cards */}
-      <section className="showroom-selector-section" aria-label="Selectable product collection">
-        <div className="container-wide">
-          <div className="section-header-compact">
-            <div>
-              <span className="eyebrow">COLLECTION OVERVIEW</span>
-              <h2 className="display-section">Choose Your Warrior Edition</h2>
-            </div>
-            <p className="selector-section-lead">
-              Select any model to preview its optical profile, hardware features, and verified warranty package.
+          <div className="section-head-centered">
+            <span className="eyebrow">FEATURED LINEUP</span>
+            <h2 className="display-section">The Warrior Series Collection</h2>
+            <p className="section-lead-text">
+              Engineered with high-lumen optical engines, built-in battery options, and smart streaming capabilities.
             </p>
           </div>
 
-          <div className="showroom-cards-grid">
-            {SHOWROOM_WARRIOR_MODELS.map((item, idx) => {
-              const isSelected = item.id === activeProduct.id;
+          {/* Clean / Artwork Switcher */}
+          <div className="showcase-view-controls">
+            <span className="controls-label">Presentation View:</span>
+            <div className="view-toggle-pills" role="group" aria-label="View mode selection">
+              <button
+                type="button"
+                className={`toggle-pill-btn ${viewMode === 'clean' ? 'active' : ''}`}
+                onClick={() => setViewMode('clean')}
+              >
+                <Eye size={13} />
+                <span>Studio Hardware</span>
+              </button>
+              <button
+                type="button"
+                className={`toggle-pill-btn ${viewMode === 'poster' ? 'active' : ''}`}
+                onClick={() => setViewMode('poster')}
+              >
+                <Maximize2 size={13} />
+                <span>Campaign Artwork</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Product Cards Grid */}
+          <div className="warrior-cards-grid">
+            {SHOWROOM_WARRIOR_MODELS.map((item) => {
               const matched = catalog.find(p => p.slug === item.catalogSlug);
-              const priceDisplay = matched?.price 
-                ? `₹${matched.price.toLocaleString('en-IN')}` 
-                : (item.id === 'warrior-003' ? '₹55,000' : '₹22,000');
+              const price = matched?.price || (item.id === 'warrior-003' ? 55000 : 22000);
+              const compareAt = matched?.compareAtPrice || (item.id === 'warrior-003' ? 65000 : 28000);
+              const displayImg = viewMode === 'clean' ? item.cleanProductImage : item.posterArtwork;
 
               return (
-                <div
-                  key={item.id}
-                  className={`showroom-card ${isSelected ? 'selected' : ''}`}
-                  onClick={() => setSelectedId(item.id)}
-                  tabIndex={0}
-                  role="button"
-                  aria-pressed={isSelected}
-                  onKeyDown={e => e.key === 'Enter' && setSelectedId(item.id)}
+                <div 
+                  key={item.id} 
+                  className={`warrior-product-card ${activeModelId === item.id ? 'card-focused' : ''}`}
+                  onMouseEnter={() => setActiveModelId(item.id)}
                   style={{
-                    '--card-theme': item.themeColor
+                    '--card-theme': item.themeColor,
+                    '--card-glow': item.ambientGlow
                   } as React.CSSProperties}
                 >
-                  <div className="card-artwork-thumb">
-                    <img 
-                      src={item.posterImage} 
-                      alt={item.name} 
-                      className="card-thumb-img" 
-                      loading="lazy"
-                    />
-                    <div className="card-thumb-overlay" />
-                    <span className="card-index-pill">0{idx + 1}</span>
-                    {isSelected && (
-                      <span className="card-active-pill">
-                        <CheckCircle2 size={12} />
-                        ACTIVE PREVIEW
-                      </span>
-                    )}
+                  <div className="card-badge-row">
+                    <span className="card-badge-pill" style={{ color: item.themeColor, borderColor: item.themeColor }}>
+                      {item.badge}
+                    </span>
+                    <span className="card-model-code">{item.code}</span>
                   </div>
 
-                  <div className="card-details-body">
-                    <div className="card-title-row">
-                      <h3 className="card-name">{item.name}</h3>
-                      <span className="card-price">{priceDisplay}</span>
-                    </div>
-                    
-                    <p className="card-headline-snippet">{item.headline}</p>
+                  {/* Product Visual Container with consistent dimensions */}
+                  <div className={`card-image-stage ${viewMode === 'poster' ? 'stage-poster-aspect' : ''}`}>
+                    <img
+                      src={displayImg}
+                      alt={item.name}
+                      className={`card-product-img ${viewMode === 'poster' ? 'img-poster' : 'img-clean'}`}
+                      loading="lazy"
+                    />
+                    <div className="card-ambient-disc" aria-hidden="true" />
+                  </div>
 
-                    <div className="card-specs-mini">
-                      <span>{item.specs.resolution.split('(')[0].trim()}</span>
-                      <span className="dot-divider">•</span>
-                      <span>{item.specs.brightness}</span>
-                      <span className="dot-divider">•</span>
-                      <span>{item.specs.screenScale}</span>
+                  {/* Product Details Header */}
+                  <div className="card-body">
+                    <div className="card-header-meta">
+                      <h3 className="card-product-name">{item.name}</h3>
+                      <p className="card-tagline">{item.headline}</p>
                     </div>
 
-                    <button
-                      type="button"
-                      className={`btn-secondary card-explore-btn ${isSelected ? 'active-btn' : ''}`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setSelectedId(item.id);
-                      }}
-                    >
-                      {isSelected ? 'Currently Viewing' : 'Explore Product'}
-                    </button>
+                    {/* Price Block */}
+                    <div className="card-price-block">
+                      <div className="price-main-row">
+                        <span className="price-currency">₹</span>
+                        <span className="price-amount">{price.toLocaleString('en-IN')}</span>
+                        {compareAt && (
+                          <span className="price-compare-at">₹{compareAt.toLocaleString('en-IN')}</span>
+                        )}
+                      </div>
+                      <span className="price-inclusive-badge">Special Launch Price • Inc. GST</span>
+                    </div>
+
+                    {/* Verified Technical Specs Grid */}
+                    <div className="card-specs-matrix">
+                      <div className="spec-tile">
+                        <Tv size={14} className="tile-icon" />
+                        <div className="tile-info">
+                          <span className="tile-label">Resolution</span>
+                          <span className="tile-value">{item.specs.resolution.split('(')[0].trim()}</span>
+                        </div>
+                      </div>
+
+                      <div className="spec-tile">
+                        <Sun size={14} className="tile-icon" />
+                        <div className="tile-info">
+                          <span className="tile-label">Luminance</span>
+                          <span className="tile-value">{item.specs.brightness}</span>
+                        </div>
+                      </div>
+
+                      <div className="spec-tile">
+                        <SlidersHorizontal size={14} className="tile-icon" />
+                        <div className="tile-info">
+                          <span className="tile-label">Max Canvas</span>
+                          <span className="tile-value">{item.specs.screenScale}</span>
+                        </div>
+                      </div>
+
+                      <div className="spec-tile">
+                        <BatteryCharging size={14} className="tile-icon" />
+                        <div className="tile-info">
+                          <span className="tile-label">Runtime</span>
+                          <span className="tile-value">{item.specs.soundOrBattery}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Smart Feature Pills */}
+                    <div className="card-features-chips">
+                      {item.specs.smartFeatures.slice(0, 3).map((feat, fIdx) => (
+                        <span key={fIdx} className="feature-mini-pill">
+                          <CheckCircle2 size={11} className="pill-check" />
+                          <span>{feat}</span>
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* Verified Warranty Label */}
+                    <div className="card-warranty-note">
+                      <ShieldCheck size={14} className="warranty-icon" />
+                      <span>{item.specs.warranty}</span>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="card-actions-row">
+                      <Link
+                        to={`/products/${item.catalogSlug}`}
+                        className="btn-primary card-details-btn"
+                      >
+                        <span>View Details</span>
+                        <ArrowRight size={14} />
+                      </Link>
+
+                      <button
+                        type="button"
+                        className="btn-secondary card-enquire-btn"
+                        onClick={() => onOpenEnquiry(item.name)}
+                      >
+                        Enquire
+                      </button>
+                    </div>
+
                   </div>
                 </div>
               );
             })}
           </div>
-        </div>
-      </section>
-
-      {/* SECTION D — Verified Product Highlights & Specifications */}
-      <section className="showroom-specs-section">
-        <div className="container">
-          
-          <div className="specs-card-container">
-            
-            <div className="specs-card-header">
-              <div>
-                <span className="eyebrow" style={{ color: activeProduct.themeColor }}>
-                  VERIFIED HARDWARE SPECIFICATIONS
-                </span>
-                <h3 className="specs-title">{activeProduct.name} Technical Sheet</h3>
-              </div>
-              <div className="specs-warranty-badge">
-                <ShieldCheck size={18} />
-                <span>{activeProduct.specs.warranty}</span>
-              </div>
-            </div>
-
-            {/* Spec Matrix Grid */}
-            <div className="specs-matrix-grid">
-              
-              <div className="spec-item">
-                <span className="spec-label">Optical Resolution</span>
-                <span className="spec-value">{activeProduct.specs.resolution}</span>
-              </div>
-
-              <div className="spec-item">
-                <span className="spec-label">ANSI Luminance</span>
-                <span className="spec-value">{activeProduct.specs.brightness}</span>
-              </div>
-
-              <div className="spec-item">
-                <span className="spec-label">Dynamic Contrast</span>
-                <span className="spec-value">{activeProduct.specs.contrast}</span>
-              </div>
-
-              <div className="spec-item">
-                <span className="spec-label">Projection Canvas</span>
-                <span className="spec-value">{activeProduct.specs.screenScale}</span>
-              </div>
-
-              <div className="spec-item">
-                <span className="spec-label">Light Engine Life</span>
-                <span className="spec-value">{activeProduct.specs.lampLife}</span>
-              </div>
-
-              <div className="spec-item">
-                <span className="spec-label">Battery / Continuous Use</span>
-                <span className="spec-value">{activeProduct.specs.soundOrBattery}</span>
-              </div>
-
-            </div>
-
-            {/* Smart Software & Connectivity Capabilities */}
-            <div className="specs-features-block">
-              <h4 className="features-block-heading">Core Smart Features & Connectivity</h4>
-              <div className="features-chips-cloud">
-                {activeProduct.specs.smartFeatures.map((feat, idx) => (
-                  <span key={idx} className="feature-pill">
-                    <CheckCircle2 size={13} className="feature-check" />
-                    <span>{feat}</span>
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            {/* Editorial Technical Summary */}
-            {activeProduct.note && (
-              <div className="specs-editorial-note">
-                <Cpu size={16} className="note-icon" />
-                <p>{activeProduct.note}</p>
-              </div>
-            )}
-
-          </div>
 
         </div>
       </section>
 
-      {/* SECTION E — Direct Visit / In-Person Demo Support */}
-      <section className="showroom-visit-section">
+      {/* 3. CINEMA EXPERIENCE INTERACTIVE SCALE SECTION */}
+      <section className="experience-cinema-section">
+        <CinemaExperience onOpenEnquiry={() => onOpenEnquiry('Interactive Cinema Scale Consultation')} />
+      </section>
+
+      {/* 4. CHENNAI SHOWROOM & TRUST STRIP */}
+      <section className="experience-showroom-invite">
         <div className="container">
-          <div className="visit-card">
-            <div className="visit-icon-box">
+          <div className="invite-card">
+            <div className="invite-icon-wrapper">
               <MapPin size={28} />
             </div>
-            <div className="visit-content">
-              <span className="eyebrow">IN-PERSON CHENNAI SHOWROOM</span>
-              <h3 className="visit-title">Experience the Real Lenses Side-by-Side</h3>
-              <p className="visit-desc">
-                Witness 1500 to 6500 ANSI lumen optical brightness on ambient light rejecting screens at our Chennai flagship studio. Get customized room throw consultations directly from our audio-visual engineers.
+            <div className="invite-info">
+              <span className="eyebrow invite-eyebrow">IN-PERSON SHOWROOM EXPERIENCE</span>
+              <h3 className="invite-title">Visit Our Chennai Experience Center</h3>
+              <p className="invite-desc">
+                Witness side-by-side optical projections on ambient light rejecting screens. Our technical specialists provide hands-on room throw assessments and sound matching.
               </p>
-              <div className="visit-location-badge">
-                <ShieldCheck size={16} />
+              <div className="invite-badge">
+                <ShieldCheck size={15} />
                 <span>{siteConfig.entity.owner} • {siteConfig.entity.locationLabel}</span>
               </div>
             </div>
-            <div className="visit-actions">
+            <div className="invite-actions">
               <button 
                 type="button" 
-                className="btn-primary" 
-                onClick={() => onOpenEnquiry('Chennai Showroom Private Booking')}
+                className="btn-primary invite-btn"
+                onClick={() => onOpenEnquiry('Chennai Showroom Private Appointment')}
               >
-                SCHEDULE PRIVATE VISIT
+                <span>Schedule Visit</span>
+                <ChevronRight size={16} />
               </button>
             </div>
           </div>
         </div>
       </section>
-
-      {/* Poster Enlarge Modal */}
-      {isPosterEnlarged && (
-        <div 
-          className="poster-modal-overlay" 
-          onClick={() => setIsPosterEnlarged(false)}
-          role="dialog"
-          aria-modal="true"
-        >
-          <div className="poster-modal-content" onClick={e => e.stopPropagation()}>
-            <button 
-              type="button" 
-              className="poster-modal-close"
-              onClick={() => setIsPosterEnlarged(false)}
-              aria-label="Close enlarged view"
-            >
-              ✕
-            </button>
-            <img 
-              src={activeProduct.posterImage} 
-              alt={`${activeProduct.name} full artwork`} 
-              className="poster-modal-image"
-            />
-            <div className="poster-modal-caption">
-              <strong>{activeProduct.name}</strong> — {activeProduct.headline}
-            </div>
-          </div>
-        </div>
-      )}
 
     </div>
   );
