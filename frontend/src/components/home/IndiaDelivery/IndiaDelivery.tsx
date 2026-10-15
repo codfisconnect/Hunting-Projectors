@@ -90,41 +90,41 @@ export const IndiaDelivery: React.FC = () => {
 
                 {/* Hub: Chennai (HQ - Pulsing Strong) */}
                 <g transform="translate(210, 370)">
-                  <circle cx="0" cy="0" r="18" fill="rgba(157, 220, 255, 0.15)">
+                  <circle cx="0" cy="0" r="18" fill="rgba(212, 175, 55, 0.15)">
                     <animate attributeName="r" values="8;24;8" dur="2.5s" repeatCount="indefinite"/>
                     <animate attributeName="opacity" values="0.8;0;0.8" dur="2.5s" repeatCount="indefinite"/>
                   </circle>
-                  <circle cx="0" cy="0" r="7" fill="#9DDCFF" />
-                  <circle cx="0" cy="0" r="3" fill="#08090B" />
-                  <text x="14" y="4" fill="#9DDCFF" fontFamily="Inter, sans-serif" fontSize="10" fontWeight="800" letterSpacing="1">CHENNAI HQ</text>
-                  <text x="14" y="16" fill="#6C7480" fontFamily="Inter, sans-serif" fontSize="8">NAP Computers & Electronics</text>
+                  <circle cx="0" cy="0" r="7" fill="#D4AF37" />
+                  <circle cx="0" cy="0" r="3" fill="#0C0D10" />
+                  <text x="14" y="4" fill="#E6CA65" fontFamily="Inter, sans-serif" fontSize="10" fontWeight="800" letterSpacing="1">CHENNAI HQ</text>
+                  <text x="14" y="16" fill="#9DA3AE" fontFamily="Inter, sans-serif" fontSize="8">NAP Computers & Electronics</text>
                 </g>
 
                 {/* Dispatch Transit Lines from Chennai */}
-                <line x1="210" y1="370" x2="160" y2="350" stroke="#9DDCFF" strokeWidth="1" strokeDasharray="3 3" opacity="0.6"/>
-                <line x1="210" y1="370" x2="120" y2="280" stroke="#9DDCFF" strokeWidth="1" strokeDasharray="3 3" opacity="0.6"/>
-                <line x1="210" y1="370" x2="190" y2="150" stroke="#9DDCFF" strokeWidth="1" strokeDasharray="3 3" opacity="0.6"/>
-                <line x1="210" y1="370" x2="270" y2="240" stroke="#9DDCFF" strokeWidth="1" strokeDasharray="3 3" opacity="0.6"/>
-                <line x1="210" y1="370" x2="180" y2="300" stroke="#9DDCFF" strokeWidth="1" strokeDasharray="3 3" opacity="0.6"/>
+                <line x1="210" y1="370" x2="160" y2="350" stroke="#D4AF37" strokeWidth="1" strokeDasharray="3 3" opacity="0.6"/>
+                <line x1="210" y1="370" x2="120" y2="280" stroke="#D4AF37" strokeWidth="1" strokeDasharray="3 3" opacity="0.6"/>
+                <line x1="210" y1="370" x2="190" y2="150" stroke="#D4AF37" strokeWidth="1" strokeDasharray="3 3" opacity="0.6"/>
+                <line x1="210" y1="370" x2="270" y2="240" stroke="#D4AF37" strokeWidth="1" strokeDasharray="3 3" opacity="0.6"/>
+                <line x1="210" y1="370" x2="180" y2="300" stroke="#D4AF37" strokeWidth="1" strokeDasharray="3 3" opacity="0.6"/>
 
                 {/* Major Delivery Hubs */}
-                <circle cx="160" cy="350" r="4" fill="#C8FF38" />
-                <text x="145" y="342" fill="#C8FF38" fontFamily="Inter, sans-serif" fontSize="8" textAnchor="end">Bengaluru</text>
+                <circle cx="160" cy="350" r="4" fill="#D4AF37" />
+                <text x="145" y="342" fill="#E6CA65" fontFamily="Inter, sans-serif" fontSize="8" textAnchor="end">Bengaluru</text>
 
-                <circle cx="120" cy="280" r="4" fill="#E7E8EA" />
-                <text x="105" y="280" fill="#E7E8EA" fontFamily="Inter, sans-serif" fontSize="8" textAnchor="end">Mumbai</text>
+                <circle cx="120" cy="280" r="4" fill="#E5E7EB" />
+                <text x="105" y="280" fill="#E5E7EB" fontFamily="Inter, sans-serif" fontSize="8" textAnchor="end">Mumbai</text>
 
-                <circle cx="180" cy="300" r="4" fill="#E7E8EA" />
-                <text x="190" y="304" fill="#E7E8EA" fontFamily="Inter, sans-serif" fontSize="8">Hyderabad</text>
+                <circle cx="180" cy="300" r="4" fill="#E5E7EB" />
+                <text x="190" y="304" fill="#E5E7EB" fontFamily="Inter, sans-serif" fontSize="8">Hyderabad</text>
 
-                <circle cx="190" cy="150" r="4" fill="#E7E8EA" />
-                <text x="200" y="152" fill="#E7E8EA" fontFamily="Inter, sans-serif" fontSize="8">Delhi NCR</text>
+                <circle cx="190" cy="150" r="4" fill="#E5E7EB" />
+                <text x="200" y="152" fill="#E5E7EB" fontFamily="Inter, sans-serif" fontSize="8">Delhi NCR</text>
 
-                <circle cx="270" cy="240" r="4" fill="#E7E8EA" />
-                <text x="280" y="244" fill="#E7E8EA" fontFamily="Inter, sans-serif" fontSize="8">Kolkata</text>
+                <circle cx="270" cy="240" r="4" fill="#E5E7EB" />
+                <text x="280" y="244" fill="#E5E7EB" fontFamily="Inter, sans-serif" fontSize="8">Kolkata</text>
 
-                <circle cx="170" cy="420" r="4" fill="#E7E8EA" />
-                <text x="155" y="424" fill="#E7E8EA" fontFamily="Inter, sans-serif" fontSize="8" textAnchor="end">Kochi</text>
+                <circle cx="170" cy="420" r="4" fill="#E5E7EB" />
+                <text x="155" y="424" fill="#E5E7EB" fontFamily="Inter, sans-serif" fontSize="8" textAnchor="end">Kochi</text>
               </svg>
 
               <div className="map-badge-corner">

@@ -373,7 +373,8 @@
 
 @media (max-width: 680px) {
   .catalog-cards-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
   }
   .products-hero-header {
     flex-direction: column;
@@ -381,5 +382,12 @@
   }
   .products-search-box {
     max-width: 100%;
+  }
+}
+
+@media (max-width: 440px) {
+  .catalog-cards-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
   }
 }

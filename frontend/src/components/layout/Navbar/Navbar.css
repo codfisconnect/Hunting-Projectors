@@ -94,8 +94,8 @@
   left: 0;
   right: 0;
   height: 2px;
-  background-color: var(--accent-ice-blue);
-  box-shadow: 0 0 10px var(--accent-ice-blue);
+  background-color: var(--accent-gold);
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
   border-radius: var(--radius-full);
 }
 
@@ -103,7 +103,7 @@
 .navbar-actions {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
 }
 
 .action-btn {
@@ -111,8 +111,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 38px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   color: var(--text-secondary);
   background-color: rgba(255, 255, 255, 0.04);
@@ -129,14 +129,14 @@
 
 .action-badge {
   position: absolute;
-  top: -3px;
-  right: -3px;
-  min-width: 17px;
-  height: 17px;
-  padding: 0 4px;
+  top: -2px;
+  right: -2px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
   border-radius: 10px;
-  background-color: var(--accent-acid-lime);
-  color: #08090B;
+  background-color: var(--accent-gold);
+  color: #111317;
   font-family: var(--font-mono);
   font-size: 0.65rem;
   font-weight: 800;
@@ -150,10 +150,11 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 16px;
-  background-color: transparent;
-  color: var(--accent-ice-blue);
-  border: 1px solid rgba(157, 220, 255, 0.3);
+  min-height: 40px;
+  padding: 8px 18px;
+  background-color: var(--accent-gold-soft);
+  color: var(--accent-gold-light);
+  border: 1px solid var(--accent-gold-border);
   border-radius: var(--radius-full);
   font-family: var(--font-mono);
   font-size: 0.74rem;
@@ -163,19 +164,20 @@
 }
 
 .navbar-enquire-btn:hover {
-  background-color: rgba(157, 220, 255, 0.12);
-  border-color: var(--accent-ice-blue);
-  color: #FFFFFF;
+  background-color: var(--accent-gold);
+  color: #111317;
+  border-color: var(--accent-gold);
 }
 
 .mobile-toggle-btn {
   display: none;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   color: var(--text-primary);
   background: none;
+  border-radius: var(--radius-sm);
 }
 
 /* Responsive */

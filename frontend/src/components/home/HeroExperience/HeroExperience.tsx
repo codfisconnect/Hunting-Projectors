@@ -46,7 +46,7 @@ export const HeroExperience: React.FC<HeroExperienceProps> = ({ onOpenEnquiry })
   }, []);
 
   const scrollToNext = () => {
-    const nextEl = document.getElementById('product-reveal-section');
+    const nextEl = document.getElementById('featured-products-section');
     if (nextEl) {
       nextEl.scrollIntoView({ behavior: 'smooth' });
     }
@@ -78,23 +78,23 @@ export const HeroExperience: React.FC<HeroExperienceProps> = ({ onOpenEnquiry })
           </span>
         </div>
 
-        {/* Massive Editorial Headline */}
+        {/* Large Editorial Headline */}
         <div className="hero-title-area">
           <h1 className="hero-main-title">
             <span className="title-line">SEE</span>
             <span className="title-line highlight">BEYOND.</span>
           </h1>
           <p className="hero-subtitle">
-            {siteConfig.brand.heroSubheadline}
+            Laser-sharp 4K optical projection engineered for cinematic immersion at home.
           </p>
         </div>
 
-        {/* Centerpiece Hero Projector with Dynamic Pointer Tilt */}
+        {/* Centerpiece Hero Projector */}
         <div className="hero-projector-stage">
           <div 
             className="hero-projector-parallax-box"
             style={{
-              transform: `perspective(1000px) rotateY(${mousePos.x * 9}deg) rotateX(${-mousePos.y * 6}deg) translateY(${mousePos.y * -8}px)`
+              transform: `perspective(1000px) rotateY(${mousePos.x * 6}deg) rotateX(${-mousePos.y * 4}deg) translateY(${mousePos.y * -6}px)`
             }}
           >
             <img 
@@ -103,50 +103,30 @@ export const HeroExperience: React.FC<HeroExperienceProps> = ({ onOpenEnquiry })
               className="hero-projector-img"
               draggable={false}
             />
-            {/* Projected beam glow simulation */}
             <div className="hero-lens-flare" />
-          </div>
-
-          {/* Technical Specs Floating Micro-cards */}
-          <div className="hero-spec-pill left">
-            <span className="pill-metric">4K UHD</span>
-            <span className="pill-desc">Edge-to-edge optical glass</span>
-          </div>
-          <div className="hero-spec-pill right">
-            <span className="pill-metric">2,600 ANSI</span>
-            <span className="pill-desc">Solid-state high luminance</span>
           </div>
         </div>
 
-        {/* CTAs */}
+        {/* Minimal Hero CTAs */}
         <div className="hero-cta-group">
           <Link to="/products" className="btn-primary hero-btn-main">
             <span>EXPLORE PROJECTORS</span>
             <ArrowRight size={17} />
           </Link>
 
-          <Link to="/experience" className="btn-secondary hero-btn-sub">
-            <Play size={15} fill="currentColor" />
-            <span>EXPERIENCE HUNTING</span>
+          <Link to="/projector-finder" className="btn-secondary hero-btn-sub">
+            <span>FIND YOUR PROJECTOR</span>
           </Link>
-
-          <button 
-            type="button" 
-            className="hero-enquiry-link"
-            onClick={onOpenEnquiry}
-          >
-            Request Private Demo In Chennai
-          </button>
         </div>
 
-        {/* Bottom Scroll Indicator */}
+        {/* Minimal Scroll Indicator */}
         <button 
           type="button" 
           className="hero-scroll-indicator" 
           onClick={scrollToNext}
-          aria-label="Scroll to interactive product reveal"
+          aria-label="Scroll to featured projectors"
         >
-          <span className="scroll-text">SCROLL TO EXPERIENCE</span>
+          <span className="scroll-text">DISCOVER</span>
           <div className="scroll-chevron-wrap">
             <ChevronDown size={18} className="scroll-chevron" />
           </div>

@@ -61,20 +61,18 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
 
   if (!isOpen) return null;
 
+  const [formError, setFormError] = useState<string | null>(null);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setFormError(null);
 
     try {
       const response = await submitEnquiry(formData);
       setResult(response);
-    } catch {
-      setResult({
-        success: true,
-        message: 'Your enquiry has been noted! Connect with our Chennai team directly via WhatsApp for instant scheduling.',
-        referenceId: `HP-${Math.floor(100000 + Math.random() * 900000)}`,
-        timestamp: new Date().toISOString(),
-      });
+    } catch (err: any) {
+      setFormError(err?.message || 'Unable to register enquiry at this time. Please contact our Chennai desk on WhatsApp directly.');
     } finally {
       setIsSubmitting(false);
     }
@@ -113,6 +111,21 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
 
         {/* Form Body or Success State */}
         <div className="enquiry-modal-body">
+          {formError && (
+            <div style={{
+              padding: '12px 16px',
+              marginBottom: '16px',
+              borderRadius: 'var(--radius-sm)',
+              backgroundColor: 'rgba(255, 69, 58, 0.1)',
+              border: '1px solid rgba(255, 69, 58, 0.3)',
+              color: '#FF6B6B',
+              fontSize: '0.85rem',
+              lineHeight: '1.4'
+            }}>
+              {formError}
+            </div>
+          )}
+
           {result ? (
             <div className="enquiry-success-view">
               <div className="success-icon-wrap">

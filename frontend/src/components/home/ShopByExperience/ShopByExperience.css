@@ -1,0 +1,187 @@
+.shop-by-experience-section {
+  padding: 80px 0;
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  position: relative;
+}
+
+.experience-section-container {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+.experience-header-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.experience-title-group {
+  max-width: 680px;
+}
+
+.experience-lead {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-top: 10px;
+}
+
+.experience-all-btn {
+  white-space: nowrap;
+}
+
+.experience-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.experience-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-decoration: none;
+  transition: all var(--transition-medium);
+  position: relative;
+  overflow: hidden;
+}
+
+.experience-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent-gold-border);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
+  background-color: var(--bg-surface-elevated);
+}
+
+.exp-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.exp-icon-box {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  background-color: var(--accent-gold-soft);
+  color: var(--accent-gold-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--accent-gold-border);
+  transition: transform var(--transition-fast);
+}
+
+.experience-card:hover .exp-icon-box {
+  transform: scale(1.08);
+}
+
+.exp-badge {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--accent-gold-light);
+  background-color: rgba(212, 175, 55, 0.08);
+  padding: 4px 8px;
+  border-radius: var(--radius-xs);
+  text-transform: uppercase;
+}
+
+.exp-card-body {
+  margin-bottom: 28px;
+}
+
+.exp-title {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+  letter-spacing: -0.02em;
+}
+
+.exp-subtitle {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent-gold-light);
+  margin-bottom: 12px;
+}
+
+.exp-desc {
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.exp-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 16px;
+}
+
+.exp-action-text {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  transition: color var(--transition-fast);
+}
+
+.experience-card:hover .exp-action-text {
+  color: var(--text-primary);
+}
+
+.exp-arrow-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.04);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.experience-card:hover .exp-arrow-circle {
+  background-color: var(--accent-gold);
+  color: #111317;
+  transform: translateX(3px);
+}
+
+@media (max-width: 1200px) {
+  .experience-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .shop-by-experience-section {
+    padding: 50px 0;
+  }
+  .experience-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .experience-card {
+    padding: 22px 18px;
+  }
+  .experience-all-btn {
+    width: 100%;
+  }
+}

@@ -61,15 +61,15 @@
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.12em;
-  color: var(--accent-acid-lime);
-  background-color: rgba(200, 255, 56, 0.08);
-  border: 1px solid rgba(200, 255, 56, 0.2);
-  padding: 5px 12px;
+  color: var(--accent-gold-light);
+  background-color: var(--accent-gold-soft);
+  border: 1px solid var(--accent-gold-border);
+  padding: 5px 14px;
   border-radius: var(--radius-full);
 }
 
 .hero-badge-icon {
-  color: var(--accent-acid-lime);
+  color: var(--accent-gold);
 }
 
 .hero-brand-tag {
@@ -185,7 +185,7 @@
   font-family: var(--font-display);
   font-size: 1.1rem;
   font-weight: 800;
-  color: var(--accent-ice-blue);
+  color: var(--accent-gold-light);
   line-height: 1.1;
 }
 

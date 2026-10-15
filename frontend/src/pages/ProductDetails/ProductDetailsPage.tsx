@@ -9,8 +9,10 @@ import {
   CheckCircle2, 
   MessageCircle,
   HelpCircle,
-  Sparkles
+  Sparkles,
+  ShoppingBag
 } from 'lucide-react';
+import { useCart } from '../../context/CartContext';
 import { getProductBySlug, getRelatedProducts } from '../../services/productService';
 import { Product } from '../../types/product';
 import { faqs } from '../../data/faqs';
@@ -32,6 +34,7 @@ interface ProductDetailsPageProps {
 export const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ onOpenEnquiry }) => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
+  const { addToCart } = useCart();
 
   const [product, setProduct] = useState<Product | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
@@ -280,6 +283,22 @@ export const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ onOpenEn
           </section>
         )}
 
+      </div>
+
+      {/* Sticky Mobile Purchase Bar (Safe Area Compliant) */}
+      <div className="mobile-sticky-purchase-bar">
+        <div className="sticky-bar-info">
+          <span className="sticky-bar-name">{product.name}</span>
+          <span className="sticky-bar-price">₹{product.price.toLocaleString('en-IN')}</span>
+        </div>
+        <button
+          type="button"
+          className="btn-primary sticky-bar-btn"
+          onClick={() => addToCart(product, 1)}
+        >
+          <ShoppingBag size={16} />
+          <span>ADD TO CART</span>
+        </button>
       </div>
     </div>
   );

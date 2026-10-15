@@ -69,18 +69,28 @@
 @media (max-width: 1080px) {
   .featured-cards-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .featured-cards-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
   }
   .featured-bottom-strip {
     flex-direction: column;
     align-items: flex-start;
+    padding: 20px;
   }
   .featured-bottom-strip .btn-primary {
     width: 100%;
+  }
+}
+
+@media (max-width: 440px) {
+  .featured-cards-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
   }
 }

@@ -55,20 +55,18 @@ export const ContactPage: React.FC = () => {
     };
   }, []);
 
+  const [formError, setFormError] = useState<string | null>(null);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setFormError(null);
 
     try {
       const res = await submitEnquiry(formData);
       setResult(res);
-    } catch {
-      setResult({
-        success: true,
-        message: 'Your enquiry has been received by our Chennai desk! A specialist will connect with you via WhatsApp or phone.',
-        referenceId: `HP-${Math.floor(100000 + Math.random() * 900000)}`,
-        timestamp: new Date().toISOString(),
-      });
+    } catch (err: any) {
+      setFormError(err?.message || 'Unable to register your request right now. Please reach out directly via WhatsApp or phone.');
     } finally {
       setIsSubmitting(false);
     }
@@ -178,6 +176,21 @@ export const ContactPage: React.FC = () => {
                   Tell us about your room size, throw distance, or questions. We respond promptly via WhatsApp or phone.
                 </p>
               </div>
+
+              {formError && (
+                <div style={{
+                  padding: '12px 16px',
+                  marginBottom: '16px',
+                  borderRadius: 'var(--radius-sm)',
+                  backgroundColor: 'rgba(255, 69, 58, 0.1)',
+                  border: '1px solid rgba(255, 69, 58, 0.3)',
+                  color: '#FF6B6B',
+                  fontSize: '0.85rem',
+                  lineHeight: '1.4'
+                }}>
+                  {formError}
+                </div>
+              )}
 
               {result ? (
                 <div className="contact-success-state">

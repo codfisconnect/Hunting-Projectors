@@ -32,7 +32,7 @@ export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ onOpenEnquir
   }, []);
 
   return (
-    <section className="featured-products-section" aria-label="Featured Hunting Projectors">
+    <section id="featured-products-section" className="featured-products-section" aria-label="Featured Hunting Projectors">
       <div className="container-wide featured-container">
         
         {/* Section Heading */}

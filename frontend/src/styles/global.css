@@ -135,7 +135,7 @@ textarea:focus-visible {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.16em;
-  color: var(--accent-ice-blue);
+  color: var(--accent-gold-light);
   margin-bottom: 14px;
 }
 
@@ -145,7 +145,7 @@ textarea:focus-visible {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: var(--accent-acid-lime);
+  background-color: var(--accent-gold);
 }
 
 /* Glass & Surface Cards */
@@ -166,7 +166,8 @@ textarea:focus-visible {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  padding: 14px 28px;
+  min-height: var(--touch-target-min);
+  padding: 12px 26px;
   background-color: var(--text-primary);
   color: var(--bg-primary);
   font-weight: 600;
@@ -188,7 +189,8 @@ textarea:focus-visible {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  padding: 13px 26px;
+  min-height: var(--touch-target-min);
+  padding: 12px 24px;
   background-color: rgba(255, 255, 255, 0.05);
   color: var(--text-primary);
   font-weight: 600;
@@ -206,12 +208,36 @@ textarea:focus-visible {
   transform: translateY(-2px);
 }
 
+.btn-gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: var(--touch-target-min);
+  padding: 12px 26px;
+  background-color: var(--accent-gold);
+  color: #111317;
+  font-weight: 700;
+  font-size: 0.92rem;
+  letter-spacing: 0.02em;
+  border-radius: var(--radius-full);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.btn-gold:hover {
+  background-color: var(--accent-gold-light);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(212, 175, 55, 0.25);
+}
+
 .btn-whatsapp {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  padding: 14px 26px;
+  min-height: var(--touch-target-min);
+  padding: 12px 24px;
   background-color: #25D366;
   color: #05240E;
   font-weight: 700;
@@ -230,6 +256,7 @@ textarea:focus-visible {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  min-height: var(--touch-target-min);
   color: var(--text-secondary);
   font-weight: 500;
   font-size: 0.88rem;
@@ -249,9 +276,9 @@ textarea:focus-visible {
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.06em;
-  color: var(--accent-ice-blue);
-  background-color: rgba(157, 220, 255, 0.08);
-  border: 1px solid rgba(157, 220, 255, 0.2);
+  color: var(--accent-gold-light);
+  background-color: var(--accent-gold-soft);
+  border: 1px solid var(--accent-gold-border);
   border-radius: var(--radius-xs);
   text-transform: uppercase;
 }

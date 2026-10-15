@@ -182,7 +182,7 @@
   font-family: var(--font-mono);
   font-size: 0.78rem;
   font-weight: 700;
-  color: var(--accent-ice-blue);
+  color: var(--accent-gold-light);
 }
 
 /* Bottom Row */
@@ -192,6 +192,7 @@
   justify-content: space-between;
   border-top: 1px solid var(--border-subtle);
   padding-top: 14px;
+  gap: 8px;
 }
 
 .card-price-block {
@@ -210,6 +211,7 @@
   display: flex;
   align-items: baseline;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
 .current-price {
@@ -221,20 +223,20 @@
 
 .compare-price {
   font-size: 0.8rem;
-  color: #585F6B;
+  color: #6B7280;
   text-decoration: line-through;
 }
 
 .card-actions-group {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 
 .card-quick-cart-btn {
-  width: 34px;
-  height: 34px;
-  border-radius: var(--radius-xs);
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
   background-color: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--border-subtle);
   color: var(--text-secondary);
@@ -245,8 +247,9 @@
 }
 
 .card-quick-cart-btn:hover {
-  background-color: var(--text-primary);
-  color: var(--bg-primary);
+  background-color: var(--accent-gold);
+  color: #111317;
+  border-color: var(--accent-gold);
 }
 
 .card-enquire-btn {
@@ -256,21 +259,21 @@
   letter-spacing: 0.08em;
   padding: 8px 12px;
   border-radius: var(--radius-xs);
-  background-color: transparent;
-  color: var(--accent-ice-blue);
-  border: 1px solid rgba(157, 220, 255, 0.3);
+  background-color: var(--accent-gold-soft);
+  color: var(--accent-gold-light);
+  border: 1px solid var(--accent-gold-border);
   transition: all var(--transition-fast);
 }
 
 .card-enquire-btn:hover {
-  background-color: rgba(157, 220, 255, 0.12);
-  border-color: var(--accent-ice-blue);
+  background-color: var(--accent-gold);
+  color: #111317;
 }
 
 .card-view-btn {
-  width: 34px;
-  height: 34px;
-  border-radius: var(--radius-xs);
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
   background-color: var(--text-primary);
   color: var(--bg-primary);
   display: flex;
@@ -280,6 +283,49 @@
 }
 
 .card-view-btn:hover {
-  background-color: var(--metal-silver);
+  background-color: var(--accent-gold);
+  color: #111317;
   transform: translateX(2px);
+}
+
+@media (max-width: 640px) {
+  .card-top-bar {
+    padding: 12px 14px 0 14px;
+  }
+  .card-image-stage {
+    height: 160px;
+    padding: 8px;
+  }
+  .card-content-area {
+    padding: 0 12px 14px 12px;
+  }
+  .card-title {
+    font-size: 1rem;
+    margin-bottom: 2px;
+  }
+  .card-subtitle {
+    font-size: 0.72rem;
+    margin-bottom: 8px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .card-specs-strip {
+    padding: 6px 8px;
+    margin-bottom: 10px;
+    gap: 4px;
+  }
+  .spec-pill-label {
+    font-size: 0.5rem;
+  }
+  .spec-pill-val {
+    font-size: 0.68rem;
+  }
+  .current-price {
+    font-size: 0.98rem;
+  }
+  .card-bottom-row {
+    padding-top: 10px;
+  }
 }

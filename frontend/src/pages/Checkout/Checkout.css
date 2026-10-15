@@ -66,8 +66,8 @@
   height: 26px;
   border-radius: 50%;
   background: var(--bg-surface-elevated);
-  border: 1px solid var(--accent-ice-blue);
-  color: var(--accent-ice-blue);
+  border: 1px solid var(--accent-gold);
+  color: var(--accent-gold-light);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -97,8 +97,8 @@
 }
 
 .selectable-address-box.selected {
-  border-color: var(--accent-ice-blue);
-  background: rgba(157, 220, 255, 0.04);
+  border-color: var(--accent-gold);
+  background: var(--accent-gold-soft);
 }
 
 .checkout-summary-card {

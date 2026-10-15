@@ -58,9 +58,9 @@
 }
 
 .step-circle.match-circle {
-  background-color: var(--accent-acid-lime);
-  color: #08090B;
-  border-color: var(--accent-acid-lime);
+  background-color: var(--accent-gold);
+  color: #111317;
+  border-color: var(--accent-gold);
 }
 
 .step-connector {
@@ -71,7 +71,7 @@
 }
 
 .step-connector.filled {
-  background-color: var(--accent-ice-blue);
+  background-color: var(--accent-gold);
 }
 
 /* Finder Card Box */
@@ -94,7 +94,7 @@
   font-family: var(--font-mono);
   font-size: 0.65rem;
   letter-spacing: 0.16em;
-  color: var(--accent-ice-blue);
+  color: var(--accent-gold-light);
   margin-bottom: 8px;
 }
 
