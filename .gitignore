@@ -49,3 +49,8 @@ coverage/
 */coverage/
 *.lcov
 .nyc_output/
+
+# Database dumps & backups
+*.dump
+*.sql
+*.backup

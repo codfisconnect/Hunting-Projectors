@@ -8,8 +8,22 @@ export const createApp = () => {
   const app = express();
 
   // Middleware
+  const allowedOrigins = [
+    config.clientUrl,
+    'https://hunting-projectors-deploy.vercel.app',
+    'http://localhost:5173',
+    'http://127.0.0.1:5173'
+  ].filter(Boolean);
+
   app.use(cors({
-    origin: [config.clientUrl, 'http://localhost:5173', 'http://127.0.0.1:5173'],
+    origin: (origin, callback) => {
+      // allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) !== -1 || origin.endsWith('.vercel.app')) {
+        return callback(null, true);
+      }
+      return callback(null, true); // fallback allow in production for custom domains
+    },
     credentials: true,
   }));
   app.use(express.json());
