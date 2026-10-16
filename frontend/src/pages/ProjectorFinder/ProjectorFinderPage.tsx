@@ -31,7 +31,7 @@ export const ProjectorFinderPage: React.FC<ProjectorFinderPageProps> = ({ onOpen
 
           <div className="support-card-actions">
             <a 
-              href={getWhatsAppLink('Hello Hunting Projectors! I need a custom throw distance and ambient lighting calculation for my room dimensions.')} 
+              href={getWhatsAppLink('Hello Nap Computers Electronicss! I need a custom throw distance and ambient lighting calculation for my room dimensions.')} 
               target="_blank" 
               rel="noopener noreferrer" 
               className="btn-whatsapp"

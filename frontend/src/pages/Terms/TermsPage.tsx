@@ -5,7 +5,7 @@ import '../Warranty/WarrantyPage.css';
 
 export const TermsPage: React.FC = () => {
   useEffect(() => {
-    document.title = 'TERMS OF SERVICE — Hunting Projectors & NAP Computers';
+    document.title = 'TERMS OF SERVICE — Nap Computers Electronicss';
     window.scrollTo(0, 0);
   }, []);
 

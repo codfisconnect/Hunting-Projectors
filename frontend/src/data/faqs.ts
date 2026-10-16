@@ -47,7 +47,7 @@ export const faqs: FAQItem[] = [
     category: 'technical',
     categoryLabel: 'Technical & Installation',
     question: 'Do I need a special projection screen, or can I project on a white wall?',
-    answer: 'All Hunting projectors can project directly onto a smooth, flat white or neutral matte wall. However, pairing your projector with an Ambient Light Rejecting (ALR) or high-contrast fixed frame screen dramatically improves black levels and contrast, particularly in living rooms with daylight.',
+    answer: 'All Nap Computers Electronicss projectors can project directly onto a smooth, flat white or neutral matte wall. However, pairing your projector with an Ambient Light Rejecting (ALR) or high-contrast fixed frame screen dramatically improves black levels and contrast, particularly in living rooms with daylight.',
   },
   {
     id: 'faq-7',
@@ -61,7 +61,7 @@ export const faqs: FAQItem[] = [
     category: 'support',
     categoryLabel: 'Warranty & Support',
     question: 'What warranty and after-sales support is provided?',
-    answer: 'All Hunting projectors come backed by official direct brand warranty from NAP Computers & Electronics. Technical guidance, installation consultations, and repair servicing are handled directly by our dedicated product specialists in Chennai. Extended warranty options and spare support are available.',
+    answer: 'All Nap Computers Electronicss projectors come backed by official direct brand warranty from NAP Computers & Electronics. Technical guidance, installation consultations, and repair servicing are handled directly by our dedicated product specialists in Chennai. Extended warranty options and spare support are available.',
   },
   {
     id: 'faq-9',
