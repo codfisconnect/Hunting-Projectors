@@ -258,9 +258,31 @@
 }
 
 .copyright-text {
-  color: #555C68;
-  font-size: 0.72rem;
-  font-family: var(--font-mono);
+  color: #7A8290;
+  font-size: 0.76rem;
+  line-height: 1.5;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-family: var(--font-body, system-ui, -apple-system, sans-serif);
+  letter-spacing: 0.02em;
+}
+
+.copyright-separator {
+  color: rgba(255, 255, 255, 0.2);
+  user-select: none;
+}
+
+.footer-highlight-gold {
+  color: #D4AF37; /* Champagne Gold */
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: color var(--transition-fast, 0.2s ease);
+}
+
+.footer-highlight-gold:hover {
+  color: #F3E5AB;
 }
 
 /* Responsive */

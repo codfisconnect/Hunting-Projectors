@@ -141,8 +141,12 @@ export const Footer: React.FC = () => {
             <Link to="/refund">Refund Policy</Link>
           </div>
 
-          <div className="copyright-text">
-            © {currentYear} Hunting Projectors. All Rights Reserved.
+          <div className="copyright-text" aria-label="Copyright and ownership">
+            <span>© 2026 Hunting Projectors</span>
+            <span className="copyright-separator">|</span>
+            <span className="footer-highlight-gold">NAP Computers</span>
+            <span className="copyright-separator">|</span>
+            <span>Web by <span className="footer-highlight-gold">Codfis Technologies</span></span>
           </div>
         </div>
       </div>
