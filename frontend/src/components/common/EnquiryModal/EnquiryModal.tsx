@@ -79,7 +79,7 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
   };
 
   const handleDirectWhatsApp = () => {
-    const text = `Hello Hunting Projectors!%0A%0AName: ${formData.fullName || 'Prospective Customer'}%0APhone: ${formData.phoneNumber || 'Not provided'}%0ACity: ${formData.city || 'India'}%0AInterested In: ${formData.productName}%0AMessage: ${formData.message || 'I would like to schedule a product demo or request pricing.'}`;
+    const text = `Hello Nap Computers Electronicss!%0A%0AName: ${formData.fullName || 'Prospective Customer'}%0APhone: ${formData.phoneNumber || 'Not provided'}%0ACity: ${formData.city || 'India'}%0AInterested In: ${formData.productName}%0AMessage: ${formData.message || 'I would like to schedule a product demo or request pricing.'}`;
     window.open(`https://wa.me/${siteConfig.contact.whatsapp}?text=${text}`, '_blank');
   };
 

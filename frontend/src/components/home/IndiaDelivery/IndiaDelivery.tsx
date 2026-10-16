@@ -51,7 +51,7 @@ export const IndiaDelivery: React.FC = () => {
             </h2>
 
             <p className="india-lead">
-              Hunting Projectors operates as a direct brand entity, cutting out commercial layers to provide cutting-edge 4K optical projection at unmatched factory value.
+              Nap Computers Electronicss operates as a direct brand entity, cutting out commercial layers to provide cutting-edge 4K optical projection at unmatched factory value.
             </p>
 
             <div className="india-entity-tag">

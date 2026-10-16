@@ -5,7 +5,7 @@ import '../Warranty/WarrantyPage.css';
 
 export const RefundPage: React.FC = () => {
   useEffect(() => {
-    document.title = 'REFUND & REPLACEMENT POLICY — Hunting Projectors';
+    document.title = 'REFUND & REPLACEMENT POLICY — Nap Computers Electronicss';
     window.scrollTo(0, 0);
   }, []);
 
@@ -29,7 +29,7 @@ export const RefundPage: React.FC = () => {
           <section className="policy-section-block">
             <h2>1. Policy Overview</h2>
             <p>
-              At Hunting Projectors, customer satisfaction and trust in our optical craftsmanship are paramount. Because all projection units are high-precision optoelectronic devices calibrated at our Chennai facility, we provide clear, transparent guidelines regarding replacements and refunds.
+              At Nap Computers Electronicss, customer satisfaction and trust in our optical craftsmanship are paramount. Because all projection units are high-precision optoelectronic devices calibrated at our Chennai facility, we provide clear, transparent guidelines regarding replacements and refunds.
             </p>
           </section>
 

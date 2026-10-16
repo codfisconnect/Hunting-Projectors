@@ -52,7 +52,7 @@ export const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ onOpenEn
       .then(async (prod) => {
         if (!isMounted) return;
         setProduct(prod);
-        document.title = `${prod.name} — Hunting Projectors`;
+        document.title = `${prod.name} — Nap Computers Electronicss`;
         try {
           const related = await getRelatedProducts(slug, 3);
           if (isMounted) setRelatedProducts(related);

@@ -11,8 +11,8 @@ export const faqs: FAQItem[] = [
     id: 'faq-1',
     category: 'general',
     categoryLabel: 'General & Brand',
-    question: 'What is Hunting Projectors, and who operates the brand?',
-    answer: 'Hunting is a premium projection brand engineered for cinema enthusiasts, creators, and modern homes. The brand is supplied, owned, and operated by NAP Computers & Electronics, established in Chennai, Tamil Nadu, India. Customers deal directly with the brand entity for genuine products, direct warranty, and technical service without intermediary markups.',
+    question: 'What is Nap Computers Electronicss, and who operates the brand?',
+    answer: 'Nap Computers Electronicss is a premium projection brand engineered for cinema enthusiasts, creators, and modern homes. The brand is supplied, owned, and operated by NAP Computers & Electronics, established in Chennai, Tamil Nadu, India. Customers deal directly with the brand entity for genuine products, direct warranty, and technical service without intermediary markups.',
   },
   {
     id: 'faq-2',

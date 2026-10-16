@@ -37,7 +37,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onOpenEnquiry }) => {
 
   const handleWhatsAppCheckout = () => {
     const itemsList = cart.map(item => `• ${item.product.name} (Qty: ${item.quantity}) - ₹${(item.product.price * item.quantity).toLocaleString('en-IN')}`).join('%0A');
-    const message = `Hello Hunting Projectors! I would like to place an order enquiry for the following equipment:%0A%0A${itemsList}%0A%0ATotal Estimated Amount: ₹${subtotal.toLocaleString('en-IN')}%0A%0APlease share delivery schedule and bank transfer/payment instructions.`;
+    const message = `Hello Nap Computers Electronicss! I would like to place an order enquiry for the following equipment:%0A%0A${itemsList}%0A%0ATotal Estimated Amount: ₹${subtotal.toLocaleString('en-IN')}%0A%0APlease share delivery schedule and bank transfer/payment instructions.`;
     window.open(`https://wa.me/${siteConfig.contact.whatsapp}?text=${message}`, '_blank');
   };
 

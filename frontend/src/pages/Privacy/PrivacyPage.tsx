@@ -5,7 +5,7 @@ import '../Warranty/WarrantyPage.css';
 
 export const PrivacyPage: React.FC = () => {
   useEffect(() => {
-    document.title = 'PRIVACY POLICY — Hunting Projectors & NAP Computers';
+    document.title = 'PRIVACY POLICY — Nap Computers Electronicss';
     window.scrollTo(0, 0);
   }, []);
 

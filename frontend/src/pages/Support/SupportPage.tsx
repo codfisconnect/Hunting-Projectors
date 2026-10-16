@@ -27,7 +27,7 @@ export const SupportPage: React.FC<SupportPageProps> = ({ onOpenEnquiry }) => {
   const [trackFeedback, setTrackFeedback] = useState<string | null>(null);
 
   useEffect(() => {
-    document.title = 'SUPPORT & SERVICE — Hunting Projectors Direct Help';
+    document.title = 'SUPPORT & SERVICE — Nap Computers Electronicss Direct Help';
     window.scrollTo(0, 0);
   }, []);
 

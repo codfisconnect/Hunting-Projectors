@@ -34,7 +34,7 @@ export const ContactPage: React.FC = () => {
   const [result, setResult] = useState<EnquirySubmissionResult | null>(null);
 
   useEffect(() => {
-    document.title = 'CONTACT & SHOWROOM — Hunting Projectors Chennai';
+    document.title = 'CONTACT & SHOWROOM — Nap Computers Electronicss Chennai';
     window.scrollTo(0, 0);
 
     let isMounted = true;
@@ -73,7 +73,7 @@ export const ContactPage: React.FC = () => {
   };
 
   const handleDirectWhatsApp = () => {
-    const text = `Hello Hunting Projectors!%0A%0AName: ${formData.fullName || 'Prospective Buyer'}%0APhone: ${formData.phoneNumber || 'Not provided'}%0ACity: ${formData.city}%0AInterested Model: ${formData.productName}%0AMessage: ${formData.message || 'I would like to inquire about demo availability and live pricing.'}`;
+    const text = `Hello Nap Computers Electronicss!%0A%0AName: ${formData.fullName || 'Prospective Buyer'}%0APhone: ${formData.phoneNumber || 'Not provided'}%0ACity: ${formData.city}%0AInterested Model: ${formData.productName}%0AMessage: ${formData.message || 'I would like to inquire about demo availability and live pricing.'}`;
     window.open(`https://wa.me/${siteConfig.contact.whatsapp}?text=${text}`, '_blank');
   };
 

@@ -103,9 +103,9 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenEnquiry }) => {
           <div className="about-entity-card">
             <div className="entity-left-col">
               <span className="eyebrow">DIRECT BUSINESS ENTITY</span>
-              <h2 className="display-section">THE BUSINESS BEHIND HUNTING</h2>
+              <h2 className="display-section">THE BUSINESS BEHIND NAP COMPUTERS ELECTRONICSS</h2>
               <p className="entity-desc">
-                Hunting Projectors is the dedicated consumer brand line supplied, owned, and operated by:
+                Nap Computers Electronicss is the dedicated consumer brand line supplied, owned, and operated by:
               </p>
 
               <div className="entity-formal-box">

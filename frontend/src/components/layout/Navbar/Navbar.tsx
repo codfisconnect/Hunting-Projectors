@@ -48,7 +48,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       <div className="container-wide navbar-container">
         
         {/* Brand Identity */}
-        <Link to="/" className="navbar-brand" aria-label="Hunting Projectors Home">
+        <Link to="/" className="navbar-brand" aria-label="Nap Computers Electronicss Home">
           <span className="brand-primary">{siteConfig.brand.name}</span>
           <span className="brand-secondary">{siteConfig.brand.subname}</span>
         </Link>

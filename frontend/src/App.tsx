@@ -92,13 +92,13 @@ export const App: React.FC = () => {
               target="_blank"
               rel="noopener noreferrer"
               className="sticky-whatsapp-bubble"
-              aria-label="Chat directly with Hunting Projectors specialist on WhatsApp"
+              aria-label="Chat directly with Nap Computers Electronicss specialist on WhatsApp"
               title="Chat with Chennai Specialist"
             >
               <div className="whatsapp-bubble-icon">
                 <MessageCircle size={24} />
               </div>
-              <span className="whatsapp-bubble-text">HUNTING CONCIERGE</span>
+              <span className="whatsapp-bubble-text">NAP CONCIERGE</span>
             </a>
 
           </div>

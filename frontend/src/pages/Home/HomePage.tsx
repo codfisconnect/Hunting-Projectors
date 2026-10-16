@@ -11,7 +11,7 @@ interface HomePageProps {
 
 export const HomePage: React.FC<HomePageProps> = ({ onOpenEnquiry }) => {
   useEffect(() => {
-    document.title = 'HUNTING PROJECTORS — 4K Laser & Cinema Optics Direct from Chennai';
+    document.title = 'Nap Computers Electronicss — 4K Laser & Cinema Optics Direct from Chennai';
     window.scrollTo(0, 0);
   }, []);
 

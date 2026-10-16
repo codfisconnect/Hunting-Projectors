@@ -42,8 +42,8 @@ export interface SiteConfig {
 
 export const siteConfig: SiteConfig = {
   brand: {
-    name: 'HUNTING',
-    subname: 'PROJECTORS',
+    name: 'NAP COMPUTERS',
+    subname: 'ELECTRONICSS',
     tagline: 'See Beyond. Light Changes Everything.',
     heroHeadline: 'SEE BEYOND.',
     heroSubheadline: 'Premium projection technology designed to transform everyday spaces into extraordinary viewing experiences.',
@@ -62,7 +62,7 @@ export const siteConfig: SiteConfig = {
     phoneDisplay: '+91 90422 92929',
     whatsapp: '919042292929',
     whatsappDisplay: '+91 90422 92929',
-    whatsappDefaultMessage: 'Hello Hunting Projectors team, I am interested in experiencing a Hunting Projector demo and would like more information.',
+    whatsappDefaultMessage: 'Hello Nap Computers Electronicss team, I am interested in experiencing a projector demo and would like more information.',
     email: 'contact@huntingprojectors.in',
     salesEmail: 'sales@huntingprojectors.in',
     address: {
@@ -77,7 +77,7 @@ export const siteConfig: SiteConfig = {
   },
   announcement: {
     enabled: true,
-    text: 'DIRECT HUNTING BRAND SUPPLY • PAN-INDIA DOORSTEP DISPATCH • CHENNAI SHOWROOM DEMO AVAILABLE',
+    text: 'DIRECT NAP COMPUTERS ELECTRONICSS SUPPLY • PAN-INDIA DOORSTEP DISPATCH • CHENNAI SHOWROOM DEMO AVAILABLE',
     tag: 'NEW LAUNCH DEMO',
   },
 };
@@ -85,10 +85,10 @@ export const siteConfig: SiteConfig = {
 export const getWhatsAppLink = (customMessage?: string, productSlug?: string) => {
   const base = `https://wa.me/${siteConfig.contact.whatsapp}`;
   const text = customMessage || (productSlug
-    ? `Hello Hunting Projectors! I am interested in learning more about the Hunting Projector (${productSlug}). Could you share live demo pricing and delivery details?`
+    ? `Hello Nap Computers Electronicss! I am interested in learning more about the projector (${productSlug}). Could you share live demo pricing and delivery details?`
     : siteConfig.contact.whatsappDefaultMessage);
   return `${base}?text=${encodeURIComponent(text)}`;
 };
 
 export const getPhoneLink = () => `tel:${siteConfig.contact.phone}`;
-export const getEmailLink = (subject = 'Enquiry: Hunting Projectors') => `mailto:${siteConfig.contact.email}?subject=${encodeURIComponent(subject)}`;
+export const getEmailLink = (subject = 'Enquiry: Nap Computers Electronicss') => `mailto:${siteConfig.contact.email}?subject=${encodeURIComponent(subject)}`;

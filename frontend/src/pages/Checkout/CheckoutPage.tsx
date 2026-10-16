@@ -132,7 +132,7 @@ export const CheckoutPage: React.FC = () => {
             </div>
             <h1 className="checkout-title" style={{ marginBottom: '8px' }}>Order Placed Successfully!</h1>
             <p className="checkout-subtitle">
-              Thank you for ordering with Hunting Projectors. Your hardware allocation is confirmed.
+              Thank you for ordering with Nap Computers Electronicss. Your hardware allocation is confirmed.
             </p>
             <div className="confirmation-order-num">
               ORDER REFERENCE: #{completedOrder.orderNumber}
