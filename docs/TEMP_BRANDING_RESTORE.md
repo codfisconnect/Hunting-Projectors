@@ -1,0 +1,76 @@
+# Temporary Branding Restoration Plan — Nap Computers Electronicss -> Hunting Projectors
+
+This document records the exact baseline and commit hashes required to safely restore the original **Hunting Projectors** branding once the temporary branding period concludes.
+
+---
+
+## 1. Commit Reference Points
+
+- **Original Baseline Commit (Before Rebranding):**  
+  `af0241aaeef47f43e3ff1c8feeafe9a50244ce2f`  
+  *(Commit message: `fix(vercel): add SPA route rewrite configuration to frontend/vercel.json`)*
+
+- **Customer-Facing Branding Update Commit:**  
+  `953f32bf580c53e6318ec697f412f8bf85ed4ee2`  
+  *(Commit message: `chore(branding): rebrand website as Nap Computers Electronicss`)*
+
+- **Dedicated Temporary Branding Finalization Commit:**  
+  `e62c38373c1785eeaa46fc799868f347cdc324b7`  
+  *(Commit message: `chore(branding): temporarily rebrand as Nap Computers Electronicss`)*
+
+---
+
+## 2. Modified Files in Temporary Branding
+
+1. `frontend/index.html` — Updated title & meta tags to Nap Computers Electronicss.
+2. `frontend/src/data/siteContent.ts` — Updated `brand.name` to `NAP COMPUTERS` and `brand.subname` to `ELECTRONICSS`, plus default enquiry & WhatsApp copy.
+3. `frontend/src/components/layout/Navbar/Navbar.tsx` — Updated brand aria-label.
+4. `frontend/src/components/layout/Footer/Footer.tsx` — Updated copyright text to:  
+   `© 2026 Nap Computers Electronicss. All Rights Reserved. | NAP Computers | Web by Codfis Technologies`
+5. `frontend/src/components/product/ProductPurchasePanel/ProductPurchasePanel.tsx` — Purchase header badge.
+6. `frontend/src/components/home/FeaturedProducts/FeaturedProducts.tsx` — Section aria-label.
+7. `frontend/src/components/home/IndiaDelivery/IndiaDelivery.tsx` — Direct entity description.
+8. `frontend/src/components/common/CartDrawer/CartDrawer.tsx` — WhatsApp order inquiry copy.
+9. `frontend/src/components/common/EnquiryModal/EnquiryModal.tsx` — WhatsApp demo inquiry copy.
+10. `frontend/src/App.tsx` — Concierge floating button text and aria-label.
+11. `frontend/src/data/faqs.ts` — Brand FAQ description.
+12. Customer-facing pages:
+    - `frontend/src/pages/Home/HomePage.tsx`
+    - `frontend/src/pages/Experience/ExperiencePage.tsx`
+    - `frontend/src/pages/Contact/ContactPage.tsx`
+    - `frontend/src/pages/FAQ/FAQPage.tsx`
+    - `frontend/src/pages/ProductDetails/ProductDetailsPage.tsx`
+    - `frontend/src/pages/About/AboutPage.tsx`
+    - `frontend/src/pages/Shipping/ShippingPage.tsx`
+    - `frontend/src/pages/Refund/RefundPage.tsx`
+    - `frontend/src/pages/Privacy/PrivacyPage.tsx`
+    - `frontend/src/pages/Warranty/WarrantyPage.tsx`
+    - `frontend/src/pages/Terms/TermsPage.tsx`
+    - `frontend/src/pages/Checkout/CheckoutPage.tsx`
+
+---
+
+## 3. How to Restore Original Branding (Safe Revert Procedure)
+
+When you are ready to restore the original **Hunting Projectors** branding, run the following safe Git commands.  
+*Do NOT use `git reset --hard` or force-push so other work is never lost.*
+
+```powershell
+Set-Location "D:\VS Code - Actual\Hunting-Projectors"
+
+# 1. Fetch latest remote state
+git fetch origin
+
+# 2. Revert the temporary branding commits cleanly without destroying subsequent work
+git revert --no-edit e62c38373c1785eeaa46fc799868f347cdc324b7 953f32bf580c53e6318ec697f412f8bf85ed4ee2
+
+# 3. Validate frontend build
+Set-Location "frontend"
+npm run build
+Set-Location ".."
+
+# 4. Push the restoration commit to main
+git push origin main
+```
+
+Upon pushing, Vercel will automatically trigger a new deployment and restore the original **Hunting Projectors** branding.
