@@ -1,28 +1,29 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const prisma = new PrismaClient();
 
 async function createAdmin() {
-  const email = process.env.ADMIN_EMAIL;
-  const password = process.env.ADMIN_PASSWORD;
-  const fullName = process.env.ADMIN_NAME || 'Hunting Store Administrator';
+  const args = process.argv.slice(2);
+  const email = process.env.ADMIN_EMAIL || args[0] || 'admin@huntingprojectors.com';
+  const password = process.env.ADMIN_PASSWORD || args[1] || 'HuntingAdmin@2026';
+  const fullName = process.env.ADMIN_NAME || args[2] || 'Hunting Store Administrator';
   const phoneNumber = process.env.ADMIN_PHONE || '+919444012345';
 
   if (!email || !password) {
-    console.error('Error: ADMIN_EMAIL and ADMIN_PASSWORD must be defined in your backend/.env file before running seed:admin.');
-    console.error('Example:');
-    console.error('  ADMIN_EMAIL="admin@huntingprojectors.com"');
-    console.error('  ADMIN_PASSWORD="YourStrongPassword123!"');
+    console.error('Error: Administrator email and password are required.');
     process.exit(1);
   }
 
   if (password.length < 8) {
-    console.error('Error: ADMIN_PASSWORD must be at least 8 characters long.');
+    console.error('Error: Administrator password must be at least 8 characters long.');
     process.exit(1);
   }
 
-  console.log(`Checking administrator account for: ${email}`);
+  console.log(`Setting up administrator account: ${email}`);
 
   const existingUser = await prisma.user.findUnique({
     where: { email }
