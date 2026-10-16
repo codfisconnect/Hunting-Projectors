@@ -146,7 +146,17 @@ export const Footer: React.FC = () => {
             <span className="copyright-separator">|</span>
             <span className="footer-highlight-gold">NAP Computers</span>
             <span className="copyright-separator">|</span>
-            <span>Web by <span className="footer-highlight-gold">Codfis Technologies</span></span>
+            <span>
+              Web by{' '}
+              <a
+                href="https://www.codfis.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-highlight-gold footer-link-gold"
+              >
+                Codfis Technologies
+              </a>
+            </span>
           </div>
         </div>
       </div>
