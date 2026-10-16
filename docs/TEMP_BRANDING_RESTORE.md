@@ -18,6 +18,10 @@ This document records the exact baseline and commit hashes required to safely re
   `e62c38373c1785eeaa46fc799868f347cdc324b7`  
   *(Commit message: `chore(branding): temporarily rebrand as Nap Computers Electronicss`)*
 
+- **Remaining Customer-Facing Branding References Commit:**  
+  `93f52c3a505fae223fa8c35292a472c914bfadab`  
+  *(Commit message: `chore(branding): complete remaining customer-facing references to Nap Computers Electronicss`)*
+
 ---
 
 ## 2. Modified Files in Temporary Branding
@@ -33,8 +37,9 @@ This document records the exact baseline and commit hashes required to safely re
 8. `frontend/src/components/common/CartDrawer/CartDrawer.tsx` — WhatsApp order inquiry copy.
 9. `frontend/src/components/common/EnquiryModal/EnquiryModal.tsx` — WhatsApp demo inquiry copy.
 10. `frontend/src/App.tsx` — Concierge floating button text and aria-label.
-11. `frontend/src/data/faqs.ts` — Brand FAQ description.
-12. Customer-facing pages:
+11. `frontend/src/data/faqs.ts` — Brand FAQ description and answers.
+12. `frontend/src/pages/ProjectorFinder/ProjectorFinderPage.tsx` — WhatsApp consultation copy.
+13. Customer-facing pages:
     - `frontend/src/pages/Home/HomePage.tsx`
     - `frontend/src/pages/Experience/ExperiencePage.tsx`
     - `frontend/src/pages/Contact/ContactPage.tsx`
@@ -62,7 +67,7 @@ Set-Location "D:\VS Code - Actual\Hunting-Projectors"
 git fetch origin
 
 # 2. Revert the temporary branding commits cleanly without destroying subsequent work
-git revert --no-edit e62c38373c1785eeaa46fc799868f347cdc324b7 953f32bf580c53e6318ec697f412f8bf85ed4ee2
+git revert --no-edit 93f52c3a505fae223fa8c35292a472c914bfadab e62c38373c1785eeaa46fc799868f347cdc324b7 953f32bf580c53e6318ec697f412f8bf85ed4ee2
 
 # 3. Validate frontend build
 Set-Location "frontend"
