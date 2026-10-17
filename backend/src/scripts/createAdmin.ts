@@ -17,7 +17,7 @@ async function createAdmin() {
     console.error('Error: Administrator email and password are required.');
     process.exit(1);
   }
-
+  // hello
   if (password.length < 8) {
     console.error('Error: Administrator password must be at least 8 characters long.');
     process.exit(1);
