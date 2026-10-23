@@ -35,7 +35,7 @@ This document records the exact baseline and commit hashes required to safely re
 3. `frontend/src/App.tsx` — Removed AnnouncementBar component import & rendering block; Concierge floating button text and aria-label.
 4. `frontend/src/components/layout/Navbar/Navbar.tsx` — Updated brand aria-label.
 5. `frontend/src/components/layout/Footer/Footer.tsx` — Updated copyright text to:  
-   `© 2026 Nap Computers Electronicss. All Rights Reserved. | NAP Computers | Web by Codfis Technologies`
+   `© 2026 Sadakka Tulla Moinuddeen. All rights reserved. | NAP Computers | Web by Codfis Technologies`
 6. `frontend/src/components/product/ProductPurchasePanel/ProductPurchasePanel.tsx` — Purchase header badge.
 7. `frontend/src/components/home/FeaturedProducts/FeaturedProducts.tsx` — Section aria-label.
 8. `frontend/src/components/home/IndiaDelivery/IndiaDelivery.tsx` — Direct entity description.
