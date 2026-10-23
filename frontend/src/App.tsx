@@ -4,7 +4,6 @@ import { MessageCircle } from 'lucide-react';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { WishlistProvider } from './context/WishlistContext';
-import { AnnouncementBar } from './components/layout/AnnouncementBar/AnnouncementBar';
 import { Navbar } from './components/layout/Navbar/Navbar';
 import { MobileDrawer } from './components/layout/MobileDrawer/MobileDrawer';
 import { Footer } from './components/layout/Footer/Footer';
@@ -34,10 +33,7 @@ export const App: React.FC = () => {
           <WishlistProvider>
             <div className="hunting-app-root">
             
-            {/* 1. Top Announcement Bar */}
-            <AnnouncementBar />
-
-            {/* 2. Global Navbar */}
+            {/* Global Navbar */}
             <Navbar
               onOpenSearch={() => setIsSearchOpen(true)}
               onOpenEnquiry={handleOpenEnquiry}

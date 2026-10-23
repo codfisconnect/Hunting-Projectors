@@ -42,8 +42,8 @@ export interface SiteConfig {
 
 export const siteConfig: SiteConfig = {
   brand: {
-    name: 'NAP COMPUTERS',
-    subname: 'ELECTRONICSS',
+    name: 'Nap Computers',
+    subname: 'Electronicss',
     tagline: 'See Beyond. Light Changes Everything.',
     heroHeadline: 'SEE BEYOND.',
     heroSubheadline: 'Premium projection technology designed to transform everyday spaces into extraordinary viewing experiences.',
@@ -76,9 +76,9 @@ export const siteConfig: SiteConfig = {
     supportHours: 'Monday – Saturday: 10:00 AM – 7:30 PM IST',
   },
   announcement: {
-    enabled: true,
-    text: 'DIRECT NAP COMPUTERS ELECTRONICSS SUPPLY • PAN-INDIA DOORSTEP DISPATCH • CHENNAI SHOWROOM DEMO AVAILABLE',
-    tag: 'NEW LAUNCH DEMO',
+    enabled: false,
+    text: '',
+    tag: '',
   },
 };
 

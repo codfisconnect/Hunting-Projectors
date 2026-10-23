@@ -22,21 +22,25 @@ This document records the exact baseline and commit hashes required to safely re
   `93f52c3a505fae223fa8c35292a472c914bfadab`  
   *(Commit message: `chore(branding): complete remaining customer-facing references to Nap Computers Electronicss`)*
 
+- **Announcement Ribbon Removal & Header Brand Display Fix Commit:**  
+  `778f1a6b57434879ceec2e49a88fa1caf90e23b8`  
+  *(Commit message: `fix(branding): remove announcement ribbon and correct brand display`)*
+
 ---
 
 ## 2. Modified Files in Temporary Branding
 
 1. `frontend/index.html` — Updated title & meta tags to Nap Computers Electronicss.
-2. `frontend/src/data/siteContent.ts` — Updated `brand.name` to `NAP COMPUTERS` and `brand.subname` to `ELECTRONICSS`, plus default enquiry & WhatsApp copy.
-3. `frontend/src/components/layout/Navbar/Navbar.tsx` — Updated brand aria-label.
-4. `frontend/src/components/layout/Footer/Footer.tsx` — Updated copyright text to:  
+2. `frontend/src/data/siteContent.ts` — Updated `brand.name` to `Nap Computers` and `brand.subname` to `Electronicss`, set `announcement.enabled` to `false`, plus default enquiry & WhatsApp copy.
+3. `frontend/src/App.tsx` — Removed AnnouncementBar component import & rendering block; Concierge floating button text and aria-label.
+4. `frontend/src/components/layout/Navbar/Navbar.tsx` — Updated brand aria-label.
+5. `frontend/src/components/layout/Footer/Footer.tsx` — Updated copyright text to:  
    `© 2026 Nap Computers Electronicss. All Rights Reserved. | NAP Computers | Web by Codfis Technologies`
-5. `frontend/src/components/product/ProductPurchasePanel/ProductPurchasePanel.tsx` — Purchase header badge.
-6. `frontend/src/components/home/FeaturedProducts/FeaturedProducts.tsx` — Section aria-label.
-7. `frontend/src/components/home/IndiaDelivery/IndiaDelivery.tsx` — Direct entity description.
-8. `frontend/src/components/common/CartDrawer/CartDrawer.tsx` — WhatsApp order inquiry copy.
-9. `frontend/src/components/common/EnquiryModal/EnquiryModal.tsx` — WhatsApp demo inquiry copy.
-10. `frontend/src/App.tsx` — Concierge floating button text and aria-label.
+6. `frontend/src/components/product/ProductPurchasePanel/ProductPurchasePanel.tsx` — Purchase header badge.
+7. `frontend/src/components/home/FeaturedProducts/FeaturedProducts.tsx` — Section aria-label.
+8. `frontend/src/components/home/IndiaDelivery/IndiaDelivery.tsx` — Direct entity description.
+9. `frontend/src/components/common/CartDrawer/CartDrawer.tsx` — WhatsApp order inquiry copy.
+10. `frontend/src/components/common/EnquiryModal/EnquiryModal.tsx` — WhatsApp demo inquiry copy.
 11. `frontend/src/data/faqs.ts` — Brand FAQ description and answers.
 12. `frontend/src/pages/ProjectorFinder/ProjectorFinderPage.tsx` — WhatsApp consultation copy.
 13. Customer-facing pages:
@@ -67,7 +71,7 @@ Set-Location "D:\VS Code - Actual\Hunting-Projectors"
 git fetch origin
 
 # 2. Revert the temporary branding commits cleanly without destroying subsequent work
-git revert --no-edit 93f52c3a505fae223fa8c35292a472c914bfadab e62c38373c1785eeaa46fc799868f347cdc324b7 953f32bf580c53e6318ec697f412f8bf85ed4ee2
+git revert --no-edit 778f1a6b57434879ceec2e49a88fa1caf90e23b8 93f52c3a505fae223fa8c35292a472c914bfadab e62c38373c1785eeaa46fc799868f347cdc324b7 953f32bf580c53e6318ec697f412f8bf85ed4ee2
 
 # 3. Validate frontend build
 Set-Location "frontend"
