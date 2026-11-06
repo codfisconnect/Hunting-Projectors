@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Play, ChevronDown, Sparkles } from 'lucide-react';
+import { ArrowRight, ChevronDown, Sparkles } from 'lucide-react';
 import { getProducts } from '../../../services/productService';
 import { Product } from '../../../types/product';
 import { siteConfig } from '../../../data/siteContent';
@@ -89,21 +89,53 @@ export const HeroExperience: React.FC<HeroExperienceProps> = ({ onOpenEnquiry })
           </p>
         </div>
 
-        {/* Centerpiece Hero Projector */}
+        {/* Centerpiece Luxury Hero Cinema Stage */}
         <div className="hero-projector-stage">
-          <div 
-            className="hero-projector-parallax-box"
-            style={{
-              transform: `perspective(1000px) rotateY(${mousePos.x * 6}deg) rotateX(${-mousePos.y * 4}deg) translateY(${mousePos.y * -6}px)`
-            }}
-          >
-            <img 
-              src={flagship?.images?.hero || '/assets/products/hunting-vision-x1-hero.svg'} 
-              alt={flagship?.name || "Hunting Flagship Projector"} 
-              className="hero-projector-img"
-              draggable={false}
-            />
-            <div className="hero-lens-flare" />
+          <div className="hero-cinema-viewport">
+            <picture>
+              <source 
+                media="(max-width: 768px)" 
+                srcSet="/assets/hero/hunting-luxury-home-cinema-hero-mobile.webp" 
+                type="image/webp" 
+              />
+              <source 
+                media="(max-width: 768px)" 
+                srcSet="/assets/hero/hunting-luxury-home-cinema-hero-mobile.jpg" 
+                type="image/jpeg" 
+              />
+              <source 
+                srcSet="/assets/hero/hunting-luxury-home-cinema-hero-2400.webp" 
+                type="image/webp" 
+              />
+              <img 
+                src="/assets/hero/hunting-luxury-home-cinema-hero-2400.jpg" 
+                alt="Hunting 4K Laser Cinema Projector in Luxury Living Room" 
+                className="hero-cinema-img"
+                fetchPriority="high"
+                loading="eager"
+                decoding="async"
+                draggable={false}
+              />
+            </picture>
+
+            {/* Subtle atmospheric vignette */}
+            <div className="hero-visual-vignette" />
+
+            {/* Editorial Glass Overlay Badges */}
+            <div className="hero-glass-pill pill-bottom-left">
+              <span className="pill-dot" />
+              <div className="pill-content">
+                <span className="pill-title">HUNTING OPTICAL ENGINE</span>
+                <span className="pill-meta">Direct Laser • Precision Glass</span>
+              </div>
+            </div>
+
+            <div className="hero-glass-pill pill-top-right">
+              <div className="pill-content align-right">
+                <span className="pill-title">UP TO 150" CINEMATIC SCALE</span>
+                <span className="pill-meta">Ambient Light Rejecting Display</span>
+              </div>
+            </div>
           </div>
         </div>
 
