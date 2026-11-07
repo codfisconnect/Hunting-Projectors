@@ -76,3 +76,4 @@ export const SCREEN_SIZE_OPTIONS: ScreenSizeOption[] = [
     },
   },
 ];
+
