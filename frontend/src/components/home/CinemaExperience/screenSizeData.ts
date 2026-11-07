@@ -1,9 +1,31 @@
 // ============================================================
 // Centralized Screen Size & Wildlife Comparison Data
-// All dimensions use 16:9 aspect ratio
+// All screens: 16:9 aspect ratio
 // Formula: Width = diag * 2.54 * 16 / sqrt(16²+9²)
 //          Height = diag * 2.54 * 9 / sqrt(16²+9²)
+//
+// Physical scale: all sizes (screen + animal) share ONE
+// conversion factor — PX_PER_CM_BASE pixels per centimetre.
+// The comparison stage CSS scales the entire stage uniformly
+// via transform/scale, so internal proportions stay correct.
 // ============================================================
+
+export interface AnimalData {
+  /** Familiar common name only — no scientific names */
+  commonName: string;
+  imagePath: string;
+  /**
+   * Representative adult shoulder height (cm).
+   * Used to calculate the animal's rendered pixel height
+   * at the shared physical scale.
+   * Sources: wildlife reference ranges (midpoint used).
+   *   Chital:        ~90 cm shoulder
+   *   Lion:         ~120 cm shoulder
+   *   Indian Gaur:  ~175 cm shoulder
+   *   Asian Elephant: ~250 cm shoulder
+   */
+  shoulderHeightCm: number;
+}
 
 export interface ScreenSizeOption {
   diagonalInches: number;
@@ -12,19 +34,16 @@ export interface ScreenSizeOption {
   animal: AnimalData;
 }
 
-export interface AnimalData {
-  name: string;
-  commonName: string;
-  imagePath: string;
-  /** Approximate adult head-to-body length range (cm), tail excluded */
-  bodyLengthRange: string;
-  /** Short description for the info callout */
-  description: string;
-}
-
-// Physical scale: pixels per cm in the visualization stage
-// We use a reference of ~2.0 px/cm at base, scaled responsively via CSS
-export const PX_PER_CM_BASE = 2.0;
+/**
+ * Base physical scale: pixels per centimetre.
+ * Both the screen and each animal use this same value.
+ * The stage container is scaled down responsively by CSS.
+ *
+ * At 1.6 px/cm:
+ *   80" screen → 177 × 100 cm → 283 × 160 px  (smallest)
+ *  140" screen → 310 × 174 cm → 496 × 278 px  (1.75× larger)
+ */
+export const PX_PER_CM = 1.6;
 
 export const SCREEN_SIZE_OPTIONS: ScreenSizeOption[] = [
   {
@@ -32,11 +51,9 @@ export const SCREEN_SIZE_OPTIONS: ScreenSizeOption[] = [
     widthCm: 177,
     heightCm: 100,
     animal: {
-      name: 'Chital',
       commonName: 'Spotted Deer',
       imagePath: '/assets/experience/animals/spotted-deer.png',
-      bodyLengthRange: '110–145 cm',
-      description: 'Adult spotted deer (chital) have a head-to-body length of roughly 110–145 cm, making them agile and compact.',
+      shoulderHeightCm: 90,
     },
   },
   {
@@ -44,11 +61,9 @@ export const SCREEN_SIZE_OPTIONS: ScreenSizeOption[] = [
     widthCm: 221,
     heightCm: 125,
     animal: {
-      name: 'Lion',
       commonName: 'Lion',
       imagePath: '/assets/experience/animals/lion.png',
-      bodyLengthRange: '170–250 cm',
-      description: 'An adult male lion measures approximately 170–250 cm head-to-body — one of the largest big cats on Earth.',
+      shoulderHeightCm: 120,
     },
   },
   {
@@ -56,11 +71,9 @@ export const SCREEN_SIZE_OPTIONS: ScreenSizeOption[] = [
     widthCm: 266,
     heightCm: 149,
     animal: {
-      name: 'Bos gaurus',
       commonName: 'Indian Gaur',
       imagePath: '/assets/experience/animals/indian-gaur.png',
-      bodyLengthRange: '250–330 cm',
-      description: 'The Indian Gaur (Bison) is Asia\'s largest wild bovine at 250–330 cm head-to-body length.',
+      shoulderHeightCm: 175,
     },
   },
   {
@@ -68,12 +81,9 @@ export const SCREEN_SIZE_OPTIONS: ScreenSizeOption[] = [
     widthCm: 310,
     heightCm: 174,
     animal: {
-      name: 'Elephas maximus',
-      commonName: 'Asian Elephant',
+      commonName: 'Elephant',
       imagePath: '/assets/experience/animals/asian-elephant.png',
-      bodyLengthRange: '550–640 cm',
-      description: 'The Asian Elephant is the largest land animal in Asia, with a head-to-body length of 550–640 cm.',
+      shoulderHeightCm: 250,
     },
   },
 ];
-
