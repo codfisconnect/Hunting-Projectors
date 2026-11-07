@@ -3,18 +3,16 @@ import {
   getProducts,
   getProductBySlug,
   getProductById,
-  createProduct,
-  updateProduct,
-  deleteProduct,
 } from '../controllers/productController.js';
 
 const router = Router();
 
+// Public read-only product endpoints
 router.get('/', getProducts);
 router.get('/id/:id', getProductById);
 router.get('/:slug', getProductBySlug);
-router.post('/', createProduct);
-router.put('/:id', updateProduct);
-router.delete('/:id', deleteProduct);
+
+// POST, PUT, DELETE are intentionally absent here.
+// All product mutation operations are protected under /api/admin/products.
 
 export default router;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
   LayoutDashboard, 
@@ -10,27 +10,24 @@ import {
   Bell, 
   Settings, 
   LogOut, 
-  ShieldCheck, 
-  ArrowUpRight, 
   TrendingUp, 
   AlertCircle, 
   CheckCircle, 
   Clock, 
   RefreshCw,
   Search,
-  ChevronRight,
   ExternalLink,
   Plus,
   Edit,
   Trash2,
-  Upload,
   Eye,
-  FileText
+  RotateCcw,
+  PowerOff
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { adminService, AdminStats } from '../../services/adminService';
-import { getProducts } from '../../services/productService';
 import { Product } from '../../types/product';
+import { ProductForm } from '../../components/admin/ProductForm';
 import './AdminDashboardPage.css';
 
 type AdminTab = 'overview' | 'orders' | 'products' | 'inventory' | 'customers' | 'enquiries' | 'notifications' | 'settings';
@@ -92,7 +89,7 @@ export const AdminDashboardPage: React.FC = () => {
       setUnreadNotificationsCount(overview.stats.unreadNotifications);
 
       // Load products for products tab
-      const prodsRes = await getProducts({ limit: 50 });
+      const prodsRes = await adminService.getAdminProducts({ limit: 100 });
       setProductsList(prodsRes.products);
     } catch (err: any) {
       console.warn('Admin overview fetch warning (offline/fallback mode active):', err);

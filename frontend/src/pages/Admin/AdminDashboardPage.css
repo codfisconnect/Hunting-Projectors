@@ -872,3 +872,319 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+/* ==========================================================================
+   PRODUCT MANAGEMENT — FILTER BAR, ACTION BUTTONS, STATUS BADGES
+   ========================================================================== */
+
+.products-action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.products-filters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.products-filters .search-input-wrapper {
+  flex: 1;
+  min-width: 200px;
+  max-width: 320px;
+}
+
+.product-status-select {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.product-status-select:focus {
+  outline: none;
+  border-color: var(--accent-gold);
+}
+
+.btn-add-product {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--accent-gold);
+  color: #0A0C10;
+  border: none;
+  border-radius: 8px;
+  padding: 9px 18px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  transition: opacity 0.15s;
+  flex-shrink: 0;
+}
+
+.btn-add-product:hover { opacity: 0.85; }
+
+.table-actions-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.04);
+  color: #ccc;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.btn-icon:hover { background: rgba(255,255,255,0.1); color: #fff; }
+.btn-icon.danger:hover { background: rgba(220,60,60,0.15); color: #f87171; border-color: rgba(220,60,60,0.3); }
+.btn-icon.success:hover { background: rgba(50,200,100,0.15); color: #4ade80; border-color: rgba(50,200,100,0.3); }
+
+.status-badge.inactive {
+  background: rgba(100, 100, 100, 0.2);
+  color: #9ca3af;
+  border: 1px solid rgba(100,100,100,0.3);
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.status-badge.active {
+  background: rgba(50, 200, 100, 0.12);
+  color: #4ade80;
+  border: 1px solid rgba(50,200,100,0.25);
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.product-thumb-sm {
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  border-radius: 6px;
+  background: #1a1d24;
+}
+
+.product-thumb-placeholder {
+  width: 44px;
+  height: 44px;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.2);
+  font-size: 0.65rem;
+}
+
+/* ==========================================================================
+   PRODUCT FORM MODAL
+   ========================================================================== */
+
+.pf-modal {
+  position: relative;
+  background: #0D0F15;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px;
+  width: min(900px, 96vw);
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.9);
+  overflow: hidden;
+}
+
+.pf-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  flex-shrink: 0;
+}
+
+.pf-modal-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.01em;
+}
+
+.pf-error-banner {
+  background: rgba(220, 60, 60, 0.12);
+  border-left: 3px solid #f87171;
+  color: #fca5a5;
+  font-size: 0.84rem;
+  padding: 10px 20px;
+  flex-shrink: 0;
+}
+
+.pf-form {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.pf-form-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pf-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 14px 24px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  flex-shrink: 0;
+}
+
+/* Collapsible sections */
+.pf-section {
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.pf-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: rgba(255,255,255,0.03);
+  border: none;
+  color: #e5e7eb;
+  font-size: 0.84rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.pf-section-header:hover { background: rgba(255,255,255,0.06); }
+
+.pf-section-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+/* Field layout helpers */
+.pf-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.pf-row-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 14px;
+}
+
+@media (max-width: 600px) {
+  .pf-row-2, .pf-row-3 { grid-template-columns: 1fr; }
+}
+
+.pf-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.pf-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #d1d5db;
+  letter-spacing: 0.03em;
+}
+
+.pf-required { color: #f87171; }
+
+.pf-hint {
+  font-size: 0.72rem;
+  color: #6b7280;
+}
+
+.pf-input {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 7px;
+  color: #fff;
+  font-size: 0.84rem;
+  padding: 8px 11px;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+}
+
+.pf-input:focus {
+  outline: none;
+  border-color: var(--accent-gold);
+  background: rgba(255,255,255,0.07);
+}
+
+.pf-input option { background: #0D0F15; color: #fff; }
+
+.pf-textarea {
+  resize: vertical;
+  min-height: 72px;
+  line-height: 1.5;
+  font-family: inherit;
+}
+
+/* Flags & toggles */
+.pf-flags-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pf-toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.84rem;
+  color: #d1d5db;
+  cursor: pointer;
+}
+
+.pf-checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent-gold);
+  cursor: pointer;
+}

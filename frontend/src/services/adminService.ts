@@ -1,4 +1,6 @@
 import { fetchJson } from './api';
+import { normalizeProduct } from './productService';
+import { Product } from '../types/product';
 
 export interface AdminStats {
   totalOrders: number;
@@ -37,6 +39,14 @@ export interface AdminCustomerFilters {
   search?: string;
   page?: number;
   limit?: number;
+}
+
+export interface AdminProductFilters {
+  search?: string;
+  category?: string;
+  status?: 'all' | 'active' | 'inactive';
+  limit?: number;
+  offset?: number;
 }
 
 class AdminService {
@@ -144,11 +154,81 @@ class AdminService {
     return res.data;
   }
 
+  // ── Admin Product Management ────────────────────────────────────────────────
+
+  /** Fetch all products (including inactive) for admin panel. */
+  async getAdminProducts(filters?: AdminProductFilters): Promise<{ products: Product[]; total: number }> {
+    const params = new URLSearchParams();
+    params.append('includeInactive', 'true');
+    if (filters?.search) params.append('q', filters.search);
+    if (filters?.category && filters.category !== 'all') params.append('category', filters.category);
+    if (filters?.limit) params.append('limit', String(filters.limit));
+    if (filters?.offset) params.append('offset', String(filters.offset));
+
+    const res = await fetchJson<{ success: boolean; data: any[]; pagination?: any }>(`/admin/products?${params.toString()}`);
+    const rawList = Array.isArray(res.data) ? res.data : [];
+    const products = rawList.map(normalizeProduct);
+    // Client-side filter by active/inactive status after normalization
+    const statusFilter = filters?.status;
+    const filtered = statusFilter === 'active'
+      ? products.filter(p => p.isActive)
+      : statusFilter === 'inactive'
+        ? products.filter(p => !p.isActive)
+        : products;
+    return { products: filtered, total: res.pagination?.total ?? filtered.length };
+  }
+
+  /** Fetch a single product by ID for admin edit form. */
+  async getAdminProduct(id: string): Promise<Product> {
+    const res = await fetchJson<{ success: boolean; data: any }>(`/admin/products/${id}`);
+    return normalizeProduct(res.data);
+  }
+
+  /** Create a new product. */
+  async createProduct(data: Record<string, any>): Promise<Product> {
+    const res = await fetchJson<{ success: boolean; data: any }>('/admin/products', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+    return normalizeProduct(res.data);
+  }
+
+  /** Update an existing product (partial update — only provided fields change). */
+  async updateProduct(id: string, data: Record<string, any>): Promise<Product> {
+    const res = await fetchJson<{ success: boolean; data: any }>(`/admin/products/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data)
+    });
+    return normalizeProduct(res.data);
+  }
+
+  /** Soft-delete (deactivate) a product. */
+  async deactivateProduct(id: string): Promise<void> {
+    await fetchJson<{ success: boolean }>(`/admin/products/${id}`, {
+      method: 'DELETE'
+      // No ?hard=true → soft delete sets isActive=false
+    });
+  }
+
+  /** Reactivate a previously deactivated product. */
+  async reactivateProduct(id: string): Promise<Product> {
+    const res = await fetchJson<{ success: boolean; data: any }>(`/admin/products/${id}/reactivate`, {
+      method: 'PATCH'
+    });
+    return normalizeProduct(res.data);
+  }
+
+  /**
+   * Upload a product image.
+   * Uses hunting_auth_token (consistent with api.ts fetchJson).
+   * NOTE: Cloudinary integration is Phase 3; this endpoint saves to local uploads for now.
+   */
   async uploadProductImage(file: File): Promise<{ url: string; filename: string }> {
     const formData = new FormData();
     formData.append('image', file);
 
-    const token = localStorage.getItem('hunting_token');
+    // Use the same token key as api.ts (hunting_auth_token)
+    const token = typeof window !== 'undefined' ? localStorage.getItem('hunting_auth_token') : null;
     const headers: Record<string, string> = {};
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
