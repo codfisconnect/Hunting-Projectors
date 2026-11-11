@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, ChevronDown, Sparkles } from 'lucide-react';
 import { getProducts } from '../../../services/productService';
 import { Product } from '../../../types/product';
-import { siteConfig } from '../../../data/siteContent';
 import './HeroExperience.css';
 
 interface HeroExperienceProps {
@@ -15,7 +14,6 @@ export const HeroExperience: React.FC<HeroExperienceProps> = ({ onOpenEnquiry })
   const [flagship, setFlagship] = useState<Product | null>(null);
   const heroRef = useRef<HTMLDivElement>(null);
 
-  // Fetch flagship product (kept for possible future use)
   useEffect(() => {
     let isMounted = true;
     getProducts({ flagship: true, limit: 1 })
@@ -32,7 +30,7 @@ export const HeroExperience: React.FC<HeroExperienceProps> = ({ onOpenEnquiry })
     };
   }, []);
 
-  // Track mouse for ambient glow effect
+  // Track mouse for ambient subtle glow
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!heroRef.current) return;
@@ -54,7 +52,7 @@ export const HeroExperience: React.FC<HeroExperienceProps> = ({ onOpenEnquiry })
 
   return (
     <section ref={heroRef} className="hero-experience-section" aria-label="Hero Launch Experience">
-      {/* Full‑bleed background image */}
+      {/* Full-bleed background image */}
       <div className="hero-background">
         <picture>
           <source media="(max-width: 768px)" srcSet="/assets/hero/hunting-luxury-home-cinema-hero-mobile.webp" type="image/webp" />
@@ -82,24 +80,18 @@ export const HeroExperience: React.FC<HeroExperienceProps> = ({ onOpenEnquiry })
         }}
       />
 
-      {/* Content overlay */}
-      <div className="container hero-container">
-        <div className="hero-left">
+      {/* Hero Content Overlay positioned cleanly in the upper-left */}
+      <div className="hero-container">
+        <div className="hero-card-panel">
           <div className="hero-eyebrow-row">
             <div className="hero-badge">
-              <Sparkles size={13} className="hero-badge-icon" />
+              <Sparkles size={12} className="hero-badge-icon" />
               <span>PREMIUM HOME CINEMA</span>
             </div>
-            <span className="hero-brand-tag">
-              {siteConfig.brand.name} {siteConfig.brand.subname} • CHENNAI, INDIA
-            </span>
           </div>
 
           <div className="hero-title-area">
-            <h1 className="hero-main-title">
-              <span className="title-line">SEE</span>
-              <span className="title-line highlight">BEYOND.</span>
-            </h1>
+            <h1 className="hero-main-title">SEE BEYOND.</h1>
             <p className="hero-subtitle">
               Laser-sharp 4K optical projection engineered for cinematic immersion at home.
             </p>
@@ -108,15 +100,13 @@ export const HeroExperience: React.FC<HeroExperienceProps> = ({ onOpenEnquiry })
           <div className="hero-cta-group">
             <Link to="/products" className="btn-primary hero-btn-main">
               <span>EXPLORE PROJECTORS</span>
-              <ArrowRight size={17} />
+              <ArrowRight size={15} />
             </Link>
             <Link to="/projector-finder" className="btn-secondary hero-btn-sub">
               <span>FIND YOUR PROJECTOR</span>
             </Link>
           </div>
         </div>
-        {/* Right side placeholder for possible future overlay badges */}
-        <div className="hero-right" />
 
         <button
           type="button"
