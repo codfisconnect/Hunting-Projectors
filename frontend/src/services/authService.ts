@@ -44,6 +44,22 @@ export const authService = {
     return res.data;
   },
 
+  async forgotPassword(email: string): Promise<{ message: string }> {
+    const res = await fetchJson<{ success: boolean; data: { message: string } }>('/auth/forgot-password', {
+      method: 'POST',
+      body: JSON.stringify({ email }),
+    });
+    return res.data;
+  },
+
+  async resetPassword(token: string, newPassword: string): Promise<{ success: boolean; message: string }> {
+    const res = await fetchJson<{ success: boolean; data: { success: boolean; message: string } }>('/auth/reset-password', {
+      method: 'POST',
+      body: JSON.stringify({ token, newPassword }),
+    });
+    return res.data;
+  },
+
   async updateProfile(data: { fullName?: string; phoneNumber?: string; email?: string }): Promise<User> {
     const res = await fetchJson<{ success: boolean; data: User }>('/customers/me', {
       method: 'PATCH',

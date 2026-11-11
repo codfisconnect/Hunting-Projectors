@@ -11,7 +11,9 @@ export interface AdminStats {
   completedOrders: number;
   cancelledOrders: number;
   totalCustomers: number;
+  totalProducts: number;
   activeProducts: number;
+  totalCategories: number;
   lowStockProducts: number;
   pendingEnquiries: number;
   failedPayments: number;
@@ -246,6 +248,35 @@ class AdminService {
     }
 
     return data.data;
+  }
+
+
+  // Collections / Categories Management
+  async getCategories(includeInactive = true): Promise<any[]> {
+    const res = await fetchJson<{ success: boolean; data: any[] }>(`/admin/categories?includeInactive=${includeInactive}`);
+    return res.data;
+  }
+
+  async createCategory(data: { name: string; slug: string; subtitle?: string; description?: string }): Promise<any> {
+    const res = await fetchJson<{ success: boolean; data: any }>('/admin/categories', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+    return res.data;
+  }
+
+  async updateCategory(id: string, data: Partial<{ name: string; slug: string; subtitle?: string; description?: string; isActive?: boolean }>): Promise<any> {
+    const res = await fetchJson<{ success: boolean; data: any }>(`/admin/categories/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data)
+    });
+    return res.data;
+  }
+
+  async deleteCategory(id: string): Promise<void> {
+    await fetchJson<{ success: boolean }>(`/admin/categories/${id}`, {
+      method: 'DELETE'
+    });
   }
 }
 

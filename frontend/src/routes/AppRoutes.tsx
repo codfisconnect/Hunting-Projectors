@@ -17,6 +17,7 @@ import { PrivacyPage } from '../pages/Privacy/PrivacyPage';
 import { TermsPage } from '../pages/Terms/TermsPage';
 import { LoginPage } from '../pages/Auth/LoginPage';
 import { RegisterPage } from '../pages/Auth/RegisterPage';
+import { ResetPasswordPage } from '../pages/Auth/ResetPasswordPage';
 import { AccountPage } from '../pages/Account/AccountPage';
 import { CheckoutPage } from '../pages/Checkout/CheckoutPage';
 import { OrdersPage } from '../pages/Orders/OrdersPage';
@@ -48,6 +49,7 @@ export const AppRoutes: React.FC<AppRoutesProps> = ({ onOpenEnquiry }) => {
       {/* Customer Commerce Routes */}
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
+      <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route path="/account" element={<AccountPage />} />
       <Route path="/checkout" element={<CheckoutPage />} />
       <Route path="/orders" element={<OrdersPage />} />
