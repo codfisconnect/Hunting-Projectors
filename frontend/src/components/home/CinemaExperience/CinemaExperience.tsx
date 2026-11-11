@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { SCREEN_SIZE_OPTIONS, ScreenSizeOption, PX_PER_CM } from './screenSizeData';
+import { SCREEN_SIZE_OPTIONS, ScreenSizeOption, PX_PER_CM, STAGE_MASTER_W, STAGE_MASTER_H } from './screenSizeData';
 import './CinemaExperience.css';
 
 interface CinemaExperienceProps {
@@ -45,32 +45,82 @@ interface ComparisonStageProps {
 
 const ComparisonStage: React.FC<ComparisonStageProps> = ({ selected, fadeKey }) => {
   const { diagonalInches, widthCm, heightCm, animal } = selected;
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [stageScale, setStageScale] = useState(1);
 
   // ── Physical sizes in pixels at the base scale ──
   const screenW = Math.round(widthCm * PX_PER_CM);
   const screenH = Math.round(heightCm * PX_PER_CM);
 
-  // Animal height in pixels (shoulder height → total body ~1.35× shoulder for quadrupeds)
-  const animalBodyHeightPx = Math.round(animal.shoulderHeightCm * 1.35 * PX_PER_CM);
+  // Animal visible height & width derived cleanly from true physical height & aspect ratio
+  const animalHeightPx = Math.round(animal.referenceHeightCm * PX_PER_CM);
+  const animalWidthPx = Math.round(animalHeightPx * animal.visibleAspect);
 
-  // ── Stage canvas size: needs to fit the largest possible screen ──
-  // 140" → 310 cm wide → 310 * PX_PER_CM = 496 px
-  // Add animal (up to ~108 cm / 1.35 × 250 × 1.6 = 540 px for elephant body height,
-  // but width is usually ≈ body-length / 2 for a compact side view ≈ 160 px gap)
-  // We define a fixed canvas and let CSS scale the whole thing.
-  const CANVAS_W = Math.round(310 * PX_PER_CM) + 220; // screen + animal gap + animal width
-  const CANVAS_H = Math.round(250 * 1.35 * PX_PER_CM) + 60; // tallest animal + padding
+  // Layout spacing inside canvas
+  const LEFT_OFFSET = 55; // space for height measurement arrow on left
+  const GAP = 28;         // gap between screen and animal
+  const animalLeft = LEFT_OFFSET + screenW + GAP;
+
+  // Global stage canvas width and height is constant across all options
+  const canvasW = STAGE_MASTER_W;
+  const canvasH = STAGE_MASTER_H;
+
+  // Responsive scale: derived purely from available container width against master canvasW
+  useEffect(() => {
+    const handleResize = () => {
+      if (!containerRef.current) return;
+      const availableW = containerRef.current.clientWidth;
+      if (availableW > 0) {
+        // Uniform scale factor based on container width vs master canvas width
+        const nextScale = Math.min(1, availableW / canvasW);
+        setStageScale(nextScale);
+      }
+    };
+
+    handleResize();
+
+    const ro = new ResizeObserver(() => {
+      handleResize();
+    });
+
+    if (containerRef.current) {
+      ro.observe(containerRef.current);
+    }
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [canvasW]);
 
   return (
     <div
-      className="wc-stage-scaler"
-      style={{ '--canvas-w': `${CANVAS_W}px`, '--canvas-h': `${CANVAS_H}px` } as React.CSSProperties}
-      aria-label="Screen and animal size comparison"
+      ref={containerRef}
+      className="wc-stage-scaler-container"
+      style={{
+        width: '100%',
+        height: `${Math.round(canvasH * stageScale)}px`,
+        position: 'relative',
+        display: 'flex',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
+        overflow: 'hidden',
+      }}
     >
-      {/* Inner canvas at natural pixel size; CSS scales this down uniformly */}
-      <div className="wc-canvas" style={{ width: CANVAS_W, height: CANVAS_H }}>
-
-        {/* ── Ground baseline ── */}
+      <div
+        className="wc-stage-scaler"
+        style={{
+          width: `${canvasW}px`,
+          height: `${canvasH}px`,
+          transform: `scale(${stageScale})`,
+          transformOrigin: 'top left',
+          position: 'relative',
+          flexShrink: 0,
+        }}
+        aria-label="Screen and animal size comparison"
+      >
+        {/* Ground baseline */}
         <div className="wc-ground" style={{ bottom: 0 }} aria-hidden="true" />
 
         {/* ── Screen block ── */}
@@ -79,8 +129,8 @@ const ComparisonStage: React.FC<ComparisonStageProps> = ({ selected, fadeKey }) 
           style={{
             width: screenW,
             height: screenH,
-            bottom: 0,          // screen sits on ground
-            left: 60,           // leave room for height measurement arrow
+            bottom: 0,          // screen sits on ground baseline
+            left: LEFT_OFFSET,  // room for left measurement arrows
           }}
         >
           {/* Width measurement above */}
@@ -101,7 +151,15 @@ const ComparisonStage: React.FC<ComparisonStageProps> = ({ selected, fadeKey }) 
             role="img"
             aria-label={`${diagonalInches}-inch projection screen, ${widthCm} by ${heightCm} centimetres`}
           >
-            {/* Cinematic grid */}
+            {/* Cinematic landscape background */}
+            <img
+              src="/assets/experience/landscape.jpg"
+              alt="Cinematic 4K projection preview"
+              className="wc-screen-bg-image"
+              loading="lazy"
+            />
+
+            {/* Cinematic grid overlay */}
             <div className="wc-screen-grid" aria-hidden="true" />
             {/* Gold inner border glow */}
             <div className="wc-screen-border" aria-hidden="true" />
@@ -131,9 +189,10 @@ const ComparisonStage: React.FC<ComparisonStageProps> = ({ selected, fadeKey }) 
           key={`animal-${fadeKey}`}
           className="wc-animal-block"
           style={{
-            height: animalBodyHeightPx,
-            bottom: 0,          // feet on ground
-            left: 60 + screenW + 32, // right of screen + gap
+            width: animalWidthPx,
+            height: animalHeightPx,
+            bottom: 0,          // feet on ground baseline
+            left: animalLeft,   // immediately to the right with balanced gap
           }}
         >
           <img
@@ -143,14 +202,10 @@ const ComparisonStage: React.FC<ComparisonStageProps> = ({ selected, fadeKey }) 
             loading="lazy"
             draggable={false}
             onError={(e) => {
-              // Hide broken image gracefully
               (e.currentTarget as HTMLImageElement).style.opacity = '0';
             }}
           />
-          {/* Animal label */}
-          <span className="wc-animal-label">{animal.commonName}</span>
         </div>
-
       </div>
     </div>
   );
@@ -160,7 +215,7 @@ const ComparisonStage: React.FC<ComparisonStageProps> = ({ selected, fadeKey }) 
 // Main exported component
 // ─────────────────────────────────────────────────────────────
 export const CinemaExperience: React.FC<CinemaExperienceProps> = ({ onOpenEnquiry }) => {
-  const [selected, setSelected] = useState<ScreenSizeOption>(SCREEN_SIZE_OPTIONS[0]);
+  const [selected, setSelected] = useState<ScreenSizeOption>(SCREEN_SIZE_OPTIONS[3]); // default to 140"
   const [fadeKey, setFadeKey] = useState(0);
 
   const handleSelect = useCallback((opt: ScreenSizeOption) => {
@@ -181,7 +236,7 @@ export const CinemaExperience: React.FC<CinemaExperienceProps> = ({ onOpenEnquir
           <span className="eyebrow wc-eyebrow">EXPERIENCE THE SCALE</span>
           <h2 className="wc-heading">Bigger Than You Imagine</h2>
           <p className="wc-subtext">
-            Choose a screen size and see it compared with a real wild animal.
+            Choose a screen size and see how impressive a large projection screen can be.
           </p>
         </div>
 
