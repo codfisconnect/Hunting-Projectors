@@ -18,6 +18,7 @@ router.post('/', createOrder);
 router.get('/', getOrders);
 router.get('/:id', getOrder);
 router.post('/:id/cancel', cancelOrder);
-router.post('/:id/confirm-payment', confirmTestPayment);
+// NOTE: Self-service payment simulation endpoint has been disabled for production readiness.
+// router.post('/:id/confirm-payment', confirmTestPayment);
 
 export default router;

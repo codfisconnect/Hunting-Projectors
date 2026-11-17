@@ -1,6 +1,8 @@
 import { prisma } from '../config/database.js';
 import { cartService } from './cartService.js';
 import { addressService } from './addressService.js';
+import { emailService } from './emailService.js';
+import { notificationService } from './notificationService.js';
 
 export interface CreateOrderDTO {
   addressId?: string;
@@ -245,6 +247,24 @@ export class OrderService {
       return newOrder;
     });
 
+    // 4. Dispatch Email Notifications asynchronously (failure does not block order creation)
+    try {
+      emailService.sendOrderConfirmation(order).catch(e => {
+        console.warn('[Customer Order Email Warning]:', e.message);
+      });
+      emailService.sendAdminOrderNotification(order).catch(e => {
+        console.warn('[Admin Order Email Warning]:', e.message);
+      });
+      notificationService.createNotification({
+        type: 'NEW_ORDER',
+        title: `New Order: ${order.orderNumber}`,
+        message: `Order #${order.orderNumber} placed by ${order.customerName} for ₹${Number(order.totalAmount).toLocaleString('en-IN')}.`,
+        linkUrl: `/admin/orders?search=${encodeURIComponent(order.orderNumber)}`
+      }).catch(() => {});
+    } catch (e: any) {
+      console.warn('[Order Notifications Dispatch Warning]:', e.message);
+    }
+
     return order;
   }
 
@@ -354,6 +374,104 @@ export class OrderService {
     });
 
     return updated;
+  }
+
+  /**
+   * Automatic cancellation of abandoned unpaid orders older than timeoutMinutes (default 30).
+   * Restores reserved inventory safely inside database transactions with duplicate prevention.
+   * Excludes PAID orders and Cash on Delivery (COD) orders.
+   */
+  async cancelExpiredPendingOrders(timeoutMinutes: number = 30): Promise<{ cancelledCount: number; restoredOrders: string[] }> {
+    const expirationThreshold = new Date(Date.now() - timeoutMinutes * 60 * 1000);
+
+    // Find orders that are strictly PENDING both in orderStatus and paymentStatus, created before threshold
+    const expiredCandidates = await prisma.order.findMany({
+      where: {
+        orderStatus: 'PENDING',
+        paymentStatus: 'PENDING',
+        createdAt: {
+          lt: expirationThreshold
+        }
+      },
+      include: {
+        items: true
+      }
+    });
+
+    // Filter out any order that has Cash on Delivery / COD payment method
+    const targets = expiredCandidates.filter(order => {
+      const pm = (order.paymentMethod || '').toUpperCase();
+      return !pm.includes('COD') && !pm.includes('CASH_ON_DELIVERY');
+    });
+
+    if (targets.length === 0) {
+      return { cancelledCount: 0, restoredOrders: [] };
+    }
+
+    const restoredOrders: string[] = [];
+
+    for (const order of targets) {
+      try {
+        await prisma.$transaction(async (tx) => {
+          // Re-fetch with row check inside transaction to prevent race conditions & duplicate restorations
+          const freshOrder = await tx.order.findUnique({
+            where: { id: order.id },
+            include: { items: true }
+          });
+
+          // Guard: Order must STILL be strictly PENDING in orderStatus and paymentStatus
+          if (!freshOrder || freshOrder.orderStatus !== 'PENDING' || freshOrder.paymentStatus !== 'PENDING') {
+            return;
+          }
+
+          // Restore inventory for each item
+          for (const item of freshOrder.items) {
+            await tx.product.update({
+              where: { id: item.productId },
+              data: {
+                stock: {
+                  increment: item.quantity
+                }
+              }
+            });
+          }
+
+          const cancelNote = `[SYSTEM AUTO-CANCEL: Order exceeded ${timeoutMinutes}-minute payment timeout. Status marked CANCELLED and reserved inventory restored to catalog.]`;
+          const updatedNotes = freshOrder.internalNotes
+            ? `${freshOrder.internalNotes}\n${cancelNote}`
+            : cancelNote;
+
+          // Transition order to CANCELLED
+          await tx.order.update({
+            where: { id: freshOrder.id },
+            data: {
+              orderStatus: 'CANCELLED',
+              internalNotes: updatedNotes
+            }
+          });
+
+          // Log status history
+          await tx.orderStatusHistory.create({
+            data: {
+              orderId: freshOrder.id,
+              fromStatus: 'PENDING',
+              toStatus: 'CANCELLED',
+              changedByName: 'SYSTEM_CLEANUP_DAEMON',
+              notes: `Auto-cancelled after ${timeoutMinutes} minutes without payment confirmation.`
+            }
+          });
+
+          restoredOrders.push(freshOrder.orderNumber);
+        });
+      } catch (err: any) {
+        console.error(`[OrderCleanup] Error cancelling expired order #${order.orderNumber}:`, err.message);
+      }
+    }
+
+    return {
+      cancelledCount: restoredOrders.length,
+      restoredOrders
+    };
   }
 }
 

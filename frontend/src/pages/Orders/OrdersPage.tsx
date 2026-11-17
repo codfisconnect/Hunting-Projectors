@@ -8,8 +8,7 @@ import {
   CheckCircle, 
   XCircle, 
   ArrowRight,
-  ShieldCheck,
-  CreditCard
+  ShieldCheck
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { orderService } from '../../services/orderService';
@@ -51,16 +50,6 @@ export const OrdersPage: React.FC = () => {
       setActionMessage(`Order #${orderNumber} has been successfully cancelled.`);
     } catch (err: any) {
       alert(err.message || 'Could not cancel order.');
-    }
-  };
-
-  const handleConfirmTestPayment = async (orderId: string, orderNumber: string) => {
-    try {
-      const updated = await orderService.confirmTestPayment(orderId);
-      setOrders(prev => prev.map(o => o.id === orderId ? updated : o));
-      setActionMessage(`Test payment confirmed for order #${orderNumber}. Status is now PAID & CONFIRMED.`);
-    } catch (err: any) {
-      alert(err.message || 'Payment confirmation failed.');
     }
   };
 
@@ -187,18 +176,6 @@ export const OrdersPage: React.FC = () => {
                     </span>
 
                     <div style={{ display: 'flex', gap: '10px' }}>
-                      {isPaymentPending && order.orderStatus !== 'CANCELLED' && (
-                        <button
-                          type="button"
-                          className="btn-order-action btn-order-pay-test"
-                          onClick={() => handleConfirmTestPayment(order.id, order.orderNumber)}
-                          title="Simulate successful payment for development"
-                        >
-                          <CreditCard size={13} style={{ marginRight: '5px' }} />
-                          Simulate Payment
-                        </button>
-                      )}
-
                       {isCancellable && (
                         <button
                           type="button"

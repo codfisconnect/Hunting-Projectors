@@ -335,6 +335,23 @@ export class AdminDashboardService {
       const order = await tx.order.findUnique({ where: { id: orderId } });
       if (!order) throw new Error('Order not found');
 
+      // Fulfilment Security: Prevent orders from being marked SHIPPED unless paymentStatus is PAID,
+      // with an explicit authorized COD exception if COD is the designated payment method.
+      const normalizedStatus = String(newStatus).toUpperCase();
+      if (normalizedStatus === 'SHIPPED' || normalizedStatus === 'DISPATCHED') {
+        const isPaid = order.paymentStatus === 'PAID';
+        const isCOD = order.paymentMethod?.toUpperCase().includes('COD') ||
+                      order.paymentMethod?.toUpperCase().includes('CASH_ON_DELIVERY');
+
+        if (!isPaid && !isCOD) {
+          throw new Error(
+            `Fulfilment Guard: Order #${order.orderNumber} cannot be marked as ${newStatus}. ` +
+            `Payment status is '${order.paymentStatus}' and payment method is '${order.paymentMethod}'. ` +
+            `Orders require verified payment (PAID) or authorized Cash on Delivery (COD) before shipment.`
+          );
+        }
+      }
+
       const oldStatus = order.orderStatus;
 
       const updated = await tx.order.update({

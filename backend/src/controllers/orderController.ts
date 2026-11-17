@@ -82,8 +82,12 @@ export async function cancelOrder(req: Request, res: Response, next: NextFunctio
 
 export async function confirmTestPayment(req: Request, res: Response, next: NextFunction) {
   try {
-    if (!req.user) {
-      return sendError(res, 'Unauthorized', 401);
+    // Disabled in production and disallowed for non-administrative requests
+    if (process.env.NODE_ENV === 'production') {
+      return sendError(res, 'Test payment confirmation is disabled in production environments.', 403);
+    }
+    if (!req.user || req.user.role !== 'ADMIN') {
+      return sendError(res, 'Forbidden: Customer accounts cannot self-confirm payments.', 403);
     }
     const id = String(req.params.id);
     const order = await orderService.confirmTestPayment(req.user.id, id);
