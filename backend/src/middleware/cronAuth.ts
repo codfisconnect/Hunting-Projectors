@@ -39,12 +39,15 @@ function safeTimingEqual(a?: string | null, b?: string | null): boolean {
  */
 export async function authenticateCronOrOIDC(req: Request, res: Response, next: NextFunction) {
   try {
+    const isProduction = process.env.NODE_ENV === 'production';
     const cronSecret = process.env.CRON_SECRET || process.env.SCHEDULER_SECRET;
     const authHeader = req.headers.authorization;
     const customHeaderSecret = req.headers['x-cloud-scheduler-secret'] as string | undefined;
 
     // Mechanism 1: Shared CRON / Scheduler secret check with timing-safe comparison
-    if (cronSecret && cronSecret.trim().length > 0) {
+    // In production, shared-secret-only authentication is disallowed to enforce Google OIDC exclusively.
+    // Allowed only in non-production environments for local development and offline script testing.
+    if (!isProduction && cronSecret && cronSecret.trim().length > 0) {
       if (customHeaderSecret && safeTimingEqual(customHeaderSecret, cronSecret)) {
         return next();
       }
@@ -56,16 +59,36 @@ export async function authenticateCronOrOIDC(req: Request, res: Response, next: 
       }
     }
 
-    // Mechanism 2: Google Cloud OIDC Identity Token verification
+    // In production, if caller attempted shared-secret header, explicitly reject and advise OIDC
+    if (isProduction && customHeaderSecret) {
+      return sendError(
+        res,
+        'Unauthorized: Shared secret authentication is disabled in production. Use Google OIDC identity token.',
+        401
+      );
+    }
+
+    // Mechanism 2: Google Cloud OIDC Identity Token verification (Required in production)
     if (authHeader && authHeader.startsWith('Bearer ')) {
       const idToken = authHeader.slice(7);
 
-      // Determine the expected audience (Cloud Run target URL or specific audience env var)
+      // In production, SCHEDULER_SERVICE_ACCOUNT_EMAIL is strictly required to prevent
+      // accepting arbitrary Google OIDC tokens from unauthorized accounts
+      const expectedServiceAccount = process.env.SCHEDULER_SERVICE_ACCOUNT_EMAIL;
+      if (isProduction && (!expectedServiceAccount || expectedServiceAccount.trim().length === 0)) {
+        console.error('[CRON / OIDC Security Error]: SCHEDULER_SERVICE_ACCOUNT_EMAIL must be configured in production.');
+        return sendError(res, 'Unauthorized: Cloud Scheduler service account authorization is not configured in production', 500);
+      }
+
+      // Determine expected audience: CLOUD_RUN_SERVICE_URL preferred; falls back to SCHEDULER_TARGET_AUDIENCE or CLIENT_URL
       const expectedAudience = process.env.CLOUD_RUN_SERVICE_URL ||
                                process.env.SCHEDULER_TARGET_AUDIENCE ||
                                process.env.CLIENT_URL;
 
-      const expectedServiceAccount = process.env.SCHEDULER_SERVICE_ACCOUNT_EMAIL;
+      if (isProduction && (!expectedAudience || expectedAudience.trim().length === 0)) {
+        console.error('[CRON / OIDC Security Error]: CLOUD_RUN_SERVICE_URL, SCHEDULER_TARGET_AUDIENCE, or CLIENT_URL must be configured in production for exact audience validation.');
+        return sendError(res, 'Unauthorized: Service audience is not configured in production', 500);
+      }
 
       try {
         const ticket = await authClient.verifyIdToken({
@@ -102,11 +125,14 @@ export async function authenticateCronOrOIDC(req: Request, res: Response, next: 
           return sendError(res, 'Unauthorized: OIDC token expired', 401);
         }
 
-        // 4. Verify Authorized Service Account Email if specified
+        // 4. Verify Authorized Service Account Email (Mandatory in production; validated if provided in dev)
         if (expectedServiceAccount) {
-          if (payload.email !== expectedServiceAccount) {
+          if (!payload.email || payload.email !== expectedServiceAccount) {
             return sendError(res, 'Forbidden: Cloud Scheduler service account mismatch', 403);
           }
+        } else if (isProduction) {
+          // Defense in depth: Reject if somehow empty in production
+          return sendError(res, 'Forbidden: Unauthorized Google OIDC token', 403);
         }
 
         return next();
@@ -117,7 +143,13 @@ export async function authenticateCronOrOIDC(req: Request, res: Response, next: 
     }
 
     // Neither authorization method satisfied
-    return sendError(res, 'Unauthorized: Access restricted to authorized Cloud Scheduler service account or secret', 401);
+    return sendError(
+      res,
+      isProduction
+        ? 'Unauthorized: Access restricted exclusively to authorized Cloud Scheduler Google OIDC identity token'
+        : 'Unauthorized: Access restricted to authorized Cloud Scheduler service account or secret',
+      401
+    );
   } catch (error: any) {
     return sendError(res, `Authentication error: ${error.message}`, 401);
   }

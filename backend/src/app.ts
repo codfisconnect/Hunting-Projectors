@@ -9,37 +9,51 @@ export const createApp = () => {
   const app = express();
 
   // Middleware
-  const allowedOrigins = [
+  const isProduction = config.nodeEnv === 'production';
+
+  // Explicit allowed production origins
+  const explicitOrigins = [
     config.clientUrl,
     'https://www.napcomputers.in',
     'https://napcomputers.in',
     'https://hunting-projectors-deploy.vercel.app',
-    'http://localhost:5173',
-    'http://127.0.0.1:5173'
+    !isProduction ? 'http://localhost:5173' : '',
+    !isProduction ? 'http://127.0.0.1:5173' : ''
   ].filter(Boolean);
 
   app.use(cors({
     origin: (origin, callback) => {
-      // allow requests with no origin (like mobile apps, curl, or Cloud Scheduler requests)
+      // Allow requests with no origin (e.g. mobile apps, curl, Cloud Scheduler service calls)
       if (!origin) return callback(null, true);
 
-      // Check against explicit allowed list
-      if (allowedOrigins.indexOf(origin) !== -1) {
+      // 1. Check against explicit allowed list
+      if (explicitOrigins.includes(origin)) {
         return callback(null, true);
       }
 
-      // Allow Vercel preview and production deployments (*.vercel.app)
-      if (origin.endsWith('.vercel.app')) {
+      // 2. Allow only Hunting Projectors project deployments on Vercel:
+      // Matches:
+      //   https://hunting-projectors-deploy.vercel.app
+      //   https://hunting-projectors-deploy-<hash>.vercel.app
+      //   https://hunting-projectors-deploy-git-<branch>-<team>.vercel.app
+      //   https://hunting-projectors-<hash>.vercel.app
+      // Rejects unrelated *.vercel.app projects (e.g. https://other-user-app.vercel.app)
+      if (/^https:\/\/hunting-projectors(-deploy)?(-[a-zA-Z0-9_-]+)*\.vercel\.app$/.test(origin)) {
         return callback(null, true);
       }
 
-      // Allow napcomputers.in subdomains
-      if (origin.endsWith('.napcomputers.in')) {
+      // 3. Allow only explicitly authorized custom domains:
+      //   https://napcomputers.in
+      //   https://www.napcomputers.in
+      //   https://hunting.napcomputers.in
+      //   https://projectors.napcomputers.in
+      // Rejects unauthorized subdomains (e.g. https://internal-admin.napcomputers.in or https://test.napcomputers.in)
+      if (/^https:\/\/(www\.|hunting\.|projectors\.)?napcomputers\.in$/.test(origin)) {
         return callback(null, true);
       }
 
       // In production, reject unauthorized origins
-      if (config.nodeEnv === 'production') {
+      if (isProduction) {
         return callback(new Error(`Origin ${origin} not permitted by CORS policy`), false);
       }
 
