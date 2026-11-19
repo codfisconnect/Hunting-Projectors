@@ -32,7 +32,7 @@ export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ onOpenEnquir
   }, []);
 
   return (
-    <section id="featured-products-section" className="featured-products-section" aria-label="Featured Nap Computers Electronicss Projectors">
+    <section id="featured-products-section" className="featured-products-section" aria-label="Featured Hunting Projectors">
       <div className="container-wide featured-container">
         
         {/* Section Heading */}
@@ -40,16 +40,16 @@ export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ onOpenEnquir
           <div className="featured-title-group">
             <span className="eyebrow">
               <Sparkles size={12} />
-              FLAGSHIP COLLECTION
+              FEATURED PROJECTORS
             </span>
-            <h2 className="display-section">CHOOSE YOUR EXPERIENCE.</h2>
+            <h2 className="display-section">CHOOSE YOUR CINEMA.</h2>
             <p className="featured-lead">
-              Precision optical instruments engineered for distinct acoustic environments and cinematic scale.
+              Precision 4K optical instruments engineered for distinct room acoustics and cinematic scale.
             </p>
           </div>
 
           <Link to="/products" className="btn-secondary featured-all-link">
-            <span>VIEW ALL MODELS</span>
+            <span>VIEW ALL PROJECTORS</span>
             <ArrowRight size={16} />
           </Link>
         </div>

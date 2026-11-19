@@ -49,6 +49,8 @@ coverage/
 */coverage/
 *.lcov
 .nyc_output/
+frontend/public/assets/uploads/test-*
+scratch/
 
 # Database dumps & backups
 *.dump

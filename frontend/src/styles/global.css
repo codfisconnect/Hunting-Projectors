@@ -16,6 +16,7 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  overflow-x: hidden;
 }
 
 body {
@@ -356,7 +357,7 @@ textarea:focus-visible {
 
 @media (max-width: 768px) {
   .sticky-whatsapp-bubble {
-    bottom: 18px;
+    bottom: 86px;
     right: 18px;
     padding: 12px;
     border-radius: 50%;

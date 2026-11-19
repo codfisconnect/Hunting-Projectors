@@ -64,9 +64,24 @@
 
 .footer-brand {
   display: flex;
-  flex-direction: column;
-  line-height: 1;
+  align-items: center;
+  gap: 14px;
+  line-height: 1.15;
   margin-bottom: 18px;
+}
+
+.footer-brand-logo {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: contain;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+}
+
+.footer-brand-text {
+  display: flex;
+  flex-direction: column;
 }
 
 .footer-brand-desc {

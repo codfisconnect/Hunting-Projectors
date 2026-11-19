@@ -16,7 +16,7 @@ export const Footer: React.FC = () => {
             <ShieldCheck size={20} className="prop-icon" />
             <div>
               <span className="prop-title">DIRECT HUNTING WARRANTY</span>
-              <span className="prop-sub">Official brand warranty backed by NAP Computers</span>
+              <span className="prop-sub">Official brand warranty backed by NAP Computers Electronics</span>
             </div>
           </div>
           <div className="prop-item">
@@ -43,28 +43,44 @@ export const Footer: React.FC = () => {
           {/* Column 1: Brand & Philosophy */}
           <div className="footer-col brand-col">
             <div className="footer-brand">
-              <span className="brand-primary">{siteConfig.brand.name}</span>
-              <span className="brand-secondary">{siteConfig.brand.subname}</span>
+              <img
+                src="/assets/hunting-projectors-logo-footer.png"
+                alt="Hunting Projectors Logo"
+                className="footer-brand-logo"
+                width="56"
+                height="56"
+              />
+              <div className="footer-brand-text">
+                <span className="brand-primary">HUNTING PROJECTORS</span>
+                <span className="brand-secondary">by NAP Computers Electronics</span>
+              </div>
             </div>
             <p className="footer-brand-desc">
               Pioneering high-lumen optical projection systems engineered to transform residential and commercial spaces into extraordinary private cinemas.
             </p>
             <div className="footer-brand-contact-pills">
-              <a 
-                href={getWhatsAppLink()} 
-                target="_blank" 
-                rel="noopener noreferrer" 
+              <a
+                href={getWhatsAppLink()}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="contact-pill whatsapp"
               >
                 <MessageCircle size={15} />
                 <span>WhatsApp: {siteConfig.contact.whatsappDisplay}</span>
               </a>
-              <a 
-                href={getPhoneLink()} 
+              <a
+                href={getPhoneLink()}
                 className="contact-pill"
               >
                 <Phone size={14} />
                 <span>Direct: {siteConfig.contact.phoneDisplay}</span>
+              </a>
+              <a
+                href={getEmailLink()}
+                className="contact-pill"
+              >
+                <Mail size={14} />
+                <span>Email: {siteConfig.contact.email}</span>
               </a>
             </div>
           </div>
@@ -144,7 +160,7 @@ export const Footer: React.FC = () => {
           <div className="copyright-text" aria-label="Copyright and ownership">
             <span>© 2026 Sadakka Tulla Moinuddeen. All rights reserved.</span>
             <span className="copyright-separator">|</span>
-            <span className="footer-highlight-gold">NAP Computers</span>
+            <span className="footer-highlight-gold">NAP Computers Electronics</span>
             <span className="copyright-separator">|</span>
             <span>
               Web by{' '}

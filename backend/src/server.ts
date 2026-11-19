@@ -9,7 +9,7 @@ const server = app.listen(config.port, HOST, () => {
   console.log(`=========================================`);
   console.log(`  HUNTING PROJECTORS - API SERVER`);
   console.log(`  Brand: Hunting Projectors`);
-  console.log(`  Supplier: NAP Computers & Electronics`);
+  console.log(`  Supplier: NAP Computers Electronics`);
   console.log(`  Location: Chennai, Tamil Nadu, India`);
   console.log(`  Running on: http://${HOST}:${config.port}`);
   console.log(`  Health Check: http://${HOST}:${config.port}/api/health`);

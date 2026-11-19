@@ -1,3 +1,5 @@
+import { BUSINESS_CONFIG } from '../config/businessConfig.js';
+
 export interface WhatsAppMessagePayload {
   toPhone: string;
   templateName?: string;
@@ -14,7 +16,7 @@ export class WhatsAppService {
   constructor() {
     this.phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID || null;
     this.accessToken = process.env.WHATSAPP_ACCESS_TOKEN || null;
-    this.businessNumber = process.env.WHATSAPP_BUSINESS_NUMBER || '+919444012345';
+    this.businessNumber = process.env.WHATSAPP_BUSINESS_NUMBER || BUSINESS_CONFIG.whatsappNumber;
     this.isConfigured = !!(this.phoneNumberId && this.accessToken);
   }
 

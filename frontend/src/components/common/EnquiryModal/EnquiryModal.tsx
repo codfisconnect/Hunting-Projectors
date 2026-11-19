@@ -32,6 +32,7 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [result, setResult] = useState<EnquirySubmissionResult | null>(null);
+  const [formError, setFormError] = useState<string | null>(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -53,6 +54,7 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
     } else {
       document.body.style.overflow = '';
       setResult(null);
+      setFormError(null);
     }
     return () => {
       document.body.style.overflow = '';
@@ -60,8 +62,6 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
   }, [isOpen, initialProduct]);
 
   if (!isOpen) return null;
-
-  const [formError, setFormError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,7 +79,7 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
   };
 
   const handleDirectWhatsApp = () => {
-    const text = `Hello Nap Computers Electronicss!%0A%0AName: ${formData.fullName || 'Prospective Customer'}%0APhone: ${formData.phoneNumber || 'Not provided'}%0ACity: ${formData.city || 'India'}%0AInterested In: ${formData.productName}%0AMessage: ${formData.message || 'I would like to schedule a product demo or request pricing.'}`;
+    const text = `Hello Hunting Projectors!%0A%0AName: ${formData.fullName || 'Prospective Customer'}%0APhone: ${formData.phoneNumber || 'Not provided'}%0ACity: ${formData.city || 'India'}%0AInterested In: ${formData.productName}%0AMessage: ${formData.message || 'I would like to schedule a product demo or request pricing.'}`;
     window.open(`https://wa.me/${siteConfig.contact.whatsapp}?text=${text}`, '_blank');
   };
 
@@ -96,7 +96,7 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
             </div>
             <h3 className="enquiry-modal-title">EXPERIENCE HUNTING</h3>
             <p className="enquiry-modal-subtitle">
-              Speak directly with an optical specialist from NAP Computers & Electronics.
+              Speak directly with an optical specialist from Hunting Projectors by NAP Computers Electronics.
             </p>
           </div>
           <button 
@@ -184,7 +184,7 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
                     id="phoneNumber"
                     type="tel"
                     required
-                    placeholder="+91 90422 92929"
+                    placeholder="+91 88256 24537"
                     value={formData.phoneNumber}
                     onChange={e => setFormData({ ...formData, phoneNumber: e.target.value })}
                   />
@@ -284,7 +284,7 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
               <div className="form-entity-footer">
                 <ShieldCheck size={14} />
                 <span>
-                  Supplied & operated directly by NAP Computers & Electronics, Chennai. No third-party brokers.
+                  Supplied & operated directly by NAP Computers Electronics, Chennai. No third-party brokers.
                 </span>
               </div>
             </form>

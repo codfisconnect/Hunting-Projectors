@@ -310,6 +310,25 @@ export class ProductService {
   async updateProduct(id: string, data: UpdateProductDTO) {
     const { specifications, images, price, mrp, compareAtPrice, ...rest } = data;
 
+    // Handle nested images update if provided
+    if (images !== undefined) {
+      // Delete existing images for this product and replace with updated gallery list
+      await prisma.productImage.deleteMany({
+        where: { productId: id }
+      });
+      if (images.length > 0) {
+        await prisma.productImage.createMany({
+          data: images.map((img, idx) => ({
+            productId: id,
+            url: img.url,
+            altText: img.altText || data.name || 'Product Image',
+            viewType: img.viewType || (idx === 0 ? 'hero' : 'gallery'),
+            sortOrder: img.sortOrder ?? idx,
+          }))
+        });
+      }
+    }
+
     return prisma.product.update({
       where: { id },
       data: {

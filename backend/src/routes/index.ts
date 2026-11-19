@@ -3,6 +3,7 @@ import productRoutes from './productRoutes.js';
 import categoryRoutes from './categoryRoutes.js';
 import enquiryRoutes from './enquiryRoutes.js';
 import reviewRoutes from './reviewRoutes.js';
+import cmsRoutes from './cmsRoutes.js';
 import authRoutes from './authRoutes.js';
 import customerRoutes from './customerRoutes.js';
 import addressRoutes from './addressRoutes.js';
@@ -27,13 +28,14 @@ router.use('/categories', categoryRoutes);
 router.use('/enquiries', enquiryRoutes);
 router.use('/contact', enquiryRoutes); // Alias for contact form enquiries
 router.use('/reviews', reviewRoutes);
+router.use('/cms', cmsRoutes);
 
 // Health check endpoint
 router.get('/health', (_req, res) => {
   res.json({
     status: 'ok',
     brand: 'Hunting Projectors',
-    supplier: 'NAP Computers & Electronics',
+    supplier: 'NAP Computers Electronics',
     location: 'Chennai, Tamil Nadu, India',
     timestamp: new Date().toISOString()
   });

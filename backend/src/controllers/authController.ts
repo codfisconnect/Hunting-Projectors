@@ -17,7 +17,11 @@ export async function register(req: Request, res: Response, next: NextFunction) 
     if (error.message?.includes('already exists')) {
       return sendError(res, error.message, 409);
     }
-    if (error.message?.includes('required') || error.message?.includes('valid') || error.message?.includes('Password')) {
+    if (
+      !error.message?.includes('prisma') &&
+      !error.message?.includes('DATABASE_URL') &&
+      (error.message?.includes('required') || error.message?.includes('valid') || error.message?.includes('Password'))
+    ) {
       return sendError(res, error.message, 400);
     }
     next(error);
@@ -37,7 +41,44 @@ export async function login(req: Request, res: Response, next: NextFunction) {
     if (error.message?.includes('Invalid email or password')) {
       return sendError(res, error.message, 401);
     }
-    if (error.message?.includes('required')) {
+    if (
+      !error.message?.includes('prisma') &&
+      !error.message?.includes('DATABASE_URL') &&
+      error.message?.includes('required')
+    ) {
+      return sendError(res, error.message, 400);
+    }
+    next(error);
+  }
+}
+
+export async function forgotPassword(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { email } = req.body;
+    const clientOrigin = req.headers.origin as string;
+    const result = await authService.requestPasswordReset(email || '', clientOrigin);
+    return sendSuccess(res, result, result.message, 200);
+  } catch (error: any) {
+    if (error.message?.includes('required') || error.message?.includes('Too many')) {
+      return sendError(res, error.message, 400);
+    }
+    next(error);
+  }
+}
+
+export async function resetPassword(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { token, newPassword } = req.body;
+    const result = await authService.resetPassword(token || '', newPassword || '');
+    return sendSuccess(res, result, result.message, 200);
+  } catch (error: any) {
+    if (
+      error.message?.includes('required') ||
+      error.message?.includes('least 8') ||
+      error.message?.includes('expired') ||
+      error.message?.includes('already been used') ||
+      error.message?.includes('Invalid')
+    ) {
       return sendError(res, error.message, 400);
     }
     next(error);

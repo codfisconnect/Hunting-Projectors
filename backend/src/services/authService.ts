@@ -1,6 +1,8 @@
+import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import { prisma } from '../config/database.js';
 import { generateToken } from '../utils/token.js';
+import { emailService } from './emailService.js';
 
 export interface RegisterDTO {
   fullName: string;
@@ -12,6 +14,23 @@ export interface RegisterDTO {
 export interface LoginDTO {
   email: string;
   password: string;
+}
+
+// In-memory rate limiting map for password reset attempts
+const resetRateLimitMap = new Map<string, { count: number; firstAttempt: number }>();
+
+function checkRateLimit(key: string, maxAttempts = 5, windowMs = 15 * 60 * 1000) {
+  const now = Date.now();
+  const record = resetRateLimitMap.get(key);
+  if (!record || now - record.firstAttempt > windowMs) {
+    resetRateLimitMap.set(key, { count: 1, firstAttempt: now });
+    return true;
+  }
+  if (record.count >= maxAttempts) {
+    return false;
+  }
+  record.count += 1;
+  return true;
 }
 
 export class AuthService {
@@ -133,6 +152,134 @@ export class AuthService {
     }
 
     return user;
+  }
+
+  /**
+   * Request password reset token.
+   * Generates a 256-bit cryptographically secure token, computes SHA-256 digest,
+   * stores only the digest with a 15-minute expiration, and emails the reset link if SMTP configured.
+   * Never leaks whether the email is registered.
+   */
+  async requestPasswordReset(email: string, clientOrigin?: string) {
+    const trimmedEmail = email.trim().toLowerCase();
+    if (!trimmedEmail) {
+      throw new Error('Email address is required.');
+    }
+
+    if (!checkRateLimit(`req_${trimmedEmail}`, 5, 15 * 60 * 1000)) {
+      throw new Error('Too many password reset requests. Please try again after 15 minutes.');
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { email: trimmedEmail },
+      select: { id: true, email: true, fullName: true }
+    });
+
+    if (user) {
+      // 256-bit raw token
+      const rawToken = crypto.randomBytes(32).toString('hex');
+      const tokenHash = crypto.createHash('sha256').update(rawToken).digest('hex');
+      const expiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 mins
+
+      // Invalidate existing unused tokens for this user
+      await prisma.passwordResetToken.updateMany({
+        where: { userId: user.id, usedAt: null },
+        data: { usedAt: new Date() }
+      }).catch(() => {});
+
+      // Save token hash
+      await prisma.passwordResetToken.create({
+        data: {
+          userId: user.id,
+          tokenHash,
+          expiresAt,
+        }
+      });
+
+      const origin = clientOrigin || process.env.CLIENT_URL || 'https://napcomputers.in';
+      const resetLink = `${origin}/reset-password?token=${rawToken}`;
+
+      // Dispatch email if SMTP configured
+      const emailHtml = `
+        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 580px; margin: 0 auto; background: #0A0C10; color: #FFFFFF; padding: 32px; border-radius: 12px; border: 1px solid #1E2330;">
+          <h2 style="color: #D4AF37; margin: 0 0 12px; font-size: 20px;">HUNTING PROJECTORS - PASSWORD RESET</h2>
+          <p style="color: #A0AEC0; font-size: 14px; line-height: 1.6;">Hello ${user.fullName},</p>
+          <p style="color: #A0AEC0; font-size: 14px; line-height: 1.6;">We received a request to reset your password for your Hunting Projectors by NAP Computers Electronics account. This link will expire in 15 minutes.</p>
+          <div style="margin: 24px 0; text-align: center;">
+            <a href="${resetLink}" style="background: #D4AF37; color: #000000; padding: 12px 28px; border-radius: 6px; font-weight: bold; text-decoration: none; display: inline-block; font-size: 14px;">Reset My Password</a>
+          </div>
+          <p style="color: #718096; font-size: 12px; line-height: 1.5;">If you did not request this password reset, please ignore this email or contact support at huntingprojectors@gmail.com. Your password remains safe.</p>
+        </div>
+      `;
+
+      await emailService.sendEmail({
+        to: user.email,
+        subject: 'Password Reset Request - Hunting Projectors',
+        html: emailHtml
+      }).catch(err => {
+        console.warn('[PasswordReset Email Delivery Note]:', err.message);
+      });
+    }
+
+    // Generic safe message to prevent user enumeration
+    return {
+      message: 'If an account exists with that email address, you will receive password reset instructions shortly.'
+    };
+  }
+
+  /**
+   * Reset password using single-use SHA-256 token digest.
+   * Performs the consumption and password update in a database transaction.
+   */
+  async resetPassword(rawToken: string, newPassword: string) {
+    if (!rawToken || !newPassword) {
+      throw new Error('Reset token and new password are required.');
+    }
+
+    if (newPassword.length < 8) {
+      throw new Error('Password must be at least 8 characters long.');
+    }
+
+    const tokenHash = crypto.createHash('sha256').update(rawToken.trim()).digest('hex');
+
+    if (!checkRateLimit(`reset_${tokenHash}`, 10, 15 * 60 * 1000)) {
+      throw new Error('Too many failed reset attempts. Please request a new link.');
+    }
+
+    const now = new Date();
+
+    return await prisma.$transaction(async (tx) => {
+      const resetRecord = await tx.passwordResetToken.findUnique({
+        where: { tokenHash }
+      });
+
+      if (!resetRecord) {
+        throw new Error('Invalid or expired password reset token.');
+      }
+
+      if (resetRecord.usedAt) {
+        throw new Error('This password reset link has already been used. Please request a new one.');
+      }
+
+      if (resetRecord.expiresAt < now) {
+        throw new Error('This password reset link has expired. Please request a new one.');
+      }
+
+      // Mark token as used
+      await tx.passwordResetToken.update({
+        where: { id: resetRecord.id },
+        data: { usedAt: now }
+      });
+
+      // Update password
+      const newHash = await bcrypt.hash(newPassword, 10);
+      await tx.user.update({
+        where: { id: resetRecord.userId },
+        data: { passwordHash: newHash }
+      });
+
+      return { success: true, message: 'Password has been reset successfully. You may now log in with your new password.' };
+    });
   }
 }
 

@@ -33,7 +33,7 @@ export const ExperiencePage: React.FC<ExperiencePageProps> = ({ onOpenEnquiry })
   const [viewMode, setViewMode] = useState<'clean' | 'poster'>('clean');
 
   useEffect(() => {
-    document.title = 'Experience Cinema Differently — Nap Computers Electronicss Showroom';
+    document.title = 'Experience Cinema Differently — Hunting Projectors by NAP Computers Electronics';
     window.scrollTo(0, 0);
 
     let isMounted = true;

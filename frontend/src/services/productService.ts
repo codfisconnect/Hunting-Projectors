@@ -37,6 +37,29 @@ export function normalizeProduct(raw: any): Product {
     ? rawImages.map(img => img.url)
     : [hero, angled, top, backPorts, ambient].filter(Boolean);
 
+  // Clean dev/testing artifacts from customer-facing strings
+  const cleanString = (str: string) => {
+    if (!str) return '';
+    return str
+      .replace(/^Development Sample:\s*/i, '')
+      .replace(/\(Development Fixture\)/gi, '')
+      .replace(/\(Demo\)/gi, '')
+      .replace(/\(Demo Metric\)/gi, '')
+      .trim();
+  };
+
+  const cleanDescription = (desc: string | string[]) => {
+    const arr = Array.isArray(desc) ? desc : (desc ? [desc] : []);
+    return arr
+      .filter(p => !p.toLowerCase().includes('sample development fixture data') && !p.toLowerCase().includes('backend api'))
+      .map(p => cleanString(p))
+      .filter(Boolean);
+  };
+
+  const cleanList = (items: string[]) => {
+    if (!Array.isArray(items)) return [];
+    return items.map(item => cleanString(item)).filter(Boolean);
+  };
   const categorySlug = raw.category?.slug || (typeof raw.category === 'string' ? raw.category : (raw.categoryId || 'home-cinema'));
   const categoryLabel = raw.category?.name || raw.categoryLabel || 'Home Cinema';
 
@@ -46,7 +69,7 @@ export function normalizeProduct(raw: any): Product {
     id: specs.id,
     resolution: specs.resolution || 'Not specified',
     supportedResolution: specs.supportedResolution,
-    brightness: specs.brightness || 'Not specified',
+    brightness: cleanString(specs.brightness) || 'Not specified',
     lightSource: specs.lightSource || 'Not specified',
     displayTechnology: specs.displayTechnology || 'Not specified',
     contrastRatio: specs.contrastRatio || 'Not specified',
@@ -118,8 +141,8 @@ export function normalizeProduct(raw: any): Product {
     sku: raw.sku,
     slug: raw.slug,
     name: raw.name,
-    subtitle: raw.subtitle || '',
-    tagline: raw.tagline || '',
+    subtitle: cleanString(raw.subtitle) || '',
+    tagline: cleanString(raw.tagline) || '',
     categoryId: raw.categoryId,
     category: categorySlug,
     categoryLabel,
@@ -134,9 +157,9 @@ export function normalizeProduct(raw: any): Product {
     isFeatured: raw.isFeatured ?? false,
     badge: raw.badge,
     availability: raw.availability || 'in-stock',
-    warranty: raw.warranty || '2 Years Official Brand Warranty',
-    shortDescription: raw.shortDescription || '',
-    description: Array.isArray(raw.description) ? raw.description : (raw.description ? [raw.description] : []),
+    warranty: 'Contact us to confirm warranty coverage',
+    shortDescription: cleanString(raw.shortDescription) || '',
+    description: cleanDescription(raw.description),
     images: {
       hero,
       transparent,
@@ -151,7 +174,7 @@ export function normalizeProduct(raw: any): Product {
     highlights,
     specifications,
     features,
-    whatsIncluded: Array.isArray(raw.whatsIncluded) ? raw.whatsIncluded : ['Hunting Projector Unit', 'Voice Remote', 'Power Cable', 'Warranty Card'],
+    whatsIncluded: cleanList(raw.whatsIncluded).length > 0 ? cleanList(raw.whatsIncluded) : ['Hunting Projector Unit', 'Voice Remote', 'Power Cable', 'Warranty Card'],
     recommendedUse: Array.isArray(raw.recommendedUse) ? raw.recommendedUse : ['Home Cinema', 'OTT Streaming', 'Gaming'],
     idealRoomSize: raw.idealRoomSize || 'medium',
     idealLighting: raw.idealLighting || 'ambient-light',
@@ -251,8 +274,14 @@ export async function getProducts(filters?: ProductFilterOptions): Promise<Produ
     };
 
     return { products, pagination };
-  } catch (err) {
-    console.warn('API /products unavailable, using fallback verified catalog data:', err);
+  } catch (err: any) {
+    // In production, never silently mask a backend outage by serving stale static mock data
+    const isProduction = import.meta.env.PROD || !import.meta.env.DEV;
+    if (isProduction) {
+      throw new Error(`Unable to load live catalog from server: ${err.message || 'Service unavailable'}`);
+    }
+
+    console.warn('DEV MODE: API /products unavailable, using fallback verified catalog data:', err);
     let filtered = [...fallbackProducts];
 
     if (filters?.category && filters.category !== 'all') {
@@ -296,13 +325,20 @@ export async function getProductBySlug(slug: string): Promise<Product> {
     if (response.data) {
       return normalizeProduct(response.data);
     }
-  } catch (err) {
-    console.warn(`API /products/${slug} unavailable, checking fallback catalog:`, err);
+  } catch (err: any) {
+    const isProduction = import.meta.env.PROD || !import.meta.env.DEV;
+    if (isProduction) {
+      throw new Error(`Unable to load product '${slug}': ${err.message || 'Service unavailable'}`);
+    }
+    console.warn(`DEV MODE: API /products/${slug} unavailable, checking fallback catalog:`, err);
   }
 
-  const found = fallbackProducts.find(p => p.slug === slug);
-  if (found) {
-    return found;
+  const isProduction = import.meta.env.PROD || !import.meta.env.DEV;
+  if (!isProduction) {
+    const found = fallbackProducts.find(p => p.slug === slug);
+    if (found) {
+      return found;
+    }
   }
 
   throw new ApiError(404, `Product '${slug}' not found`);
@@ -322,11 +358,19 @@ export async function getCategories(): Promise<Category[]> {
     if (rawList.length > 0) {
       return rawList.map(normalizeCategory);
     }
-  } catch (err) {
-    console.warn('API /categories unavailable, using fallback categories:', err);
+  } catch (err: any) {
+    const isProduction = import.meta.env.PROD || !import.meta.env.DEV;
+    if (isProduction) {
+      throw new Error(`Unable to load categories: ${err.message || 'Service unavailable'}`);
+    }
+    console.warn('DEV MODE: API /categories unavailable, using fallback categories:', err);
   }
 
-  return fallbackCategories;
+  const isProduction = import.meta.env.PROD || !import.meta.env.DEV;
+  if (!isProduction) {
+    return fallbackCategories;
+  }
+  return [];
 }
 
 /**

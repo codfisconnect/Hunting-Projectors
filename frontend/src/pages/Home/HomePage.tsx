@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { HeroExperience } from '../../components/home/HeroExperience/HeroExperience';
+import { TrustStrip } from '../../components/home/TrustStrip/TrustStrip';
 import { FeaturedProducts } from '../../components/home/FeaturedProducts/FeaturedProducts';
 import { CinemaExperience } from '../../components/home/CinemaExperience/CinemaExperience';
 import { IndiaDelivery } from '../../components/home/IndiaDelivery/IndiaDelivery';
@@ -11,7 +12,7 @@ interface HomePageProps {
 
 export const HomePage: React.FC<HomePageProps> = ({ onOpenEnquiry }) => {
   useEffect(() => {
-    document.title = 'Nap Computers Electronicss — 4K Laser & Cinema Optics Direct from Chennai';
+    document.title = 'Hunting Projectors by NAP Computers Electronics — 4K Laser & Cinema Optics Direct from Chennai';
     window.scrollTo(0, 0);
   }, []);
 
@@ -20,13 +21,16 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenEnquiry }) => {
       {/* Section 1 — Premium Cinematic Hero */}
       <HeroExperience onOpenEnquiry={() => onOpenEnquiry()} />
 
-      {/* Section 2 — Featured Projectors (Real Catalog Data) */}
+      {/* Section 2 — Trust Strip (Genuine Products, Warranty, Support, Security) */}
+      <TrustStrip />
+
+      {/* Section 3 — Featured Projectors (Real Database Catalog Data) */}
       <FeaturedProducts onOpenEnquiry={onOpenEnquiry} />
 
-      {/* Section 3 — Cinematic Experience (Scale Simulation) */}
+      {/* Section 4 — Cinematic Experience (Scale Simulation) */}
       <CinemaExperience onOpenEnquiry={() => onOpenEnquiry()} />
 
-      {/* Section 4 — Simple Verified Trust Strip */}
+      {/* Section 5 — Direct Brand Hub & Pan-India Dispatch */}
       <IndiaDelivery />
     </div>
   );

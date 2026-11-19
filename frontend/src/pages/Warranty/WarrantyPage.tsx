@@ -5,7 +5,7 @@ import './WarrantyPage.css';
 
 export const WarrantyPage: React.FC = () => {
   useEffect(() => {
-    document.title = 'WARRANTY GUIDELINES — Nap Computers Electronicss Policy';
+    document.title = 'WARRANTY GUIDELINES — Hunting Projectors by NAP Computers Electronics';
     window.scrollTo(0, 0);
   }, []);
 

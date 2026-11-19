@@ -222,6 +222,20 @@
 }
 
 @media (max-width: 600px) {
+  .enquiry-modal-overlay {
+    padding: 12px;
+    align-items: flex-start;
+  }
+  .enquiry-modal-card {
+    margin-top: 20px;
+    margin-bottom: 80px;
+  }
+  .enquiry-modal-header {
+    padding: 18px 20px;
+  }
+  .enquiry-modal-body {
+    padding: 18px 20px;
+  }
   .form-grid-2,
   .form-actions {
     grid-template-columns: 1fr;

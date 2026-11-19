@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { X, ChevronDown, ChevronUp } from 'lucide-react';
+import { X, ChevronDown, ChevronUp, Upload, Trash2, Star, ArrowUp, ArrowDown } from 'lucide-react';
 import { adminService } from '../../services/adminService';
 import { getCategories } from '../../services/productService';
-import { Product } from '../../types/product';
+import { Product, ProductImage } from '../../types/product';
 import { Category } from '../../types/category';
 
 interface ProductFormProps {
@@ -11,7 +11,7 @@ interface ProductFormProps {
   onCancel: () => void;
 }
 
-type SectionKey = 'basic' | 'pricing' | 'specs' | 'flags';
+type SectionKey = 'basic' | 'images' | 'pricing' | 'specs' | 'flags';
 
 function slugify(s: string) {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -19,6 +19,7 @@ function slugify(s: string) {
 
 const SECTION_LABELS: Record<SectionKey, string> = {
   basic: 'Basic Information',
+  images: 'Product Gallery & Media',
   pricing: 'Pricing & Inventory',
   specs: 'Projector Specifications',
   flags: 'Display Flags & Badge',
@@ -31,10 +32,36 @@ export const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCan
   const [categories, setCategories] = useState<Category[]>([]);
   const [openSections, setOpenSections] = useState<Record<SectionKey, boolean>>({
     basic: true,
+    images: true,
     pricing: true,
     specs: false,
     flags: false,
   });
+
+  // Gallery state
+  const [gallery, setGallery] = useState<ProductImage[]>(() => {
+    if (product?.rawImages && product.rawImages.length > 0) {
+      return [...product.rawImages].sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+    }
+    if (Array.isArray(product?.gallery) && product.gallery.length > 0) {
+      return product.gallery.map((url, i) => ({
+        url,
+        viewType: i === 0 ? 'hero' : 'gallery',
+        sortOrder: i,
+        altText: product?.name || 'Product Image'
+      }));
+    }
+    if (product?.images?.hero) {
+      return [
+        { url: product.images.hero, viewType: 'hero', sortOrder: 0, altText: product.name },
+        ...(product.images.transparent ? [{ url: product.images.transparent, viewType: 'transparent', sortOrder: 1, altText: product.name }] : []),
+        ...(product.images.ambient ? [{ url: product.images.ambient, viewType: 'ambient', sortOrder: 2, altText: product.name }] : [])
+      ];
+    }
+    return [];
+  });
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [manualImageUrl, setManualImageUrl] = useState('');
 
   // Form state
   const [name, setName] = useState(product?.name ?? '');
@@ -110,6 +137,85 @@ export const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCan
     setOpenSections(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 10 * 1024 * 1024) {
+      setError('File size must be less than 10MB.');
+      return;
+    }
+
+    setUploadingImage(true);
+    setError(null);
+    try {
+      const res = await adminService.uploadProductImage(file);
+      const newImg: ProductImage = {
+        url: res.url,
+        altText: name || 'Product image',
+        viewType: gallery.length === 0 ? 'hero' : 'gallery',
+        sortOrder: gallery.length,
+      };
+      setGallery(prev => [...prev, newImg]);
+    } catch (err: any) {
+      setError(err.message || 'Image upload failed.');
+    } finally {
+      setUploadingImage(false);
+      e.target.value = '';
+    }
+  };
+
+  const handleAddManualUrl = () => {
+    if (!manualImageUrl.trim()) return;
+    const newImg: ProductImage = {
+      url: manualImageUrl.trim(),
+      altText: name || 'Product image',
+      viewType: gallery.length === 0 ? 'hero' : 'gallery',
+      sortOrder: gallery.length,
+    };
+    setGallery(prev => [...prev, newImg]);
+    setManualImageUrl('');
+  };
+
+  const handleRemoveImage = (index: number) => {
+    setGallery(prev => {
+      const next = prev.filter((_, i) => i !== index);
+      // If removed was hero, make the first one hero
+      if (next.length > 0 && !next.some(img => img.viewType === 'hero')) {
+        next[0].viewType = 'hero';
+      }
+      return next.map((img, i) => ({ ...img, sortOrder: i }));
+    });
+  };
+
+  const handleSetPrimary = (index: number) => {
+    setGallery(prev => {
+      const target = prev[index];
+      const others = prev.filter((_, i) => i !== index);
+      const updated = [
+        { ...target, viewType: 'hero', sortOrder: 0 },
+        ...others.map((img, i) => ({
+          ...img,
+          viewType: img.viewType === 'hero' ? 'gallery' : img.viewType,
+          sortOrder: i + 1,
+        }))
+      ];
+      return updated;
+    });
+  };
+
+  const handleMoveImage = (index: number, direction: 'up' | 'down') => {
+    const targetIdx = direction === 'up' ? index - 1 : index + 1;
+    if (targetIdx < 0 || targetIdx >= gallery.length) return;
+    setGallery(prev => {
+      const next = [...prev];
+      const temp = next[index];
+      next[index] = next[targetIdx];
+      next[targetIdx] = temp;
+      return next.map((img, i) => ({ ...img, sortOrder: i }));
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -141,6 +247,12 @@ export const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCan
       stock: Number(stock) || 0,
       availability,
       warranty: warranty.trim(),
+      images: gallery.map((img, i) => ({
+        url: img.url,
+        altText: img.altText || name.trim(),
+        viewType: img.viewType || (i === 0 ? 'hero' : 'gallery'),
+        sortOrder: i,
+      })),
       isActive,
       isNew,
       isFeatured,
@@ -288,6 +400,141 @@ export const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCan
               <Field label="Full Description" hint="One paragraph per line; each becomes a separate bullet on the product page">
                 <textarea rows={5} value={description} onChange={e => setDescription(e.target.value)} className="pf-input pf-textarea" placeholder="Line 1 — key benefit&#10;Line 2 — another benefit" />
               </Field>
+            </Section>
+
+            {/* ── PRODUCT GALLERY & MEDIA ── */}
+            <Section id="images">
+              <div style={{ marginBottom: '16px' }}>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted, #8E95A5)', marginBottom: '12px' }}>
+                  Upload multiple product gallery views. The first image marked as <strong>Hero</strong> is used as the primary image across catalog cards.
+                </p>
+
+                {/* Upload & Manual URL Controls */}
+                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center', marginBottom: '16px' }}>
+                  <label className="btn-secondary" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', cursor: 'pointer', padding: '8px 14px', borderRadius: '4px' }}>
+                    <Upload size={15} />
+                    <span>{uploadingImage ? 'Uploading Image...' : 'Upload Image File'}</span>
+                    <input
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp,image/svg+xml"
+                      onChange={handleFileUpload}
+                      disabled={uploadingImage}
+                      style={{ display: 'none' }}
+                    />
+                  </label>
+
+                  <div style={{ display: 'flex', gap: '6px', flex: '1', minWidth: '240px' }}>
+                    <input
+                      type="text"
+                      value={manualImageUrl}
+                      onChange={e => setManualImageUrl(e.target.value)}
+                      placeholder="Or paste image URL (e.g. /assets/products/model-hero.webp)"
+                      className="pf-input"
+                      style={{ flex: 1 }}
+                    />
+                    <button
+                      type="button"
+                      onClick={handleAddManualUrl}
+                      className="btn-secondary"
+                      style={{ padding: '8px 12px' }}
+                      disabled={!manualImageUrl.trim()}
+                    >
+                      Add URL
+                    </button>
+                  </div>
+                </div>
+
+                {/* Image Thumbnails Gallery */}
+                {gallery.length === 0 ? (
+                  <div style={{ padding: '24px', textAlign: 'center', border: '1px dashed #333', borderRadius: '6px', color: '#8E95A5', fontSize: '0.85rem' }}>
+                    No product images uploaded yet. Upload a hero image or add an image path.
+                  </div>
+                ) : (
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: '12px' }}>
+                    {gallery.map((img, idx) => {
+                      const isHero = img.viewType === 'hero' || idx === 0;
+                      return (
+                        <div
+                          key={idx}
+                          style={{
+                            position: 'relative',
+                            border: isHero ? '2px solid #D4AF37' : '1px solid #333',
+                            borderRadius: '6px',
+                            background: '#141721',
+                            overflow: 'hidden',
+                            display: 'flex',
+                            flexDirection: 'column',
+                          }}
+                        >
+                          {/* Image preview */}
+                          <div style={{ width: '100%', height: '90px', background: '#0A0C10', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+                            <img
+                              src={img.url}
+                              alt={img.altText || `View ${idx + 1}`}
+                              style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+                              onError={e => {
+                                (e.target as HTMLElement).style.display = 'none';
+                              }}
+                            />
+                          </div>
+
+                          {/* Hero Badge */}
+                          {isHero && (
+                            <div style={{ position: 'absolute', top: '4px', left: '4px', background: '#D4AF37', color: '#000', fontSize: '10px', fontWeight: 'bold', padding: '2px 6px', borderRadius: '3px' }}>
+                              HERO
+                            </div>
+                          )}
+
+                          {/* Controls */}
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px', background: '#1A1F2E', fontSize: '11px' }}>
+                            {!isHero && (
+                              <button
+                                type="button"
+                                title="Set as primary hero image"
+                                onClick={() => handleSetPrimary(idx)}
+                                style={{ background: 'none', border: 'none', color: '#D4AF37', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+                              >
+                                <Star size={13} />
+                              </button>
+                            )}
+
+                            <div style={{ display: 'flex', gap: '2px', marginLeft: 'auto' }}>
+                              {idx > 0 && (
+                                <button
+                                  type="button"
+                                  title="Move earlier"
+                                  onClick={() => handleMoveImage(idx, 'up')}
+                                  style={{ background: 'none', border: 'none', color: '#A0AEC0', cursor: 'pointer' }}
+                                >
+                                  <ArrowUp size={13} />
+                                </button>
+                              )}
+                              {idx < gallery.length - 1 && (
+                                <button
+                                  type="button"
+                                  title="Move later"
+                                  onClick={() => handleMoveImage(idx, 'down')}
+                                  style={{ background: 'none', border: 'none', color: '#A0AEC0', cursor: 'pointer' }}
+                                >
+                                  <ArrowDown size={13} />
+                                </button>
+                              )}
+                              <button
+                                type="button"
+                                title="Delete image"
+                                onClick={() => handleRemoveImage(idx)}
+                                style={{ background: 'none', border: 'none', color: '#FF6B6B', cursor: 'pointer', marginLeft: '4px' }}
+                              >
+                                <Trash2 size={13} />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
             </Section>
 
             {/* ── PRICING & INVENTORY ── */}

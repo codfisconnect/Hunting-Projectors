@@ -28,37 +28,48 @@
 /* 1. SIDEBAR BRANDING */
 .admin-sidebar-branding {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 24px 22px 20px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 20px 20px 18px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.07);
   background: linear-gradient(180deg, rgba(212, 175, 55, 0.04) 0%, transparent 100%);
-  gap: 5px;
+  gap: 12px;
+}
+
+.admin-sidebar-logo {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: contain;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
+}
+
+.admin-sidebar-brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
 }
 
 .branding-title {
   font-family: var(--font-display, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
-  font-size: 1.25rem;
+  font-size: 0.98rem;
   font-weight: 800;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.08em;
   color: #FFFFFF;
-  line-height: 1.1;
+  line-height: 1.2;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .branding-subtitle {
-  font-family: var(--font-mono, 'SF Mono', Consolas, monospace);
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  color: var(--accent-gold, #D4AF37);
-  text-transform: uppercase;
-  background: rgba(212, 175, 55, 0.12);
-  padding: 3px 8px;
-  border-radius: 3px;
-  border: 1px solid rgba(212, 175, 55, 0.25);
-  display: inline-block;
+  font-family: var(--font-body, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  color: #D4AF37;
+  white-space: nowrap;
 }
 
 /* 2. ADMIN PROFILE CARD */

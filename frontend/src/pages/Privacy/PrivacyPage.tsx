@@ -5,7 +5,7 @@ import '../Warranty/WarrantyPage.css';
 
 export const PrivacyPage: React.FC = () => {
   useEffect(() => {
-    document.title = 'PRIVACY POLICY — Nap Computers Electronicss';
+    document.title = 'PRIVACY POLICY — Hunting Projectors by NAP Computers Electronics';
     window.scrollTo(0, 0);
   }, []);
 
@@ -53,7 +53,7 @@ export const PrivacyPage: React.FC = () => {
           <section className="policy-section-block">
             <h2>3. Zero Data Sale Guarantee</h2>
             <p>
-              We do not sell, rent, monetize, or trade your personal data to third-party telemarketers, advertising networks, or lead aggregators. Communication is conducted strictly between you and authorized product specialists from NAP Computers & Electronics.
+              We do not sell, rent, monetize, or trade your personal data to third-party telemarketers, advertising networks, or lead aggregators. Communication is conducted strictly between you and authorized product specialists from NAP Computers Electronics.
             </p>
           </section>
 

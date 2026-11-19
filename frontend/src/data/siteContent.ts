@@ -1,3 +1,5 @@
+import { BUSINESS_CONFIG } from '../config/businessConfig';
+
 export interface SiteConfig {
   brand: {
     name: string;
@@ -42,38 +44,38 @@ export interface SiteConfig {
 
 export const siteConfig: SiteConfig = {
   brand: {
-    name: 'Nap Computers',
-    subname: 'Electronicss',
-    tagline: 'See Beyond. Light Changes Everything.',
+    name: 'Hunting Projectors',
+    subname: 'by NAP Computers Electronics',
+    tagline: BUSINESS_CONFIG.tagline,
     heroHeadline: 'SEE BEYOND.',
     heroSubheadline: 'Premium projection technology designed to transform everyday spaces into extraordinary viewing experiences.',
   },
   entity: {
-    owner: 'NAP Computers & Electronics',
-    relation: 'Supplied / Owned / Operated by NAP Computers & Electronics',
-    city: 'Chennai',
-    state: 'Tamil Nadu',
-    country: 'India',
-    locationLabel: 'Chennai, Tamil Nadu, India',
-    panIndiaCoverage: 'Direct brand supply and doorstep delivery across all Indian pin codes',
+    owner: BUSINESS_CONFIG.companyName,
+    relation: `Supplied / Owned / Operated by ${BUSINESS_CONFIG.companyName}`,
+    city: BUSINESS_CONFIG.address.city,
+    state: BUSINESS_CONFIG.address.state,
+    country: BUSINESS_CONFIG.address.country,
+    locationLabel: BUSINESS_CONFIG.location,
+    panIndiaCoverage: BUSINESS_CONFIG.panIndiaCoverage,
   },
   contact: {
-    phone: '+919042292929',
-    phoneDisplay: '+91 90422 92929',
-    whatsapp: '919042292929',
-    whatsappDisplay: '+91 90422 92929',
-    whatsappDefaultMessage: 'Hello Nap Computers Electronicss team, I am interested in experiencing a projector demo and would like more information.',
-    email: 'contact@huntingprojectors.in',
-    salesEmail: 'sales@huntingprojectors.in',
+    phone: BUSINESS_CONFIG.phoneRaw,
+    phoneDisplay: BUSINESS_CONFIG.phoneDisplay,
+    whatsapp: BUSINESS_CONFIG.whatsappRaw,
+    whatsappDisplay: BUSINESS_CONFIG.whatsappDisplay,
+    whatsappDefaultMessage: 'Hello Hunting Projectors, I would like to know more about your projector products and services.',
+    email: BUSINESS_CONFIG.email,
+    salesEmail: BUSINESS_CONFIG.email,
     address: {
-      line1: 'NAP Computers & Electronics',
-      line2: 'Mount Road / Electronics District',
-      city: 'Chennai',
-      state: 'Tamil Nadu',
-      pincode: '600002',
-      country: 'India',
+      line1: BUSINESS_CONFIG.address.line1,
+      line2: BUSINESS_CONFIG.address.line2,
+      city: BUSINESS_CONFIG.address.city,
+      state: BUSINESS_CONFIG.address.state,
+      pincode: BUSINESS_CONFIG.address.pincode,
+      country: BUSINESS_CONFIG.address.country,
     },
-    supportHours: 'Monday – Saturday: 10:00 AM – 7:30 PM IST',
+    supportHours: BUSINESS_CONFIG.supportHours,
   },
   announcement: {
     enabled: false,
@@ -82,13 +84,34 @@ export const siteConfig: SiteConfig = {
   },
 };
 
-export const getWhatsAppLink = (customMessage?: string, productSlug?: string) => {
-  const base = `https://wa.me/${siteConfig.contact.whatsapp}`;
-  const text = customMessage || (productSlug
-    ? `Hello Nap Computers Electronicss! I am interested in learning more about the projector (${productSlug}). Could you share live demo pricing and delivery details?`
-    : siteConfig.contact.whatsappDefaultMessage);
+/**
+ * Standardized WhatsApp click-to-chat links
+ * Number: +918825624537
+ */
+export const getWhatsAppLink = (customMessage?: string, productName?: string) => {
+  const base = `https://wa.me/${BUSINESS_CONFIG.whatsappRaw}`;
+  let text = customMessage;
+  if (!text) {
+    if (productName) {
+      text = `Hello Hunting Projectors, I am interested in ${productName}. Please share more details, availability and pricing.`;
+    } else {
+      text = 'Hello Hunting Projectors, I would like to know more about your projector products and services.';
+    }
+  }
   return `${base}?text=${encodeURIComponent(text)}`;
 };
 
-export const getPhoneLink = () => `tel:${siteConfig.contact.phone}`;
-export const getEmailLink = (subject = 'Enquiry: Nap Computers Electronicss') => `mailto:${siteConfig.contact.email}?subject=${encodeURIComponent(subject)}`;
+/**
+ * Demo booking WhatsApp link
+ */
+export const getWhatsAppDemoLink = (productName?: string) => {
+  const base = `https://wa.me/${BUSINESS_CONFIG.whatsappRaw}`;
+  const text = productName
+    ? `Hello Hunting Projectors, I would like to schedule a demonstration for ${productName}. Please contact me to arrange a suitable time.`
+    : 'Hello Hunting Projectors, I would like to schedule a projector demonstration. Please contact me to arrange a suitable time.';
+  return `${base}?text=${encodeURIComponent(text)}`;
+};
+
+export const getPhoneLink = () => `tel:${BUSINESS_CONFIG.phoneRaw}`;
+export const getEmailLink = (subject = 'Enquiry: Hunting Projectors by NAP Computers Electronics') =>
+  `mailto:${BUSINESS_CONFIG.email}?subject=${encodeURIComponent(subject)}`;

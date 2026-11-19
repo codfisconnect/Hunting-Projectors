@@ -1,4 +1,4 @@
-import { fetchJson } from './api';
+import { fetchJson, API_BASE_URL } from './api';
 import { normalizeProduct } from './productService';
 import { Product } from '../types/product';
 
@@ -222,29 +222,46 @@ class AdminService {
 
   /**
    * Upload a product image.
-   * Uses hunting_auth_token (consistent with api.ts fetchJson).
-   * NOTE: Cloudinary integration is Phase 3; this endpoint saves to local uploads for now.
+   * Uses hunting_auth_token and API_BASE_URL (consistent with api.ts).
+   * Safely parses response without uncaught JSON exceptions.
    */
   async uploadProductImage(file: File): Promise<{ url: string; filename: string }> {
     const formData = new FormData();
     formData.append('image', file);
 
-    // Use the same token key as api.ts (hunting_auth_token)
     const token = typeof window !== 'undefined' ? localStorage.getItem('hunting_auth_token') : null;
     const headers: Record<string, string> = {};
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
     }
 
-    const response = await fetch('/api/admin/upload', {
-      method: 'POST',
-      headers,
-      body: formData
-    });
+    const url = `${API_BASE_URL}/admin/upload`;
+    let response: Response;
+    try {
+      response = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: formData
+      });
+    } catch (networkErr: any) {
+      throw new Error(`Unable to connect to upload server at ${url}: ${networkErr.message || 'Network error'}`);
+    }
 
-    const data = await response.json();
-    if (!response.ok || !data.success) {
-      throw new Error(data.message || 'Image upload failed');
+    const responseText = await response.text();
+    let data: any = null;
+    if (responseText && responseText.trim().length > 0) {
+      try {
+        data = JSON.parse(responseText);
+      } catch {
+        // Response was not JSON (e.g. HTML 404/502/500 proxy error)
+        throw new Error(`Server returned non-JSON response (${response.status} ${response.statusText}): ${responseText.slice(0, 150)}`);
+      }
+    } else {
+      throw new Error(`Server returned an empty response (Status: ${response.status} ${response.statusText})`);
+    }
+
+    if (!response.ok || !data?.success) {
+      throw new Error(data?.message || data?.error || `Image upload failed (HTTP ${response.status})`);
     }
 
     return data.data;
@@ -277,6 +294,125 @@ class AdminService {
     await fetchJson<{ success: boolean }>(`/admin/categories/${id}`, {
       method: 'DELETE'
     });
+  }
+
+  async getReviews(): Promise<any[]> {
+    const res = await fetchJson<{ success: boolean; data: any[] }>('/admin/reviews');
+    return res.data;
+  }
+
+  async moderateReview(id: string, action: 'approve' | 'reject' | 'hide' | 'restore'): Promise<any> {
+    const res = await fetchJson<{ success: boolean; data: any }>(`/admin/reviews/${id}/moderate`, {
+      method: 'PATCH',
+      body: JSON.stringify({ action })
+    });
+    return res.data;
+  }
+
+  async getOrderInvoice(orderId: string): Promise<any> {
+    const res = await fetchJson<{ success: boolean; data: any }>(`/admin/orders/${orderId}/invoice`);
+    return res.data;
+  }
+
+  async getAuditLogs(limit = 50): Promise<any[]> {
+    const res = await fetchJson<{ success: boolean; data: any[] }>(`/admin/audit-logs?limit=${limit}`);
+    return res.data;
+  }
+
+  async getCmsContent(): Promise<Record<string, any>> {
+    const res = await fetchJson<{ success: boolean; data: Record<string, any> }>('/admin/cms');
+    return res.data;
+  }
+
+  async updateCmsContent(key: string, value: any): Promise<any> {
+    const res = await fetchJson<{ success: boolean; data: any }>('/admin/cms', {
+      method: 'POST',
+      body: JSON.stringify({ key, value })
+    });
+    return res.data;
+  }
+
+  async bulkImportProducts(products: any[]): Promise<{ createdCount: number; errors: any[] }> {
+    const res = await fetchJson<{ success: boolean; data: { createdCount: number; errors: any[] } }>('/admin/products/bulk-import', {
+      method: 'POST',
+      body: JSON.stringify({ products })
+    });
+    return res.data;
+  }
+
+  async getAnalytics(range = 'all'): Promise<any> {
+    const res = await fetchJson<{ success: boolean; data: any }>(`/admin/analytics?range=${range}`);
+    return res.data;
+  }
+
+  async getWarranties(params?: { q?: string; status?: string }): Promise<any[]> {
+    const qp = new URLSearchParams();
+    if (params?.q) qp.append('q', params.q);
+    if (params?.status && params.status !== 'all') qp.append('status', params.status);
+    const query = qp.toString() ? `?${qp.toString()}` : '';
+    const res = await fetchJson<{ success: boolean; data: any[] }>(`/admin/warranties${query}`);
+    return res.data;
+  }
+
+  async createWarranty(data: any): Promise<any> {
+    const res = await fetchJson<{ success: boolean; data: any }>('/admin/warranties', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+    return res.data;
+  }
+
+  async getServiceTickets(params?: { q?: string; status?: string }): Promise<any[]> {
+    const qp = new URLSearchParams();
+    if (params?.q) qp.append('q', params.q);
+    if (params?.status && params.status !== 'all') qp.append('status', params.status);
+    const query = qp.toString() ? `?${qp.toString()}` : '';
+    const res = await fetchJson<{ success: boolean; data: any[] }>(`/admin/service-tickets${query}`);
+    return res.data;
+  }
+
+  async createServiceTicket(data: any): Promise<any> {
+    const res = await fetchJson<{ success: boolean; data: any }>('/admin/service-tickets', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+    return res.data;
+  }
+
+  async updateServiceTicketStatus(id: string, status: string, serviceNotes?: string): Promise<any> {
+    const res = await fetchJson<{ success: boolean; data: any }>(`/admin/service-tickets/${id}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status, serviceNotes })
+    });
+    return res.data;
+  }
+
+  async getQuotations(): Promise<any[]> {
+    const res = await fetchJson<{ success: boolean; data: any[] }>('/admin/quotations');
+    return res.data;
+  }
+
+  async createQuotation(data: any): Promise<any> {
+    const res = await fetchJson<{ success: boolean; data: any }>('/admin/quotations', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+    return res.data;
+  }
+
+  async updateQuotationStatus(id: string, status: string): Promise<any> {
+    const res = await fetchJson<{ success: boolean; data: any }>(`/admin/quotations/${id}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status })
+    });
+    return res.data;
+  }
+
+  async convertQuotationToOrder(id: string): Promise<any> {
+    const res = await fetchJson<{ success: boolean; data: any }>(`/admin/quotations/${id}/convert-to-order`, {
+      method: 'POST'
+    });
+    return res.data;
   }
 }
 

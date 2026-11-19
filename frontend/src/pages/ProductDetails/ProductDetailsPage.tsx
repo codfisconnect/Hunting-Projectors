@@ -52,7 +52,7 @@ export const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ onOpenEn
       .then(async (prod) => {
         if (!isMounted) return;
         setProduct(prod);
-        document.title = `${prod.name} — Nap Computers Electronicss`;
+        document.title = `${prod.name} — Hunting Projectors by NAP Computers Electronics`;
         try {
           const related = await getRelatedProducts(slug, 3);
           if (isMounted) setRelatedProducts(related);
@@ -198,7 +198,7 @@ export const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ onOpenEn
               <span className="eyebrow">OFFICIAL BRAND GUARANTEE</span>
               <h2 className="display-section">DIRECT CHENNAI SUPPORT & WARRANTY</h2>
               <p className="warranty-banner-desc">
-                When you choose Hunting, you purchase directly from the brand owner: NAP Computers & Electronics. Every unit is tested, inspected, and serialized at our Chennai facility before express dispatch.
+                When you choose Hunting Projectors, you purchase directly from the brand owner: NAP Computers Electronics. Every unit is tested, inspected, and serialized at our Chennai facility before express dispatch.
               </p>
               
               <div className="warranty-checklist">

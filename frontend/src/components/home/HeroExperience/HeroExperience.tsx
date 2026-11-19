@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ChevronDown, Sparkles } from 'lucide-react';
 import { getProducts } from '../../../services/productService';
+import { getPublicCms } from '../../../services/cmsService';
 import { Product } from '../../../types/product';
 import './HeroExperience.css';
 
@@ -12,6 +13,12 @@ interface HeroExperienceProps {
 export const HeroExperience: React.FC<HeroExperienceProps> = ({ onOpenEnquiry }) => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [flagship, setFlagship] = useState<Product | null>(null);
+  const [headline, setHeadline] = useState<string>('SEE BEYOND.');
+  const [subheadline, setSubheadline] = useState<string>(
+    'Laser-sharp 4K optical projection engineered for cinematic immersion and breathtaking scale at home.'
+  );
+  const [promoBanner, setPromoBanner] = useState<{ active: boolean; text: string; link: string } | null>(null);
+
   const heroRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -25,6 +32,29 @@ export const HeroExperience: React.FC<HeroExperienceProps> = ({ onOpenEnquiry })
       .catch(err => {
         console.warn('HeroExperience flagship fetch fallback:', err);
       });
+
+    // Fetch dynamic CMS configurations
+    getPublicCms()
+      .then(cms => {
+        if (!isMounted) return;
+        if (cms.cms_hero) {
+          if (cms.cms_hero.headline && cms.cms_hero.headline.trim()) {
+            setHeadline(cms.cms_hero.headline.trim());
+          }
+          if (cms.cms_hero.subheadline && cms.cms_hero.subheadline.trim()) {
+            setSubheadline(cms.cms_hero.subheadline.trim());
+          }
+        }
+        if (cms.cms_banners && cms.cms_banners.active && cms.cms_banners.text) {
+          setPromoBanner({
+            active: true,
+            text: cms.cms_banners.text,
+            link: cms.cms_banners.link || '/contact',
+          });
+        }
+      })
+      .catch(() => {});
+
     return () => {
       isMounted = false;
     };
@@ -91,19 +121,42 @@ export const HeroExperience: React.FC<HeroExperienceProps> = ({ onOpenEnquiry })
           </div>
 
           <div className="hero-title-area">
-            <h1 className="hero-main-title">SEE BEYOND.</h1>
-            <p className="hero-subtitle">
-              Laser-sharp 4K optical projection engineered for cinematic immersion at home.
-            </p>
+            <h1 className="hero-main-title">{headline}</h1>
+            <p className="hero-subtitle">{subheadline}</p>
           </div>
 
+          {/* Dynamic Promotional Banner (if enabled in Admin CMS) */}
+          {promoBanner && promoBanner.active && (
+            <div className="hero-promo-banner-pill" style={{
+              margin: '12px 0 16px 0',
+              padding: '8px 14px',
+              background: 'rgba(212, 160, 23, 0.15)',
+              border: '1px solid rgba(212, 160, 23, 0.4)',
+              borderRadius: '6px',
+              fontSize: '0.85rem',
+              color: '#FAD02C',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              maxWidth: 'fit-content'
+            }}>
+              <Sparkles size={14} />
+              <span>{promoBanner.text}</span>
+              {promoBanner.link && (
+                <Link to={promoBanner.link} style={{ color: '#fff', textDecoration: 'underline', marginLeft: '6px', fontWeight: 600 }}>
+                  Details
+                </Link>
+              )}
+            </div>
+          )}
+
           <div className="hero-cta-group">
-            <Link to="/products" className="btn-primary hero-btn-main">
-              <span>EXPLORE PROJECTORS</span>
+            <Link to="/projector-finder" className="btn-primary hero-btn-main">
+              <span>FIND YOUR PROJECTOR</span>
               <ArrowRight size={15} />
             </Link>
-            <Link to="/projector-finder" className="btn-secondary hero-btn-sub">
-              <span>FIND YOUR PROJECTOR</span>
+            <Link to="/products" className="btn-secondary hero-btn-sub">
+              <span>EXPLORE PROJECTORS</span>
             </Link>
           </div>
         </div>

@@ -27,7 +27,7 @@ export const SupportPage: React.FC<SupportPageProps> = ({ onOpenEnquiry }) => {
   const [trackFeedback, setTrackFeedback] = useState<string | null>(null);
 
   useEffect(() => {
-    document.title = 'SUPPORT & SERVICE — Nap Computers Electronicss Direct Help';
+    document.title = 'SUPPORT & SERVICE — Hunting Projectors by NAP Computers Electronics';
     window.scrollTo(0, 0);
   }, []);
 
@@ -65,7 +65,7 @@ export const SupportPage: React.FC<SupportPageProps> = ({ onOpenEnquiry }) => {
           </span>
           <h1 className="display-title">SUPPORT & SERVICE HUB.</h1>
           <p className="support-hero-desc">
-            Direct after-sales service, warranty registration, optical technical guidance, and pan-India dispatch support operated by NAP Computers & Electronics.
+            Direct after-sales service, warranty registration, optical technical guidance, and pan-India dispatch support operated by NAP Computers Electronics.
           </p>
 
           <div className="support-quick-contact-pills">
@@ -91,7 +91,7 @@ export const SupportPage: React.FC<SupportPageProps> = ({ onOpenEnquiry }) => {
           <div className="support-pillar-card">
             <div className="sp-icon-box"><ShieldCheck size={22} /></div>
             <h3 className="sp-title">WARRANTY REGISTRATION</h3>
-            <p className="sp-desc">Official brand warranty coverage backed by NAP Computers. Register your serial number within 15 days of delivery.</p>
+            <p className="sp-desc">Official brand warranty coverage backed by NAP Computers Electronics. Register your serial number within 15 days of delivery.</p>
             <Link to="/warranty" className="sp-link">
               <span>Warranty Guidelines</span>
               <ArrowRight size={14} />

@@ -8,10 +8,10 @@ const prisma = new PrismaClient();
 
 async function createAdmin() {
   const args = process.argv.slice(2);
-  const email = process.env.ADMIN_EMAIL || args[0] || 'admin@huntingprojectors.com';
+  const email = process.env.ADMIN_EMAIL || args[0] || 'huntingprojectors@gmail.com';
   const password = process.env.ADMIN_PASSWORD || args[1] || 'HuntingAdmin@2026';
   const fullName = process.env.ADMIN_NAME || args[2] || 'Hunting Store Administrator';
-  const phoneNumber = process.env.ADMIN_PHONE || '+919444012345';
+  const phoneNumber = process.env.ADMIN_PHONE || '+918825624537';
 
   if (!email || !password) {
     console.error('Error: Administrator email and password are required.');

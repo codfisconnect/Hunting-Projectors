@@ -34,7 +34,7 @@ export const ContactPage: React.FC = () => {
   const [result, setResult] = useState<EnquirySubmissionResult | null>(null);
 
   useEffect(() => {
-    document.title = 'CONTACT & SHOWROOM — Nap Computers Electronicss Chennai';
+    document.title = 'CONTACT & SHOWROOM — Hunting Projectors by NAP Computers Electronics';
     window.scrollTo(0, 0);
 
     let isMounted = true;
@@ -73,7 +73,7 @@ export const ContactPage: React.FC = () => {
   };
 
   const handleDirectWhatsApp = () => {
-    const text = `Hello Nap Computers Electronicss!%0A%0AName: ${formData.fullName || 'Prospective Buyer'}%0APhone: ${formData.phoneNumber || 'Not provided'}%0ACity: ${formData.city}%0AInterested Model: ${formData.productName}%0AMessage: ${formData.message || 'I would like to inquire about demo availability and live pricing.'}`;
+    const text = `Hello Hunting Projectors!%0A%0AName: ${formData.fullName || 'Prospective Buyer'}%0APhone: ${formData.phoneNumber || 'Not provided'}%0ACity: ${formData.city}%0AInterested Model: ${formData.productName}%0AMessage: ${formData.message || 'I would like to inquire about demo availability and live pricing.'}`;
     window.open(`https://wa.me/${siteConfig.contact.whatsapp}?text=${text}`, '_blank');
   };
 
@@ -144,7 +144,7 @@ export const ContactPage: React.FC = () => {
               </div>
               <h3 className="entity-box-name">{siteConfig.entity.owner}</h3>
               <p className="entity-box-desc">
-                Hunting is the customer-facing projector brand. All orders, warranties, and after-sales support are fulfilled directly by NAP Computers & Electronics.
+                Hunting Projectors is the customer-facing projector brand. All orders, warranties, and after-sales support are fulfilled directly by NAP Computers Electronics.
               </p>
 
               <div className="entity-address-card">
@@ -242,7 +242,7 @@ export const ContactPage: React.FC = () => {
                         id="c-phone"
                         type="tel"
                         required
-                        placeholder="+91 90422 92929"
+                        placeholder="+91 88256 24537"
                         value={formData.phoneNumber}
                         onChange={e => setFormData({ ...formData, phoneNumber: e.target.value })}
                       />

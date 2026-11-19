@@ -55,7 +55,7 @@ export const ProductSpecs: React.FC<ProductSpecsProps> = ({ specifications }) =>
           <span className="eyebrow">LABORATORY CALIBRATION</span>
           <h2 className="display-section">TECHNICAL SPECIFICATIONS</h2>
           <p className="specs-notice-text">
-            * Clearly stated demo technical parameters. Official production certification will accompany shipment units.
+            * Calibrated technical parameters. Full specification sheet accompanies shipment units.
           </p>
         </div>
 

@@ -4,6 +4,7 @@ import { MessageCircle } from 'lucide-react';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { WishlistProvider } from './context/WishlistContext';
+import { AnnouncementBar } from './components/layout/AnnouncementBar/AnnouncementBar';
 import { Navbar } from './components/layout/Navbar/Navbar';
 import { MobileDrawer } from './components/layout/MobileDrawer/MobileDrawer';
 import { Footer } from './components/layout/Footer/Footer';
@@ -33,6 +34,9 @@ export const App: React.FC = () => {
           <WishlistProvider>
             <div className="hunting-app-root">
             
+            {/* Top Announcement Bar (Dynamic CMS Powered) */}
+            <AnnouncementBar />
+
             {/* Global Navbar */}
             <Navbar
               onOpenSearch={() => setIsSearchOpen(true)}
@@ -88,13 +92,13 @@ export const App: React.FC = () => {
               target="_blank"
               rel="noopener noreferrer"
               className="sticky-whatsapp-bubble"
-              aria-label="Chat directly with Nap Computers Electronicss specialist on WhatsApp"
+              aria-label="Chat directly with Hunting Projectors by NAP Computers Electronics specialist on WhatsApp"
               title="Chat with Chennai Specialist"
             >
               <div className="whatsapp-bubble-icon">
                 <MessageCircle size={24} />
               </div>
-              <span className="whatsapp-bubble-text">NAP CONCIERGE</span>
+              <span className="whatsapp-bubble-text">CHAT WITH US</span>
             </a>
 
           </div>

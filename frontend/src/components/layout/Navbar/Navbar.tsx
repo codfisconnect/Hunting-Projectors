@@ -47,10 +47,19 @@ export const Navbar: React.FC<NavbarProps> = ({
     <header className={`navbar-header ${isScrolled ? 'scrolled' : ''}`}>
       <div className="container-wide navbar-container">
         
-        {/* Brand Identity */}
-        <Link to="/" className="navbar-brand" aria-label="Nap Computers Electronicss Home">
-          <span className="brand-primary">{siteConfig.brand.name}</span>
-          <span className="brand-secondary">{siteConfig.brand.subname}</span>
+        {/* Brand Identity with Circular Logo */}
+        <Link to="/" className="navbar-brand" aria-label="Hunting Projectors by NAP Computers Electronics Home">
+          <img
+            src="/assets/hunting-projectors-logo-nav.png"
+            alt="Hunting Projectors Logo"
+            className="navbar-brand-logo"
+            width="44"
+            height="44"
+          />
+          <div className="navbar-brand-text">
+            <span className="brand-primary">HUNTING PROJECTORS</span>
+            <span className="brand-secondary">by NAP Computers Electronics</span>
+          </div>
         </Link>
 
         {/* Desktop Navigation Links */}

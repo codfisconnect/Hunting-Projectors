@@ -6,6 +6,8 @@ import { whatsappService } from '../services/whatsappService.js';
 import { notificationService } from '../services/notificationService.js';
 import { sendSuccess, sendError } from '../utils/response.js';
 
+import { BUSINESS_CONFIG } from '../config/businessConfig.js';
+
 export async function getOverview(req: Request, res: Response, next: NextFunction) {
   try {
     const { from, to } = req.query as { from?: string; to?: string };
@@ -183,11 +185,11 @@ export async function getSettings(req: Request, res: Response, next: NextFunctio
 
     sendSuccess(res, {
       store: {
-        name: 'Hunting Projectors',
-        company: 'NAP Computers & Electronics',
-        location: 'Chennai, Tamil Nadu, India',
-        phone: '+91 94440 12345',
-        email: 'sales@huntingprojectors.com'
+        name: BUSINESS_CONFIG.brandName,
+        company: BUSINESS_CONFIG.companyName,
+        location: BUSINESS_CONFIG.location,
+        phone: BUSINESS_CONFIG.phone,
+        email: BUSINESS_CONFIG.email
       },
       integrations: {
         email: emailStatus,
@@ -200,18 +202,22 @@ export async function getSettings(req: Request, res: Response, next: NextFunctio
   }
 }
 
+import { storageService } from '../services/storageService.js';
+
 export async function uploadProductImage(req: Request, res: Response, next: NextFunction) {
   try {
     if (!req.file) {
       return sendError(res, 'No image file uploaded', 400);
     }
 
-    const publicUrl = `/assets/uploads/${req.file.filename}`;
+    const uploadResult = await storageService.uploadFile(req.file);
+
     sendSuccess(res, {
-      url: publicUrl,
-      filename: req.file.filename,
-      size: req.file.size,
-      mimetype: req.file.mimetype
+      url: uploadResult.url,
+      filename: uploadResult.filename,
+      size: uploadResult.size,
+      mimetype: uploadResult.mimetype,
+      storageProvider: uploadResult.storageProvider
     }, 'Product image uploaded successfully');
   } catch (err: any) {
     sendError(res, err.message || 'Image upload failed', 500);

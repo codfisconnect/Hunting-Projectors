@@ -5,15 +5,26 @@ export function errorHandler(err: any, req: Request, res: Response, next: NextFu
   let statusCode = err.status || err.statusCode || 500;
   let message = err.message || 'Internal Server Error';
 
-  console.error(`[Error] ${req.method} ${req.originalUrl}:`, err);
+  // Server-side diagnostic log (never print database connection strings or secrets)
+  console.error(`[Error] ${req.method} ${req.originalUrl}:`, err.name || 'Error', err.message || '');
 
-  // Mask database / Prisma internal errors from the response
-  if (err.name?.includes('Prisma') || err.message?.includes('prisma') || err.message?.includes('DATABASE_URL')) {
+  // Mask database / Prisma / environment internals from client response
+  const isPrismaError =
+    err.name?.includes('Prisma') ||
+    err.message?.includes('prisma') ||
+    err.message?.includes('Prisma') ||
+    err.message?.includes('DATABASE_URL') ||
+    err.message?.includes('DIRECT_URL') ||
+    err.message?.includes('invocation') ||
+    err.message?.includes('database');
+
+  if (isPrismaError) {
     statusCode = 500;
     message = 'A database service error occurred. Please try again later.';
   }
 
-  return sendError(res, message, statusCode, process.env.NODE_ENV === 'development' ? err.stack : undefined);
+  // Never leak filesystem paths or stack traces in responses
+  return sendError(res, message, statusCode);
 }
 
 export function notFoundHandler(req: Request, res: Response) {

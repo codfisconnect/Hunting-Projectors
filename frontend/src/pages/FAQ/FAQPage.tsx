@@ -13,7 +13,7 @@ export const FAQPage: React.FC<FAQPageProps> = ({ onOpenEnquiry }) => {
   const [activeCategory, setActiveCategory] = useState<string>('all');
 
   useEffect(() => {
-    document.title = 'FREQUENTLY ASKED QUESTIONS — Nap Computers Electronicss';
+    document.title = 'FREQUENTLY ASKED QUESTIONS — Hunting Projectors by NAP Computers Electronics';
     window.scrollTo(0, 0);
   }, []);
 
