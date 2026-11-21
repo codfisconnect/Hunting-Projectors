@@ -25,6 +25,8 @@ import { ProductWhatsIncluded } from '../../components/product/ProductWhatsInclu
 import { ProductCard } from '../../components/product/ProductCard/ProductCard';
 import { Accordion } from '../../components/common/Accordion/Accordion';
 import { siteConfig, getWhatsAppLink, getPhoneLink } from '../../data/siteContent';
+import { SEOHead } from '../../components/common/SEOHead/SEOHead';
+import { BUSINESS_CONFIG } from '../../config/businessConfig';
 import './ProductDetailsPage.css';
 
 interface ProductDetailsPageProps {
@@ -52,7 +54,6 @@ export const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ onOpenEn
       .then(async (prod) => {
         if (!isMounted) return;
         setProduct(prod);
-        document.title = `${prod.name} — Hunting Projectors by NAP Computers Electronics`;
         try {
           const related = await getRelatedProducts(slug, 3);
           if (isMounted) setRelatedProducts(related);
@@ -78,6 +79,11 @@ export const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ onOpenEn
   if (loading) {
     return (
       <div className="product-not-found-container">
+        <SEOHead
+          title="Loading Projector Specifications — Hunting Projectors"
+          description="Connecting to Hunting Projectors database for verified optical hardware specifications."
+          noindex={true}
+        />
         <h2>Loading Projector Specifications...</h2>
         <p>Connecting to Hunting database for optical hardware specifications.</p>
       </div>
@@ -87,6 +93,11 @@ export const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ onOpenEn
   if (!product || error) {
     return (
       <div className="product-not-found-container">
+        <SEOHead
+          title="Projector Model Not Found — Hunting Projectors"
+          description="The requested projector model could not be found or may have been unlisted."
+          noindex={true}
+        />
         <h2>Projector Model Not Found</h2>
         <p>{error || 'The requested Hunting model may have been moved or updated.'}</p>
         <Link to="/products" className="btn-primary">
@@ -94,6 +105,46 @@ export const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ onOpenEn
         </Link>
       </div>
     );
+  }
+
+  // Build verified Product structured data
+  const primaryImageUrl = product.images?.hero
+    ? (product.images.hero.startsWith('http') ? product.images.hero : `https://huntingprojector.in${product.images.hero}`)
+    : 'https://huntingprojector.in/assets/hunting-projectors-og.png';
+
+  const productStructuredData: Record<string, any> = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    image: [primaryImageUrl],
+    description: product.shortDescription || `${product.name} premium optical projector.`,
+    brand: {
+      '@type': 'Brand',
+      name: BUSINESS_CONFIG.brandName
+    },
+    offers: {
+      '@type': 'Offer',
+      price: product.price,
+      priceCurrency: 'INR',
+      availability: (product.stock ?? 0) > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+      url: `https://huntingprojector.in/products/${encodeURIComponent(product.slug)}`,
+      seller: {
+        '@type': 'Organization',
+        name: BUSINESS_CONFIG.companyName
+      }
+    }
+  };
+
+  if (product.sku) {
+    productStructuredData.sku = product.sku;
+  }
+
+  if (product.rating && product.reviewsCount > 0) {
+    productStructuredData.aggregateRating = {
+      '@type': 'AggregateRating',
+      ratingValue: product.rating,
+      reviewCount: product.reviewsCount
+    };
   }
 
   // Relevant Product FAQs
@@ -105,6 +156,14 @@ export const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ onOpenEn
 
   return (
     <div className="product-details-page">
+      <SEOHead
+        title={`${product.name} — Hunting Projectors by NAP Computers Electronics`}
+        description={product.shortDescription || `${product.name} — Premium high-brightness optical home cinema projector.`}
+        canonicalPath={`/products/${encodeURIComponent(product.slug)}`}
+        ogType="product"
+        ogImage={primaryImageUrl}
+        structuredData={productStructuredData}
+      />
       <div className="container-wide details-container">
         
         {/* Breadcrumb Navigation */}

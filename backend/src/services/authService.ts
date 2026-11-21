@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import { prisma } from '../config/database.js';
 import { generateToken } from '../utils/token.js';
 import { emailService } from './emailService.js';
+import { config } from '../config/env.js';
 
 export interface RegisterDTO {
   fullName: string;
@@ -31,6 +32,45 @@ function checkRateLimit(key: string, maxAttempts = 5, windowMs = 15 * 60 * 1000)
   }
   record.count += 1;
   return true;
+}
+
+/**
+ * Sanitizes and validates client origin against explicitly approved production domains.
+ * Prevents Host/Origin header injection into password reset or verification links.
+ * Defaults securely to https://huntingprojector.in if no valid approved origin is provided.
+ */
+export function resolveSafeAuthOrigin(clientOrigin?: string): string {
+  const defaultOrigin = 'https://huntingprojector.in';
+  if (!clientOrigin || typeof clientOrigin !== 'string') {
+    return defaultOrigin;
+  }
+
+  const trimmed = clientOrigin.trim().replace(/\/+$/, ''); // Remove trailing slashes
+
+  // 1. Check primary and official Hunting Projectors domains
+  if (/^https:\/\/(www\.)?huntingprojector\.in$/.test(trimmed)) {
+    return trimmed;
+  }
+
+  // 2. Check NAP Computers apex and official subdomains
+  if (/^https:\/\/(www\.|hunting\.|projectors\.)?napcomputers\.in$/.test(trimmed)) {
+    return trimmed;
+  }
+
+  // 3. Check authorized Hunting Projectors Vercel deployment/preview domains
+  if (/^https:\/\/hunting-projectors(-deploy)?(-[a-zA-Z0-9_-]+)*\.vercel\.app$/.test(trimmed)) {
+    return trimmed;
+  }
+
+  // 4. In development mode only, permit localhost
+  if (config.nodeEnv !== 'production') {
+    if (trimmed === 'http://localhost:5173' || trimmed === 'http://127.0.0.1:5173') {
+      return trimmed;
+    }
+  }
+
+  // Fallback to default primary domain for any untrusted or unrecognized origin
+  return defaultOrigin;
 }
 
 export class AuthService {
@@ -196,8 +236,9 @@ export class AuthService {
         }
       });
 
-      const origin = clientOrigin || process.env.CLIENT_URL || 'https://napcomputers.in';
-      const resetLink = `${origin}/reset-password?token=${rawToken}`;
+      // Resolve origin safely using strict whitelist, defaulting to https://huntingprojector.in
+      const safeOrigin = resolveSafeAuthOrigin(clientOrigin || process.env.CLIENT_URL);
+      const resetLink = `${safeOrigin}/reset-password?token=${rawToken}`;
 
       // Dispatch email if SMTP configured
       const emailHtml = `

@@ -21,6 +21,7 @@ import { getProducts } from '../../services/productService';
 import { Product } from '../../types/product';
 import { siteConfig } from '../../data/siteContent';
 import { CinemaExperience } from '../../components/home/CinemaExperience/CinemaExperience';
+import { SEOHead } from '../../components/common/SEOHead/SEOHead';
 import './ExperiencePage.css';
 
 interface ExperiencePageProps {
@@ -33,7 +34,6 @@ export const ExperiencePage: React.FC<ExperiencePageProps> = ({ onOpenEnquiry })
   const [viewMode, setViewMode] = useState<'clean' | 'poster'>('clean');
 
   useEffect(() => {
-    document.title = 'Experience Cinema Differently — Hunting Projectors by NAP Computers Electronics';
     window.scrollTo(0, 0);
 
     let isMounted = true;
@@ -58,6 +58,11 @@ export const ExperiencePage: React.FC<ExperiencePageProps> = ({ onOpenEnquiry })
 
   return (
     <div className="experience-page">
+      <SEOHead
+        title="Experience Cinema Differently — Hunting Projectors Scale & Lumens"
+        description="Explore 100-inch to 300-inch cinematic scale simulations, throw distance ratios, and ambient light optical performance with Hunting Projectors."
+        canonicalPath="/experience"
+      />
 
       {/* 1. HERO SECTION */}
       <section className="experience-hero-cinematic">

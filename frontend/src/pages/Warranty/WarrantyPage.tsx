@@ -1,16 +1,21 @@
 import React, { useEffect } from 'react';
 import { ShieldCheck, CheckCircle2, AlertCircle, Wrench, Phone, MessageCircle } from 'lucide-react';
 import { siteConfig, getWhatsAppLink, getPhoneLink } from '../../data/siteContent';
+import { SEOHead } from '../../components/common/SEOHead/SEOHead';
 import './WarrantyPage.css';
 
 export const WarrantyPage: React.FC = () => {
   useEffect(() => {
-    document.title = 'WARRANTY GUIDELINES — Hunting Projectors by NAP Computers Electronics';
     window.scrollTo(0, 0);
   }, []);
 
   return (
     <div className="policy-page">
+      <SEOHead
+        title="Official Warranty Guidelines — Hunting Projectors Direct Protection"
+        description="Comprehensive 2-year brand warranty guidelines covering optical engines, laser light sources, and electronics fulfilled directly by NAP Computers Electronics."
+        canonicalPath="/warranty"
+      />
       <div className="container policy-container">
         
         <header className="policy-header">

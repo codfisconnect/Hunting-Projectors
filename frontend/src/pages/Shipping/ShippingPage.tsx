@@ -1,16 +1,21 @@
 import React, { useEffect } from 'react';
 import { Truck, PackageCheck, ShieldCheck, MapPin, Video, CheckCircle2 } from 'lucide-react';
 import { siteConfig } from '../../data/siteContent';
+import { SEOHead } from '../../components/common/SEOHead/SEOHead';
 import '../Warranty/WarrantyPage.css';
 
 export const ShippingPage: React.FC = () => {
   useEffect(() => {
-    document.title = 'SHIPPING & PAN-INDIA DELIVERY — Hunting Projectors by NAP Computers Electronics';
     window.scrollTo(0, 0);
   }, []);
 
   return (
     <div className="policy-page">
+      <SEOHead
+        title="Shipping & Pan-India Delivery — Hunting Projectors Logistics"
+        description="Learn about our insured door-to-door projector delivery across all Indian pin codes, optical shock-dampening packaging, and burn-in testing from Chennai."
+        canonicalPath="/shipping"
+      />
       <div className="container policy-container">
         
         <header className="policy-header">

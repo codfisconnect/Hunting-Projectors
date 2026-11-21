@@ -1,16 +1,21 @@
 import React, { useEffect } from 'react';
 import { FileText, ShieldCheck, Scale } from 'lucide-react';
 import { siteConfig } from '../../data/siteContent';
+import { SEOHead } from '../../components/common/SEOHead/SEOHead';
 import '../Warranty/WarrantyPage.css';
 
 export const TermsPage: React.FC = () => {
   useEffect(() => {
-    document.title = 'TERMS OF SERVICE — Hunting Projectors by NAP Computers Electronics';
     window.scrollTo(0, 0);
   }, []);
 
   return (
     <div className="policy-page">
+      <SEOHead
+        title="Terms of Service — Hunting Projectors Legal Framework"
+        description="Review the terms and conditions for direct brand supply, showroom appointments, and optical hardware orders with Hunting Projectors by NAP Computers Electronics."
+        canonicalPath="/terms"
+      />
       <div className="container policy-container">
         
         <header className="policy-header">

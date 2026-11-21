@@ -12,8 +12,12 @@ import wishlistRoutes from './wishlistRoutes.js';
 import orderRoutes from './orderRoutes.js';
 import adminRoutes from './adminRoutes.js';
 import jobRoutes from './jobRoutes.js';
+import { getSitemapXml } from '../controllers/sitemapController.js';
 
 const router = Router();
+
+// Dynamic XML Sitemap for Search Engines
+router.get('/sitemap.xml', getSitemapXml);
 
 router.use('/admin', adminRoutes);
 router.use('/jobs', jobRoutes);

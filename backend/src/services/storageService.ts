@@ -42,12 +42,19 @@ export class StorageService {
   private fallbackDir: string;
 
   constructor() {
-    this.fallbackDir = path.resolve(process.cwd(), '../frontend/public/assets/uploads');
-    if (!fs.existsSync(this.fallbackDir)) {
+    const isProduction = process.env.NODE_ENV === 'production';
+
+    // On Cloud Run / production container, use writable /tmp; in local dev use frontend public uploads
+    this.fallbackDir = isProduction
+      ? path.join('/tmp', 'hunting-uploads')
+      : path.resolve(process.cwd(), '../frontend/public/assets/uploads');
+
+    // Only attempt directory creation in non-production local development
+    if (!isProduction && !fs.existsSync(this.fallbackDir)) {
       try {
         fs.mkdirSync(this.fallbackDir, { recursive: true });
-      } catch (err) {
-        console.warn('Could not create fallback local upload directory:', err);
+      } catch (err: any) {
+        console.warn('Could not create fallback local upload directory:', err.message);
       }
     }
   }

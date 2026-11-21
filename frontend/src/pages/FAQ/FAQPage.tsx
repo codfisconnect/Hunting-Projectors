@@ -3,6 +3,7 @@ import { faqs } from '../../data/faqs';
 import { Accordion } from '../../components/common/Accordion/Accordion';
 import { HelpCircle, Sparkles, MessageCircle, Phone } from 'lucide-react';
 import { siteConfig, getWhatsAppLink, getPhoneLink } from '../../data/siteContent';
+import { SEOHead } from '../../components/common/SEOHead/SEOHead';
 import './FAQPage.css';
 
 interface FAQPageProps {
@@ -13,7 +14,6 @@ export const FAQPage: React.FC<FAQPageProps> = ({ onOpenEnquiry }) => {
   const [activeCategory, setActiveCategory] = useState<string>('all');
 
   useEffect(() => {
-    document.title = 'FREQUENTLY ASKED QUESTIONS — Hunting Projectors by NAP Computers Electronics';
     window.scrollTo(0, 0);
   }, []);
 
@@ -35,8 +35,28 @@ export const FAQPage: React.FC<FAQPageProps> = ({ onOpenEnquiry }) => {
     category: f.categoryLabel,
   }));
 
+  // Build FAQPage schema using verified questions and answers
+  const faqStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.slice(0, 10).map(f => ({
+      '@type': 'Question',
+      name: f.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: f.answer
+      }
+    }))
+  };
+
   return (
     <div className="faq-page">
+      <SEOHead
+        title="Frequently Asked Questions — Hunting Projectors Knowledge Base"
+        description="Find answers to questions about 4K optical projection, throw distance, ambient light ALR screens, Pan-India delivery, and 2-year warranty."
+        canonicalPath="/faq"
+        structuredData={faqStructuredData}
+      />
       <div className="container faq-container">
         
         {/* Header */}

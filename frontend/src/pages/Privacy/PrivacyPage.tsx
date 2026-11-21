@@ -1,16 +1,21 @@
 import React, { useEffect } from 'react';
 import { ShieldCheck, Lock, Eye, FileText } from 'lucide-react';
 import { siteConfig } from '../../data/siteContent';
+import { SEOHead } from '../../components/common/SEOHead/SEOHead';
 import '../Warranty/WarrantyPage.css';
 
 export const PrivacyPage: React.FC = () => {
   useEffect(() => {
-    document.title = 'PRIVACY POLICY — Hunting Projectors by NAP Computers Electronics';
     window.scrollTo(0, 0);
   }, []);
 
   return (
     <div className="policy-page">
+      <SEOHead
+        title="Privacy Policy — Hunting Projectors Data Integrity"
+        description="Learn how Hunting Projectors by NAP Computers Electronics protects your personal information, demo inquiries, and customer data."
+        canonicalPath="/privacy"
+      />
       <div className="container policy-container">
         
         <header className="policy-header">

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { ProjectorFinderSection } from '../../components/home/ProjectorFinderSection/ProjectorFinderSection';
 import { Sparkles, Compass, ShieldCheck, Phone } from 'lucide-react';
 import { siteConfig, getPhoneLink, getWhatsAppLink } from '../../data/siteContent';
+import { SEOHead } from '../../components/common/SEOHead/SEOHead';
 import './ProjectorFinderPage.css';
 
 interface ProjectorFinderPageProps {
@@ -10,12 +11,16 @@ interface ProjectorFinderPageProps {
 
 export const ProjectorFinderPage: React.FC<ProjectorFinderPageProps> = ({ onOpenEnquiry }) => {
   useEffect(() => {
-    document.title = 'FIND YOUR HUNTING — Guided Projector Match Engine';
     window.scrollTo(0, 0);
   }, []);
 
   return (
     <div className="projector-finder-page">
+      <SEOHead
+        title="Projector Finder Tool — Guided Room & Distance Match Engine"
+        description="Find the ideal projector for your room size, throw distance, ambient light level, and budget with Hunting Projectors interactive optical match engine."
+        canonicalPath="/projector-finder"
+      />
       <ProjectorFinderSection standalone onOpenEnquiry={onOpenEnquiry} />
 
       {/* Supporting Architectural Advice Section */}

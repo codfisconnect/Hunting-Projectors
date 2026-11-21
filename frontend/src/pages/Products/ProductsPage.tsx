@@ -13,6 +13,7 @@ import { getProducts, getCategories } from '../../services/productService';
 import { Product, ProductPagination } from '../../types/product';
 import { Category } from '../../types/category';
 import { ProductCard } from '../../components/product/ProductCard/ProductCard';
+import { SEOHead } from '../../components/common/SEOHead/SEOHead';
 import './ProductsPage.css';
 
 interface ProductsPageProps {
@@ -44,7 +45,6 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ onOpenEnquiry }) => 
   const debounceTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    document.title = 'EXPLORE PROJECTORS — Hunting 4K Laser & Cinema Lineup';
     window.scrollTo(0, 0);
   }, []);
 
@@ -176,8 +176,26 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ onOpenEnquiry }) => 
 
   const totalCatalogCount = categories.reduce((sum, c) => sum + (c.count ?? c._count?.products ?? 0), 0);
 
+  // Active category display title if filtered
+  const activeCategoryObj = categories.find(c => c.slug === selectedCategory);
+  const isFiltered = selectedCategory !== 'all' || searchQuery.trim().length > 0;
+
+  const catalogTitle = activeCategoryObj
+    ? `${activeCategoryObj.name} Projectors — Hunting Projectors Catalog`
+    : 'Explore Projectors — Hunting 4K Laser & Cinema Lineup';
+
+  const catalogDescription = activeCategoryObj?.description
+    ? `${activeCategoryObj.description} Explore Hunting Projectors ${activeCategoryObj.name} collection.`
+    : 'From ultra-short-throw triple-laser systems to smart portable projectors, explore the complete optical projection catalog by Hunting Projectors.';
+
   return (
     <div className="products-page">
+      <SEOHead
+        title={catalogTitle}
+        description={catalogDescription}
+        canonicalPath="/products"
+        noindex={isFiltered} // Prevent duplicate indexing of parameter filter combinations
+      />
       <div className="container-wide products-page-container">
         
         {/* Page Hero Header */}

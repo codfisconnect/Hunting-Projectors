@@ -12,6 +12,7 @@ import {
 import { getProducts } from '../../services/productService';
 import { Product } from '../../types/product';
 import { useCart } from '../../context/CartContext';
+import { SEOHead } from '../../components/common/SEOHead/SEOHead';
 import './ComparePage.css';
 
 interface ComparePageProps {
@@ -24,7 +25,6 @@ export const ComparePage: React.FC<ComparePageProps> = ({ onOpenEnquiry }) => {
   const { addToCart } = useCart();
 
   useEffect(() => {
-    document.title = 'COMPARE PROJECTORS — Hunting 4K Optical Comparison';
     window.scrollTo(0, 0);
 
     let isMounted = true;
@@ -89,6 +89,11 @@ export const ComparePage: React.FC<ComparePageProps> = ({ onOpenEnquiry }) => {
 
   return (
     <div className="compare-page">
+      <SEOHead
+        title="Compare 4K Projectors — Side-by-Side Optical Comparison"
+        description="Compare resolution, lumens, throw ratio, light engine, and contrast specs across Hunting Projectors optical cinema models."
+        canonicalPath="/compare"
+      />
       <div className="container-wide compare-container">
         
         {/* Header */}

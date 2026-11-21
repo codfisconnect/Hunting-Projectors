@@ -1,41 +1,51 @@
 # syntax=docker/dockerfile:1
-FROM node:20-alpine AS builder
+FROM node:20-bookworm-slim AS builder
 
 WORKDIR /app
 
-# Copy root and package dependency manifests
+# Install OpenSSL and CA certificates for Prisma generation and HTTPS
+RUN apt-get update -y && \
+    apt-get install -y --no-install-recommends openssl ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
+
+# Copy dependency manifests and Prisma schema
 COPY package*.json ./
 COPY prisma ./prisma/
 
 # Install all dependencies including devDependencies for build
 RUN npm ci
 
-# Generate Prisma Client
+# Generate Prisma Client (builds debian-openssl-3.0.x engine)
 RUN npx prisma generate
 
 # Copy source code and config
 COPY tsconfig.json ./
 COPY src ./src/
 
-# Compile TypeScript
+# Compile TypeScript to dist/
 RUN npm run build
 
 # Remove development dependencies
 RUN npm prune --production
 
 # --- Production Runner Stage ---
-FROM node:20-alpine AS runner
+FROM node:20-bookworm-slim AS runner
 
 WORKDIR /app
 
 ENV NODE_ENV=production
 ENV PORT=8080
 
-# Create non-root user for security
-RUN addgroup --system --gid 1001 nodejs && \
-    adduser --system --uid 1001 expressjs
+# Install runtime OpenSSL and CA certificates
+RUN apt-get update -y && \
+    apt-get install -y --no-install-recommends openssl ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
 
-# Copy node_modules and built dist from builder
+# Create non-root system user and group for security
+RUN groupadd --system --gid 1001 nodejs && \
+    useradd --system --uid 1001 -g nodejs expressjs
+
+# Copy node_modules, built dist, and prisma artifacts from builder
 COPY --from=builder --chown=expressjs:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=expressjs:nodejs /app/dist ./dist
 COPY --from=builder --chown=expressjs:nodejs /app/prisma ./prisma

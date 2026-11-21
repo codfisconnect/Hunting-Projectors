@@ -16,6 +16,7 @@ import {
 import { faqs } from '../../data/faqs';
 import { Accordion } from '../../components/common/Accordion/Accordion';
 import { siteConfig, getWhatsAppLink, getPhoneLink, getEmailLink } from '../../data/siteContent';
+import { SEOHead } from '../../components/common/SEOHead/SEOHead';
 import './SupportPage.css';
 
 interface SupportPageProps {
@@ -27,7 +28,6 @@ export const SupportPage: React.FC<SupportPageProps> = ({ onOpenEnquiry }) => {
   const [trackFeedback, setTrackFeedback] = useState<string | null>(null);
 
   useEffect(() => {
-    document.title = 'SUPPORT & SERVICE — Hunting Projectors by NAP Computers Electronics';
     window.scrollTo(0, 0);
   }, []);
 
@@ -55,6 +55,11 @@ export const SupportPage: React.FC<SupportPageProps> = ({ onOpenEnquiry }) => {
 
   return (
     <div className="support-page">
+      <SEOHead
+        title="Support & Service Hub — Hunting Projectors Customer Care"
+        description="Access direct technical support, warranty registration, optical calibration guides, and Chennai service desk for Hunting Projectors."
+        canonicalPath="/support"
+      />
       <div className="container-wide support-container">
         
         {/* Support Hero */}

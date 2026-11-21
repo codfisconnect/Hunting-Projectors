@@ -15,6 +15,7 @@ import { Product } from '../../types/product';
 import { submitEnquiry } from '../../services/enquiryService';
 import { EnquiryFormData, EnquirySubmissionResult } from '../../types/enquiry';
 import { siteConfig, getWhatsAppLink, getPhoneLink, getEmailLink } from '../../data/siteContent';
+import { SEOHead } from '../../components/common/SEOHead/SEOHead';
 import './ContactPage.css';
 
 export const ContactPage: React.FC = () => {
@@ -34,7 +35,6 @@ export const ContactPage: React.FC = () => {
   const [result, setResult] = useState<EnquirySubmissionResult | null>(null);
 
   useEffect(() => {
-    document.title = 'CONTACT & SHOWROOM — Hunting Projectors by NAP Computers Electronics';
     window.scrollTo(0, 0);
 
     let isMounted = true;
@@ -79,6 +79,11 @@ export const ContactPage: React.FC = () => {
 
   return (
     <div className="contact-page">
+      <SEOHead
+        title="Contact & Chennai Showroom — Hunting Projectors"
+        description="Book a private cinema projector demonstration at our Chennai showroom or request Pan-India dispatch from Hunting Projectors by NAP Computers Electronics."
+        canonicalPath="/contact"
+      />
       <div className="container-wide contact-container">
 
         {/* Header */}

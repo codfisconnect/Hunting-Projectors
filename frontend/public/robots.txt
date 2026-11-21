@@ -1,0 +1,37 @@
+# Hunting Projectors - robots.txt
+# Primary Canonical Domain: https://huntingprojector.in
+# Supplier & Fulfilment: NAP Computers Electronics
+
+User-agent: *
+Allow: /
+Allow: /products
+Allow: /products/
+Allow: /experience
+Allow: /compare
+Allow: /projector-finder
+Allow: /about
+Allow: /contact
+Allow: /support
+Allow: /faq
+Allow: /warranty
+Allow: /shipping
+Allow: /refund
+Allow: /privacy
+Allow: /terms
+
+# Disallow Private, Customer Session, and Administrative Routes
+Disallow: /admin
+Disallow: /admin/
+Disallow: /checkout
+Disallow: /checkout/
+Disallow: /account
+Disallow: /account/
+Disallow: /orders
+Disallow: /orders/
+Disallow: /login
+Disallow: /register
+Disallow: /reset-password
+Disallow: /api/
+
+# Canonical Sitemap Declaration
+Sitemap: https://huntingprojector.in/sitemap.xml

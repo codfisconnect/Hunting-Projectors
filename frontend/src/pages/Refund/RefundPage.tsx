@@ -1,16 +1,21 @@
 import React, { useEffect } from 'react';
 import { RefreshCw, CheckCircle2, AlertTriangle, ShieldCheck } from 'lucide-react';
 import { siteConfig } from '../../data/siteContent';
+import { SEOHead } from '../../components/common/SEOHead/SEOHead';
 import '../Warranty/WarrantyPage.css';
 
 export const RefundPage: React.FC = () => {
   useEffect(() => {
-    document.title = 'REFUND & REPLACEMENT POLICY — Hunting Projectors by NAP Computers Electronics';
     window.scrollTo(0, 0);
   }, []);
 
   return (
     <div className="policy-page">
+      <SEOHead
+        title="Refund & Replacement Policy — Hunting Projectors Buyer Assurance"
+        description="Review our transparent replacement terms for transit damage, Dead-on-Arrival (DOA) protection, and return verification by NAP Computers Electronics."
+        canonicalPath="/refund"
+      />
       <div className="container policy-container">
         
         <header className="policy-header">

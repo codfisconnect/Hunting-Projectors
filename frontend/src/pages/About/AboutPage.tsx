@@ -12,6 +12,7 @@ import {
   Phone
 } from 'lucide-react';
 import { siteConfig, getWhatsAppLink, getPhoneLink } from '../../data/siteContent';
+import { SEOHead } from '../../components/common/SEOHead/SEOHead';
 import './AboutPage.css';
 
 interface AboutPageProps {
@@ -20,12 +21,16 @@ interface AboutPageProps {
 
 export const AboutPage: React.FC<AboutPageProps> = ({ onOpenEnquiry }) => {
   useEffect(() => {
-    document.title = 'ABOUT HUNTING — The Direct Optical Projection Philosophy';
     window.scrollTo(0, 0);
   }, []);
 
   return (
     <div className="about-page">
+      <SEOHead
+        title="About Hunting Projectors — Direct Optical Projection Philosophy"
+        description="Learn about Hunting Projectors by NAP Computers Electronics. Born from an uncompromising obsession with cinematic optics, acoustic integrity, and direct brand craftsmanship in Chennai."
+        canonicalPath="/about"
+      />
       
       {/* Editorial Hero */}
       <section className="about-hero-section text-center">
