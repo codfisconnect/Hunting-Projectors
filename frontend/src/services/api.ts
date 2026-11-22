@@ -11,18 +11,17 @@
  * 4. Development fallback: http://localhost:4000/api only when import.meta.env.DEV is true
  */
 function resolveApiBaseUrl(): string {
-  const envUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL;
-  if (envUrl && typeof envUrl === 'string' && envUrl.trim() !== '') {
-    return envUrl.trim().replace(/\/+$/, '');
-  }
-
-  // In development mode, localhost:4000 is expected
+  // Local development mode (e.g. `npm run dev`)
   if (import.meta.env.DEV) {
+    const envUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL;
+    if (envUrl && typeof envUrl === 'string' && envUrl.trim() !== '') {
+      return envUrl.trim().replace(/\/+$/, '');
+    }
     return 'http://localhost:4000/api';
   }
 
-  // In production, fallback to relative '/api' endpoint (or current origin)
-  // If no backend is routed at /api, fetchJson will report a clear diagnostic message
+  // Production and Vercel Preview builds: ALWAYS same-origin relative '/api'
+  // Vercel edge proxy rewrites in vercel.json route '/api/*' to Cloud Run
   return '/api';
 }
 
