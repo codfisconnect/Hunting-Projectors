@@ -142,7 +142,7 @@ export const AdminDashboardPage: React.FC = () => {
   const [cmsPromoBanner, setCmsPromoBanner] = useState<{ active: boolean; text: string; link: string }>({ active: true, text: 'Special Showroom Bundle: Free 120" Fresnel ALR Screen with Flagship UST orders.', link: '/contact' });
   const [cmsBusinessHours, setCmsBusinessHours] = useState<string>('Monday – Saturday: 10:00 AM – 7:30 PM IST (Sunday by Appointment)');
   const [cmsSocialLinks, setCmsSocialLinks] = useState<{ instagram: string; youtube: string; whatsapp: string }>({ instagram: 'https://instagram.com/huntingprojectors', youtube: 'https://youtube.com/@huntingprojectors', whatsapp: 'https://wa.me/918825624537' });
-  const [cmsSeo, setCmsSeo] = useState<{ metaTitle: string; metaDescription: string }>({ metaTitle: 'Hunting Projectors | Luxury Home Cinema & Laser TV Systems Chennai', metaDescription: 'India’s premier destination for ultra-short-throw 4K home theater projectors, daylight ALR screens, and THX-certified installations.' });
+  const [cmsSeo, setCmsSeo] = useState<{ metaTitle: string; metaDescription: string }>({ metaTitle: 'Hunting Projector | Luxury Home Cinema & Laser TV Systems Chennai', metaDescription: 'India’s premier destination for ultra-short-throw 4K home theater projectors, daylight ALR screens, and THX-certified installations.' });
   const [cmsFaqs, setCmsFaqs] = useState<Array<{ q: string; a: string }>>([
     { q: 'What makes Ultra Short Throw projectors superior to standard TVs?', a: 'UST projectors sit just 6 to 12 inches from the wall to project a cinematic 100 to 150-inch image without casting shadows or requiring ceiling mounting.' },
     { q: 'Can I watch in daylight with ambient room light?', a: 'Yes, when paired with an Ambient Light Rejecting (ALR) Fresnel screen, ambient ceiling light is deflected while laser brightness is reflected directly to viewers.' }
@@ -313,7 +313,7 @@ export const AdminDashboardPage: React.FC = () => {
       adminService.getSettings()
         .then(res => setSettingsData(res))
         .catch(() => setSettingsData({
-          store: { name: 'Hunting Projectors', company: 'NAP Computers Electronics', location: 'Chennai, India' },
+          store: { name: 'Hunting Projector', company: 'Nap Computers Electronicss', location: 'Chennai, India' },
           integrations: {
             email: { configured: false, sender: 'huntingprojectors@gmail.com' },
             whatsapp: { configured: false, businessNumber: '+91 88256 24537' },
@@ -488,14 +488,14 @@ export const AdminDashboardPage: React.FC = () => {
         <div className="admin-sidebar-branding">
           <img
             src="/assets/hunting-projectors-logo-nav.png"
-            alt="Hunting Projectors Logo"
+            alt="Hunting Projector Logo"
             className="admin-sidebar-logo"
             width="38"
             height="38"
           />
           <div className="admin-sidebar-brand-text">
-            <span className="branding-title">HUNTING PROJECTORS</span>
-            <span className="branding-subtitle">by NAP Computers Electronics</span>
+            <span className="branding-title">HUNTING PROJECTOR</span>
+            <span className="branding-subtitle">by Nap Computers Electronicss</span>
           </div>
         </div>
 
@@ -705,7 +705,7 @@ export const AdminDashboardPage: React.FC = () => {
               {activeTab === 'notifications' && 'System Notifications & Alerts'}
               {activeTab === 'settings' && 'Store & Integration Settings'}
             </h1>
-            <span className="admin-store-tag">NAP Computers Electronics • Chennai Fulfillment Hub</span>
+            <span className="admin-store-tag">Nap Computers Electronicss • Chennai Fulfillment Hub</span>
           </div>
 
           <div className="header-actions">
@@ -2936,8 +2936,8 @@ export const AdminDashboardPage: React.FC = () => {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '24px' }}>
                   <div style={{ background: '#F9FAFB', padding: '16px', borderRadius: '6px', border: '1px solid #E5E7EB' }}>
                     <h4 style={{ margin: '0 0 6px 0', color: '#111827', fontSize: '14px' }}>Prepared By:</h4>
-                    <strong>Hunting Projectors</strong><br />
-                    NAP Computers Electronics<br />
+                    <strong>Hunting Projector</strong><br />
+                    Nap Computers Electronicss<br />
                     Mount Road, Chennai, Tamil Nadu - 600002<br />
                     huntingprojectors@gmail.com | +91 88256 24537
                   </div>

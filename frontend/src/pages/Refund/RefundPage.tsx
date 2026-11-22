@@ -12,8 +12,8 @@ export const RefundPage: React.FC = () => {
   return (
     <div className="policy-page">
       <SEOHead
-        title="Refund & Replacement Policy — Hunting Projectors Buyer Assurance"
-        description="Review our transparent replacement terms for transit damage, Dead-on-Arrival (DOA) protection, and return verification by NAP Computers Electronics."
+        title="Refund & Replacement Policy — Hunting Projector Buyer Assurance"
+        description="Review our transparent replacement terms for transit damage, Dead-on-Arrival (DOA) protection, and return verification by Nap Computers Electronicss."
         canonicalPath="/refund"
       />
       <div className="container policy-container">
@@ -34,7 +34,7 @@ export const RefundPage: React.FC = () => {
           <section className="policy-section-block">
             <h2>1. Policy Overview</h2>
             <p>
-              At Hunting Projectors, customer satisfaction and trust in our optical craftsmanship are paramount. Because all projection units are high-precision optoelectronic devices calibrated at our Chennai facility, we provide clear, transparent guidelines regarding replacements and refunds.
+              At Hunting Projector, customer satisfaction and trust in our optical craftsmanship are paramount. Because all projection units are high-precision optoelectronic devices calibrated at our Chennai facility, we provide clear, transparent guidelines regarding replacements and refunds.
             </p>
           </section>
 

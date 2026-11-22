@@ -26,8 +26,8 @@ export const IndiaDelivery: React.FC = () => {
     {
       icon: <ShieldCheck size={22} />,
       title: 'OFFICIAL WARRANTY',
-      sub: 'Backed by NAP Computers Electronics',
-      desc: 'Every Hunting projector includes an official direct warranty card operated and honored by NAP Computers Electronics in Chennai, Tamil Nadu.',
+      sub: 'Backed by Nap Computers Electronicss',
+      desc: 'Every Hunting projector includes an official direct warranty card operated and honored by Nap Computers Electronicss in Chennai, Tamil Nadu.',
     },
   ];
 
@@ -51,7 +51,7 @@ export const IndiaDelivery: React.FC = () => {
             </h2>
 
             <p className="india-lead">
-              Hunting Projectors operates as a direct brand entity by NAP Computers Electronics, cutting out commercial layers to provide cutting-edge 4K optical projection at unmatched factory value.
+              Hunting Projector operates as a direct brand entity by Nap Computers Electronicss, cutting out commercial layers to provide cutting-edge 4K optical projection at unmatched factory value.
             </p>
 
             <div className="india-entity-tag">
@@ -97,7 +97,7 @@ export const IndiaDelivery: React.FC = () => {
                   <circle cx="0" cy="0" r="7" fill="#D4AF37" />
                   <circle cx="0" cy="0" r="3" fill="#0C0D10" />
                   <text x="14" y="4" fill="#E6CA65" fontFamily="Inter, sans-serif" fontSize="10" fontWeight="800" letterSpacing="1">CHENNAI HQ</text>
-                  <text x="14" y="16" fill="#9DA3AE" fontFamily="Inter, sans-serif" fontSize="8">NAP Computers Electronics</text>
+                  <text x="14" y="16" fill="#9DA3AE" fontFamily="Inter, sans-serif" fontSize="8">Nap Computers Electronicss</text>
                 </g>
 
                 {/* Dispatch Transit Lines from Chennai */}

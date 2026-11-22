@@ -27,8 +27,8 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenEnquiry }) => {
   return (
     <div className="about-page">
       <SEOHead
-        title="About Hunting Projectors — Direct Optical Projection Philosophy"
-        description="Learn about Hunting Projectors by NAP Computers Electronics. Born from an uncompromising obsession with cinematic optics, acoustic integrity, and direct brand craftsmanship in Chennai."
+        title="About Hunting Projector — Direct Optical Projection Philosophy"
+        description="Learn about Hunting Projector by Nap Computers Electronicss. Born from an uncompromising obsession with cinematic optics, acoustic integrity, and direct brand craftsmanship in Chennai."
         canonicalPath="/about"
       />
       
@@ -108,9 +108,9 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenEnquiry }) => {
           <div className="about-entity-card">
             <div className="entity-left-col">
               <span className="eyebrow">DIRECT BUSINESS ENTITY</span>
-              <h2 className="display-section">THE BUSINESS BEHIND HUNTING PROJECTORS</h2>
+              <h2 className="display-section">THE BUSINESS BEHIND HUNTING PROJECTOR</h2>
               <p className="entity-desc">
-                Hunting Projectors is the dedicated brand line supplied, owned, and operated by NAP Computers Electronics:
+                Hunting Projector is the dedicated brand line supplied, owned, and operated by Nap Computers Electronicss:
               </p>
 
               <div className="entity-formal-box">

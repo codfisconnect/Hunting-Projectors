@@ -56,8 +56,8 @@ export const SupportPage: React.FC<SupportPageProps> = ({ onOpenEnquiry }) => {
   return (
     <div className="support-page">
       <SEOHead
-        title="Support & Service Hub — Hunting Projectors Customer Care"
-        description="Access direct technical support, warranty registration, optical calibration guides, and Chennai service desk for Hunting Projectors."
+        title="Support & Service Hub — Hunting Projector Customer Care"
+        description="Access direct technical support, warranty registration, optical calibration guides, and Chennai service desk for Hunting Projector."
         canonicalPath="/support"
       />
       <div className="container-wide support-container">
@@ -70,7 +70,7 @@ export const SupportPage: React.FC<SupportPageProps> = ({ onOpenEnquiry }) => {
           </span>
           <h1 className="display-title">SUPPORT & SERVICE HUB.</h1>
           <p className="support-hero-desc">
-            Direct after-sales service, warranty registration, optical technical guidance, and pan-India dispatch support operated by NAP Computers Electronics.
+            Direct after-sales service, warranty registration, optical technical guidance, and pan-India dispatch support operated by Nap Computers Electronicss.
           </p>
 
           <div className="support-quick-contact-pills">
@@ -96,7 +96,7 @@ export const SupportPage: React.FC<SupportPageProps> = ({ onOpenEnquiry }) => {
           <div className="support-pillar-card">
             <div className="sp-icon-box"><ShieldCheck size={22} /></div>
             <h3 className="sp-title">WARRANTY REGISTRATION</h3>
-            <p className="sp-desc">Official brand warranty coverage backed by NAP Computers Electronics. Register your serial number within 15 days of delivery.</p>
+            <p className="sp-desc">Official brand warranty coverage backed by Nap Computers Electronicss. Register your serial number within 15 days of delivery.</p>
             <Link to="/warranty" className="sp-link">
               <span>Warranty Guidelines</span>
               <ArrowRight size={14} />

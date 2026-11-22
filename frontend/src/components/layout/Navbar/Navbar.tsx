@@ -48,17 +48,17 @@ export const Navbar: React.FC<NavbarProps> = ({
       <div className="container-wide navbar-container">
         
         {/* Brand Identity with Circular Logo */}
-        <Link to="/" className="navbar-brand" aria-label="Hunting Projectors by NAP Computers Electronics Home">
+        <Link to="/" className="navbar-brand" aria-label="Hunting Projector by Nap Computers Electronicss Home">
           <img
             src="/assets/hunting-projectors-logo-nav.png"
-            alt="Hunting Projectors Logo"
+            alt="Hunting Projector Logo"
             className="navbar-brand-logo"
             width="44"
             height="44"
           />
           <div className="navbar-brand-text">
-            <span className="brand-primary">HUNTING PROJECTORS</span>
-            <span className="brand-secondary">by NAP Computers Electronics</span>
+            <span className="brand-primary">HUNTING PROJECTOR</span>
+            <span className="brand-secondary">by Nap Computers Electronicss</span>
           </div>
         </Link>
 

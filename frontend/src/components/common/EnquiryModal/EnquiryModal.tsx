@@ -79,7 +79,7 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
   };
 
   const handleDirectWhatsApp = () => {
-    const text = `Hello Hunting Projectors!%0A%0AName: ${formData.fullName || 'Prospective Customer'}%0APhone: ${formData.phoneNumber || 'Not provided'}%0ACity: ${formData.city || 'India'}%0AInterested In: ${formData.productName}%0AMessage: ${formData.message || 'I would like to schedule a product demo or request pricing.'}`;
+    const text = `Hello Hunting Projector!%0A%0AName: ${formData.fullName || 'Prospective Customer'}%0APhone: ${formData.phoneNumber || 'Not provided'}%0ACity: ${formData.city || 'India'}%0AInterested In: ${formData.productName}%0AMessage: ${formData.message || 'I would like to schedule a product demo or request pricing.'}`;
     window.open(`https://wa.me/${siteConfig.contact.whatsapp}?text=${text}`, '_blank');
   };
 
@@ -96,7 +96,7 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
             </div>
             <h3 className="enquiry-modal-title">EXPERIENCE HUNTING</h3>
             <p className="enquiry-modal-subtitle">
-              Speak directly with an optical specialist from Hunting Projectors by NAP Computers Electronics.
+              Speak directly with an optical specialist from Hunting Projector by Nap Computers Electronicss.
             </p>
           </div>
           <button 
@@ -284,7 +284,7 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
               <div className="form-entity-footer">
                 <ShieldCheck size={14} />
                 <span>
-                  Supplied & operated directly by NAP Computers Electronics, Chennai. No third-party brokers.
+                  Supplied & operated directly by Nap Computers Electronicss, Chennai. No third-party brokers.
                 </span>
               </div>
             </form>

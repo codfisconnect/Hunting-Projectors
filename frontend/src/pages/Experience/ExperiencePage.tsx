@@ -59,8 +59,8 @@ export const ExperiencePage: React.FC<ExperiencePageProps> = ({ onOpenEnquiry })
   return (
     <div className="experience-page">
       <SEOHead
-        title="Experience Cinema Differently — Hunting Projectors Scale & Lumens"
-        description="Explore 100-inch to 300-inch cinematic scale simulations, throw distance ratios, and ambient light optical performance with Hunting Projectors."
+        title="Experience Cinema Differently — Hunting Projector Scale & Lumens"
+        description="Explore 100-inch to 300-inch cinematic scale simulations, throw distance ratios, and ambient light optical performance with Hunting Projector."
         canonicalPath="/experience"
       />
 

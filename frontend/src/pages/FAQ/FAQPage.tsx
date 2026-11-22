@@ -52,7 +52,7 @@ export const FAQPage: React.FC<FAQPageProps> = ({ onOpenEnquiry }) => {
   return (
     <div className="faq-page">
       <SEOHead
-        title="Frequently Asked Questions — Hunting Projectors Knowledge Base"
+        title="Frequently Asked Questions — Hunting Projector Knowledge Base"
         description="Find answers to questions about 4K optical projection, throw distance, ambient light ALR screens, Pan-India delivery, and 2-year warranty."
         canonicalPath="/faq"
         structuredData={faqStructuredData}

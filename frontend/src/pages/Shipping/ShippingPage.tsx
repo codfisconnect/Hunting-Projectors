@@ -12,7 +12,7 @@ export const ShippingPage: React.FC = () => {
   return (
     <div className="policy-page">
       <SEOHead
-        title="Shipping & Pan-India Delivery — Hunting Projectors Logistics"
+        title="Shipping & Pan-India Delivery — Hunting Projector Logistics"
         description="Learn about our insured door-to-door projector delivery across all Indian pin codes, optical shock-dampening packaging, and burn-in testing from Chennai."
         canonicalPath="/shipping"
       />
@@ -34,7 +34,7 @@ export const ShippingPage: React.FC = () => {
           <section className="policy-section-block">
             <h2>1. Pan-India Delivery Scope</h2>
             <p>
-              Hunting Projectors provides insured door-to-door delivery across all serviceable pin codes in India. Every shipment originates directly from our central fulfillment and testing facility in Chennai, Tamil Nadu operated by NAP Computers Electronics.
+              Hunting Projector provides insured door-to-door delivery across all serviceable pin codes in India. Every shipment originates directly from our central fulfillment and testing facility in Chennai, Tamil Nadu operated by Nap Computers Electronicss.
             </p>
             <p>
               Before dispatch, each optical engine undergoes a 20-minute burn-in test, sensor alignment inspection, and firmware check to ensure zero DOA (dead-on-arrival) occurrences.

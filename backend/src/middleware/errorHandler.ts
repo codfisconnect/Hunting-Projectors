@@ -28,6 +28,6 @@ export function errorHandler(err: any, req: Request, res: Response, next: NextFu
 }
 
 export function notFoundHandler(req: Request, res: Response) {
-  return sendError(res, `Endpoint ${req.method} ${req.originalUrl} not found on Hunting Projectors API`, 404);
+  return sendError(res, `Endpoint ${req.method} ${req.originalUrl} not found on Hunting Projector API`, 404);
 }
 

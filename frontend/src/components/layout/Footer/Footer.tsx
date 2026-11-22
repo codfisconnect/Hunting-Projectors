@@ -16,7 +16,7 @@ export const Footer: React.FC = () => {
             <ShieldCheck size={20} className="prop-icon" />
             <div>
               <span className="prop-title">DIRECT HUNTING WARRANTY</span>
-              <span className="prop-sub">Official brand warranty backed by NAP Computers Electronics</span>
+              <span className="prop-sub">Official brand warranty backed by Nap Computers Electronicss</span>
             </div>
           </div>
           <div className="prop-item">
@@ -45,14 +45,14 @@ export const Footer: React.FC = () => {
             <div className="footer-brand">
               <img
                 src="/assets/hunting-projectors-logo-footer.png"
-                alt="Hunting Projectors Logo"
+                alt="Hunting Projector Logo"
                 className="footer-brand-logo"
                 width="56"
                 height="56"
               />
               <div className="footer-brand-text">
-                <span className="brand-primary">HUNTING PROJECTORS</span>
-                <span className="brand-secondary">by NAP Computers Electronics</span>
+                <span className="brand-primary">HUNTING PROJECTOR</span>
+                <span className="brand-secondary">by Nap Computers Electronicss</span>
               </div>
             </div>
             <p className="footer-brand-desc">
@@ -160,7 +160,7 @@ export const Footer: React.FC = () => {
           <div className="copyright-text" aria-label="Copyright and ownership">
             <span>© 2026 Sadakka Tulla Moinuddeen. All rights reserved.</span>
             <span className="copyright-separator">|</span>
-            <span className="footer-highlight-gold">NAP Computers Electronics</span>
+            <span className="footer-highlight-gold">Nap Computers Electronicss</span>
             <span className="copyright-separator">|</span>
             <span>
               Web by{' '}

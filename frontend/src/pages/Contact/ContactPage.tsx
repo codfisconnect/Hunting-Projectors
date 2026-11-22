@@ -73,15 +73,15 @@ export const ContactPage: React.FC = () => {
   };
 
   const handleDirectWhatsApp = () => {
-    const text = `Hello Hunting Projectors!%0A%0AName: ${formData.fullName || 'Prospective Buyer'}%0APhone: ${formData.phoneNumber || 'Not provided'}%0ACity: ${formData.city}%0AInterested Model: ${formData.productName}%0AMessage: ${formData.message || 'I would like to inquire about demo availability and live pricing.'}`;
+    const text = `Hello Hunting Projector!%0A%0AName: ${formData.fullName || 'Prospective Buyer'}%0APhone: ${formData.phoneNumber || 'Not provided'}%0ACity: ${formData.city}%0AInterested Model: ${formData.productName}%0AMessage: ${formData.message || 'I would like to inquire about demo availability and live pricing.'}`;
     window.open(`https://wa.me/${siteConfig.contact.whatsapp}?text=${text}`, '_blank');
   };
 
   return (
     <div className="contact-page">
       <SEOHead
-        title="Contact & Chennai Showroom — Hunting Projectors"
-        description="Book a private cinema projector demonstration at our Chennai showroom or request Pan-India dispatch from Hunting Projectors by NAP Computers Electronics."
+        title="Contact & Chennai Showroom — Hunting Projector"
+        description="Book a private cinema projector demonstration at our Chennai showroom or request Pan-India dispatch from Hunting Projector by Nap Computers Electronicss."
         canonicalPath="/contact"
       />
       <div className="container-wide contact-container">
@@ -149,7 +149,7 @@ export const ContactPage: React.FC = () => {
               </div>
               <h3 className="entity-box-name">{siteConfig.entity.owner}</h3>
               <p className="entity-box-desc">
-                Hunting Projectors is the customer-facing projector brand. All orders, warranties, and after-sales support are fulfilled directly by NAP Computers Electronics.
+                Hunting Projector is the customer-facing projector brand. All orders, warranties, and after-sales support are fulfilled directly by Nap Computers Electronicss.
               </p>
 
               <div className="entity-address-card">

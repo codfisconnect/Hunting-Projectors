@@ -44,8 +44,8 @@ export interface SiteConfig {
 
 export const siteConfig: SiteConfig = {
   brand: {
-    name: 'Hunting Projectors',
-    subname: 'by NAP Computers Electronics',
+    name: 'Hunting Projector',
+    subname: 'by Nap Computers Electronicss',
     tagline: BUSINESS_CONFIG.tagline,
     heroHeadline: 'SEE BEYOND.',
     heroSubheadline: 'Premium projection technology designed to transform everyday spaces into extraordinary viewing experiences.',
@@ -64,7 +64,7 @@ export const siteConfig: SiteConfig = {
     phoneDisplay: BUSINESS_CONFIG.phoneDisplay,
     whatsapp: BUSINESS_CONFIG.whatsappRaw,
     whatsappDisplay: BUSINESS_CONFIG.whatsappDisplay,
-    whatsappDefaultMessage: 'Hello Hunting Projectors, I would like to know more about your projector products and services.',
+    whatsappDefaultMessage: 'Hello Hunting Projector, I would like to know more about your projector products and services.',
     email: BUSINESS_CONFIG.email,
     salesEmail: BUSINESS_CONFIG.email,
     address: {
@@ -93,9 +93,9 @@ export const getWhatsAppLink = (customMessage?: string, productName?: string) =>
   let text = customMessage;
   if (!text) {
     if (productName) {
-      text = `Hello Hunting Projectors, I am interested in ${productName}. Please share more details, availability and pricing.`;
+      text = `Hello Hunting Projector, I am interested in ${productName}. Please share more details, availability and pricing.`;
     } else {
-      text = 'Hello Hunting Projectors, I would like to know more about your projector products and services.';
+      text = 'Hello Hunting Projector, I would like to know more about your projector products and services.';
     }
   }
   return `${base}?text=${encodeURIComponent(text)}`;
@@ -107,11 +107,11 @@ export const getWhatsAppLink = (customMessage?: string, productName?: string) =>
 export const getWhatsAppDemoLink = (productName?: string) => {
   const base = `https://wa.me/${BUSINESS_CONFIG.whatsappRaw}`;
   const text = productName
-    ? `Hello Hunting Projectors, I would like to schedule a demonstration for ${productName}. Please contact me to arrange a suitable time.`
-    : 'Hello Hunting Projectors, I would like to schedule a projector demonstration. Please contact me to arrange a suitable time.';
+    ? `Hello Hunting Projector, I would like to schedule a demonstration for ${productName}. Please contact me to arrange a suitable time.`
+    : 'Hello Hunting Projector, I would like to schedule a projector demonstration. Please contact me to arrange a suitable time.';
   return `${base}?text=${encodeURIComponent(text)}`;
 };
 
 export const getPhoneLink = () => `tel:${BUSINESS_CONFIG.phoneRaw}`;
-export const getEmailLink = (subject = 'Enquiry: Hunting Projectors by NAP Computers Electronics') =>
+export const getEmailLink = (subject = 'Enquiry: Hunting Projector by Nap Computers Electronicss') =>
   `mailto:${BUSINESS_CONFIG.email}?subject=${encodeURIComponent(subject)}`;

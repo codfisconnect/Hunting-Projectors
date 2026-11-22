@@ -47,7 +47,7 @@ export function resolveSafeAuthOrigin(clientOrigin?: string): string {
 
   const trimmed = clientOrigin.trim().replace(/\/+$/, ''); // Remove trailing slashes
 
-  // 1. Check primary and official Hunting Projectors domains
+  // 1. Check primary and official Hunting Projector domains
   if (/^https:\/\/(www\.)?huntingprojector\.in$/.test(trimmed)) {
     return trimmed;
   }
@@ -57,7 +57,7 @@ export function resolveSafeAuthOrigin(clientOrigin?: string): string {
     return trimmed;
   }
 
-  // 3. Check authorized Hunting Projectors Vercel deployment/preview domains
+  // 3. Check authorized Hunting Projector Vercel deployment/preview domains
   if (/^https:\/\/hunting-projectors(-deploy)?(-[a-zA-Z0-9_-]+)*\.vercel\.app$/.test(trimmed)) {
     return trimmed;
   }
@@ -243,9 +243,9 @@ export class AuthService {
       // Dispatch email if SMTP configured
       const emailHtml = `
         <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 580px; margin: 0 auto; background: #0A0C10; color: #FFFFFF; padding: 32px; border-radius: 12px; border: 1px solid #1E2330;">
-          <h2 style="color: #D4AF37; margin: 0 0 12px; font-size: 20px;">HUNTING PROJECTORS - PASSWORD RESET</h2>
+          <h2 style="color: #D4AF37; margin: 0 0 12px; font-size: 20px;">HUNTING PROJECTOR - PASSWORD RESET</h2>
           <p style="color: #A0AEC0; font-size: 14px; line-height: 1.6;">Hello ${user.fullName},</p>
-          <p style="color: #A0AEC0; font-size: 14px; line-height: 1.6;">We received a request to reset your password for your Hunting Projectors by NAP Computers Electronics account. This link will expire in 15 minutes.</p>
+          <p style="color: #A0AEC0; font-size: 14px; line-height: 1.6;">We received a request to reset your password for your Hunting Projector by Nap Computers Electronicss account. This link will expire in 15 minutes.</p>
           <div style="margin: 24px 0; text-align: center;">
             <a href="${resetLink}" style="background: #D4AF37; color: #000000; padding: 12px 28px; border-radius: 6px; font-weight: bold; text-decoration: none; display: inline-block; font-size: 14px;">Reset My Password</a>
           </div>
@@ -255,7 +255,7 @@ export class AuthService {
 
       await emailService.sendEmail({
         to: user.email,
-        subject: 'Password Reset Request - Hunting Projectors',
+        subject: 'Password Reset Request - Hunting Projector',
         html: emailHtml
       }).catch(err => {
         console.warn('[PasswordReset Email Delivery Note]:', err.message);

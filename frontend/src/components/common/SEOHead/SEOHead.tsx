@@ -85,7 +85,7 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
     setMetaTag('property', 'og:url', canonicalUrl);
     setMetaTag('property', 'og:type', ogType);
     setMetaTag('property', 'og:image', ogImage);
-    setMetaTag('property', 'og:site_name', 'Hunting Projectors');
+    setMetaTag('property', 'og:site_name', 'Hunting Projector');
 
     // 6. Twitter Card Tags
     setMetaTag('name', 'twitter:card', 'summary_large_image');

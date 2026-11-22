@@ -91,7 +91,7 @@ export const ComparePage: React.FC<ComparePageProps> = ({ onOpenEnquiry }) => {
     <div className="compare-page">
       <SEOHead
         title="Compare 4K Projectors — Side-by-Side Optical Comparison"
-        description="Compare resolution, lumens, throw ratio, light engine, and contrast specs across Hunting Projectors optical cinema models."
+        description="Compare resolution, lumens, throw ratio, light engine, and contrast specs across Hunting Projector optical cinema models."
         canonicalPath="/compare"
       />
       <div className="container-wide compare-container">

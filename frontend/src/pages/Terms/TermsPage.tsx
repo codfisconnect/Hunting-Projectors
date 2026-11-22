@@ -12,8 +12,8 @@ export const TermsPage: React.FC = () => {
   return (
     <div className="policy-page">
       <SEOHead
-        title="Terms of Service — Hunting Projectors Legal Framework"
-        description="Review the terms and conditions for direct brand supply, showroom appointments, and optical hardware orders with Hunting Projectors by NAP Computers Electronics."
+        title="Terms of Service — Hunting Projector Legal Framework"
+        description="Review the terms and conditions for direct brand supply, showroom appointments, and optical hardware orders with Hunting Projector by Nap Computers Electronicss."
         canonicalPath="/terms"
       />
       <div className="container policy-container">
@@ -34,28 +34,28 @@ export const TermsPage: React.FC = () => {
           <section className="policy-section-block">
             <h2>1. Acceptance of Terms</h2>
             <p>
-              By accessing and browsing the Hunting Projectors website, digital showroom, and interactive tools, you agree to comply with and be bound by the terms, conditions, and notices stated herein.
+              By accessing and browsing the Hunting Projector website, digital showroom, and interactive tools, you agree to comply with and be bound by the terms, conditions, and notices stated herein.
             </p>
           </section>
 
           <section className="policy-section-block">
             <h2>2. Client Demo & Pre-Release Notice</h2>
             <p>
-              This digital platform serves as the showcase experience for the Hunting Projectors brand portfolio by NAP Computers Electronics. Technical specifications, prices, and features are representative parameters engineered for showcase evaluation. Final commercial quotations and production firmware specifications will be confirmed upon formal order placement.
+              This digital platform serves as the showcase experience for the Hunting Projector brand portfolio by Nap Computers Electronicss. Technical specifications, prices, and features are representative parameters engineered for showcase evaluation. Final commercial quotations and production firmware specifications will be confirmed upon formal order placement.
             </p>
           </section>
 
           <section className="policy-section-block">
             <h2>3. Intellectual Property Rights</h2>
             <p>
-              The names "HUNTING PROJECTORS", optical diagrams, UI components, typography systems, and branding identity are the intellectual property of the brand owner and operating entity: NAP Computers Electronics. Unauthorized reproduction, scraping, or commercial imitation is prohibited.
+              The names "HUNTING PROJECTOR", optical diagrams, UI components, typography systems, and branding identity are the intellectual property of the brand owner and operating entity: Nap Computers Electronicss. Unauthorized reproduction, scraping, or commercial imitation is prohibited.
             </p>
           </section>
 
           <section className="policy-section-block">
             <h2>4. Direct Brand Supply & Commercial Scope</h2>
             <p>
-              Hunting Projectors operates as a direct brand line under NAP Computers Electronics. Communications, invoicing, warranty servicing, and dispatch logistics are executed directly by NAP Computers Electronics without third-party commission brokers.
+              Hunting Projector operates as a direct brand line under Nap Computers Electronicss. Communications, invoicing, warranty servicing, and dispatch logistics are executed directly by Nap Computers Electronicss without third-party commission brokers.
             </p>
           </section>
 

@@ -181,12 +181,12 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ onOpenEnquiry }) => 
   const isFiltered = selectedCategory !== 'all' || searchQuery.trim().length > 0;
 
   const catalogTitle = activeCategoryObj
-    ? `${activeCategoryObj.name} Projectors — Hunting Projectors Catalog`
+    ? `${activeCategoryObj.name} Projectors — Hunting Projector Catalog`
     : 'Explore Projectors — Hunting 4K Laser & Cinema Lineup';
 
   const catalogDescription = activeCategoryObj?.description
-    ? `${activeCategoryObj.description} Explore Hunting Projectors ${activeCategoryObj.name} collection.`
-    : 'From ultra-short-throw triple-laser systems to smart portable projectors, explore the complete optical projection catalog by Hunting Projectors.';
+    ? `${activeCategoryObj.description} Explore Hunting Projector ${activeCategoryObj.name} collection.`
+    : 'From ultra-short-throw triple-laser systems to smart portable projectors, explore the complete optical projection catalog by Hunting Projector.';
 
   return (
     <div className="products-page">

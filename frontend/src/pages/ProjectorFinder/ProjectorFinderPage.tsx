@@ -18,7 +18,7 @@ export const ProjectorFinderPage: React.FC<ProjectorFinderPageProps> = ({ onOpen
     <div className="projector-finder-page">
       <SEOHead
         title="Projector Finder Tool — Guided Room & Distance Match Engine"
-        description="Find the ideal projector for your room size, throw distance, ambient light level, and budget with Hunting Projectors interactive optical match engine."
+        description="Find the ideal projector for your room size, throw distance, ambient light level, and budget with Hunting Projector interactive optical match engine."
         canonicalPath="/projector-finder"
       />
       <ProjectorFinderSection standalone onOpenEnquiry={onOpenEnquiry} />
@@ -36,7 +36,7 @@ export const ProjectorFinderPage: React.FC<ProjectorFinderPageProps> = ({ onOpen
 
           <div className="support-card-actions">
             <a
-              href={getWhatsAppLink('Hello Hunting Projectors! I need a custom throw distance and ambient lighting calculation for my room dimensions.')}
+              href={getWhatsAppLink('Hello Hunting Projector! I need a custom throw distance and ambient lighting calculation for my room dimensions.')}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-whatsapp"

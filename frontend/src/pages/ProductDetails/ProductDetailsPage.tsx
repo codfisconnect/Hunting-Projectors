@@ -80,8 +80,8 @@ export const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ onOpenEn
     return (
       <div className="product-not-found-container">
         <SEOHead
-          title="Loading Projector Specifications — Hunting Projectors"
-          description="Connecting to Hunting Projectors database for verified optical hardware specifications."
+          title="Loading Projector Specifications — Hunting Projector"
+          description="Connecting to Hunting Projector database for verified optical hardware specifications."
           noindex={true}
         />
         <h2>Loading Projector Specifications...</h2>
@@ -94,7 +94,7 @@ export const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ onOpenEn
     return (
       <div className="product-not-found-container">
         <SEOHead
-          title="Projector Model Not Found — Hunting Projectors"
+          title="Projector Model Not Found — Hunting Projector"
           description="The requested projector model could not be found or may have been unlisted."
           noindex={true}
         />
@@ -157,7 +157,7 @@ export const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ onOpenEn
   return (
     <div className="product-details-page">
       <SEOHead
-        title={`${product.name} — Hunting Projectors by NAP Computers Electronics`}
+        title={`${product.name} — Hunting Projector by Nap Computers Electronicss`}
         description={product.shortDescription || `${product.name} — Premium high-brightness optical home cinema projector.`}
         canonicalPath={`/products/${encodeURIComponent(product.slug)}`}
         ogType="product"
@@ -257,7 +257,7 @@ export const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ onOpenEn
               <span className="eyebrow">OFFICIAL BRAND GUARANTEE</span>
               <h2 className="display-section">DIRECT CHENNAI SUPPORT & WARRANTY</h2>
               <p className="warranty-banner-desc">
-                When you choose Hunting Projectors, you purchase directly from the brand owner: NAP Computers Electronics. Every unit is tested, inspected, and serialized at our Chennai facility before express dispatch.
+                When you choose Hunting Projector, you purchase directly from the brand owner: Nap Computers Electronicss. Every unit is tested, inspected, and serialized at our Chennai facility before express dispatch.
               </p>
               
               <div className="warranty-checklist">

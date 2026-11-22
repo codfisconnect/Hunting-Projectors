@@ -12,8 +12,8 @@ export const PrivacyPage: React.FC = () => {
   return (
     <div className="policy-page">
       <SEOHead
-        title="Privacy Policy — Hunting Projectors Data Integrity"
-        description="Learn how Hunting Projectors by NAP Computers Electronics protects your personal information, demo inquiries, and customer data."
+        title="Privacy Policy — Hunting Projector Data Integrity"
+        description="Learn how Hunting Projector by Nap Computers Electronicss protects your personal information, demo inquiries, and customer data."
         canonicalPath="/privacy"
       />
       <div className="container policy-container">
@@ -58,7 +58,7 @@ export const PrivacyPage: React.FC = () => {
           <section className="policy-section-block">
             <h2>3. Zero Data Sale Guarantee</h2>
             <p>
-              We do not sell, rent, monetize, or trade your personal data to third-party telemarketers, advertising networks, or lead aggregators. Communication is conducted strictly between you and authorized product specialists from NAP Computers Electronics.
+              We do not sell, rent, monetize, or trade your personal data to third-party telemarketers, advertising networks, or lead aggregators. Communication is conducted strictly between you and authorized product specialists from Nap Computers Electronicss.
             </p>
           </section>
 

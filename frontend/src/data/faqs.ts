@@ -11,8 +11,8 @@ export const faqs: FAQItem[] = [
     id: 'faq-1',
     category: 'general',
     categoryLabel: 'General & Brand',
-    question: 'What is Hunting Projectors, and who operates the brand?',
-    answer: 'Hunting Projectors is a premium projection brand engineered for cinema enthusiasts, creators, and modern homes. The brand is supplied, owned, and operated by NAP Computers Electronics, established in Chennai, Tamil Nadu, India. Customers deal directly with the brand entity for genuine products, direct warranty, and technical service without intermediary markups.',
+    question: 'What is Hunting Projector, and who operates the brand?',
+    answer: 'Hunting Projector is a premium projection brand engineered for cinema enthusiasts, creators, and modern homes. The brand is supplied, owned, and operated by Nap Computers Electronicss, established in Chennai, Tamil Nadu, India. Customers deal directly with the brand entity for genuine products, direct warranty, and technical service without intermediary markups.',
   },
   {
     id: 'faq-2',
@@ -47,7 +47,7 @@ export const faqs: FAQItem[] = [
     category: 'technical',
     categoryLabel: 'Technical & Installation',
     question: 'Do I need a special projection screen, or can I project on a white wall?',
-    answer: 'All Hunting Projectors can project directly onto a smooth, flat white or neutral matte wall. However, pairing your projector with an Ambient Light Rejecting (ALR) or high-contrast fixed frame screen dramatically improves black levels and contrast, particularly in living rooms with daylight.',
+    answer: 'All Hunting Projector systems can project directly onto a smooth, flat white or neutral matte wall. However, pairing your projector with an Ambient Light Rejecting (ALR) or high-contrast fixed frame screen dramatically improves black levels and contrast, particularly in living rooms with daylight.',
   },
   {
     id: 'faq-7',
@@ -61,7 +61,7 @@ export const faqs: FAQItem[] = [
     category: 'support',
     categoryLabel: 'Warranty & Support',
     question: 'What warranty and after-sales support is provided?',
-    answer: 'All Hunting Projectors come backed by official direct brand warranty from NAP Computers Electronics. Technical guidance, installation consultations, and repair servicing are handled directly by our dedicated product specialists in Chennai. Extended warranty options and spare support are available.',
+    answer: 'All Hunting Projector units come backed by official direct brand warranty from Nap Computers Electronicss. Technical guidance, installation consultations, and repair servicing are handled directly by our dedicated product specialists in Chennai. Extended warranty options and spare support are available.',
   },
   {
     id: 'faq-9',

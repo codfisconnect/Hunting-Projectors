@@ -38,8 +38,8 @@ router.use('/cms', cmsRoutes);
 router.get('/health', (_req, res) => {
   res.json({
     status: 'ok',
-    brand: 'Hunting Projectors',
-    supplier: 'NAP Computers Electronics',
+    brand: 'Hunting Projector',
+    supplier: 'Nap Computers Electronicss',
     location: 'Chennai, Tamil Nadu, India',
     timestamp: new Date().toISOString()
   });

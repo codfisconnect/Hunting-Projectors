@@ -24,7 +24,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenEnquiry }) => {
     alternateName: BUSINESS_CONFIG.companyName,
     url: 'https://huntingprojector.in',
     logo: 'https://huntingprojector.in/favicon.png',
-    description: 'Direct brand supply of premium 4K laser cinema, ultra short throw, and high-brightness optical projectors by NAP Computers Electronics, Chennai, India.',
+    description: 'Direct brand supply of premium 4K laser cinema, ultra short throw, and high-brightness optical projectors by Nap Computers Electronicss, Chennai, India.',
     telephone: BUSINESS_CONFIG.phoneRaw,
     email: BUSINESS_CONFIG.email,
     address: {
@@ -43,8 +43,8 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenEnquiry }) => {
   return (
     <div className="home-page-wrapper">
       <SEOHead
-        title="Hunting Projectors by NAP Computers Electronics — 4K Laser & Cinema Optics"
-        description="Direct brand supply of premium 4K laser cinema, ultra short throw, and smart portable projectors by Hunting Projectors by NAP Computers Electronics, Chennai, India. Pan-India express delivery."
+        title="Hunting Projector by Nap Computers Electronicss — 4K Laser & Cinema Optics"
+        description="Direct brand supply of premium 4K laser cinema, ultra short throw, and smart portable projectors by Hunting Projector by Nap Computers Electronicss, Chennai, India. Pan-India express delivery."
         canonicalPath="/"
         structuredData={organizationStructuredData}
       />

@@ -1,6 +1,6 @@
-# Hunting Projectors - robots.txt
+# Hunting Projector - robots.txt
 # Primary Canonical Domain: https://huntingprojector.in
-# Supplier & Fulfilment: NAP Computers Electronics
+# Supplier & Fulfilment: Nap Computers Electronicss
 
 User-agent: *
 Allow: /

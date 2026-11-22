@@ -12,8 +12,8 @@ export const WarrantyPage: React.FC = () => {
   return (
     <div className="policy-page">
       <SEOHead
-        title="Official Warranty Guidelines — Hunting Projectors Direct Protection"
-        description="Comprehensive 2-year brand warranty guidelines covering optical engines, laser light sources, and electronics fulfilled directly by NAP Computers Electronics."
+        title="Official Warranty Guidelines — Hunting Projector Direct Protection"
+        description="Comprehensive 2-year brand warranty guidelines covering optical engines, laser light sources, and electronics fulfilled directly by Nap Computers Electronicss."
         canonicalPath="/warranty"
       />
       <div className="container policy-container">

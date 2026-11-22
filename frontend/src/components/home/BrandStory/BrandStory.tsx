@@ -72,7 +72,7 @@ export const BrandStory: React.FC = () => {
               <div>
                 <h4 className="story-pillar-title">DIRECT FACTORY INTEGRITY</h4>
                 <p className="story-pillar-text">
-                  Supplied, owned, and serviced directly by NAP Computers Electronics, Chennai. Honest pricing, genuine optical engineering, and dedicated Indian service support.
+                  Supplied, owned, and serviced directly by Nap Computers Electronicss, Chennai. Honest pricing, genuine optical engineering, and dedicated Indian service support.
                 </p>
               </div>
             </div>
