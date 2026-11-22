@@ -19,7 +19,7 @@ export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ onOpenEnquir
       .then(res => {
         if (isMounted) {
           const sorted = [...res.products].sort((a, b) => (b.isFlagship ? 1 : 0) - (a.isFlagship ? 1 : 0));
-          setFeaturedList(sorted.slice(0, 3));
+          setFeaturedList(sorted.slice(0, 6));
         }
       })
       .catch(err => {

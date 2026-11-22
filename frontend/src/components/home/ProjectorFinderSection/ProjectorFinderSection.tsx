@@ -314,7 +314,6 @@ export const ProjectorFinderSection: React.FC<ProjectorFinderSectionProps> = ({
 
                   <div className="result-price-strip">
                     <div>
-                      <span className="r-price-tag">DIRECT DEMO PRICING</span>
                       <div className="r-price">₹{primaryMatch.price.toLocaleString('en-IN')}</div>
                     </div>
                   </div>

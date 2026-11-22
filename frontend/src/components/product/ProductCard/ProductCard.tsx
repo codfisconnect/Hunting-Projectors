@@ -85,7 +85,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         {/* Price & Action Row */}
         <div className="card-bottom-row">
           <div className="card-price-block">
-            <span className="price-label">DIRECT DEMO PRICING</span>
             <div className="price-values">
               <span className="current-price">₹{product.price.toLocaleString('en-IN')}</span>
               {product.compareAtPrice && (

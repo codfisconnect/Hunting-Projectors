@@ -25,6 +25,37 @@ const SECTION_LABELS: Record<SectionKey, string> = {
   flags: 'Display Flags & Badge',
 };
 
+const Section: React.FC<{
+  id: SectionKey;
+  isOpen: boolean;
+  onToggle: (id: SectionKey) => void;
+  children: React.ReactNode;
+}> = ({ id, isOpen, onToggle, children }) => (
+  <div className="pf-section">
+    <button
+      type="button"
+      className="pf-section-header"
+      onClick={() => onToggle(id)}
+    >
+      <span>{SECTION_LABELS[id]}</span>
+      {isOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+    </button>
+    {isOpen && <div className="pf-section-body">{children}</div>}
+  </div>
+);
+
+const Field: React.FC<{
+  label: string; required?: boolean; hint?: string; children: React.ReactNode;
+}> = ({ label, required, hint, children }) => (
+  <div className="pf-field">
+    <label className="pf-label">
+      {label}{required && <span className="pf-required"> *</span>}
+    </label>
+    {children}
+    {hint && <span className="pf-hint">{hint}</span>}
+  </div>
+);
+
 export const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCancel }) => {
   const isEdit = !!product;
   const [saving, setSaving] = useState(false);
@@ -302,32 +333,6 @@ export const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCan
     }
   };
 
-  const Section: React.FC<{ id: SectionKey; children: React.ReactNode }> = ({ id, children }) => (
-    <div className="pf-section">
-      <button
-        type="button"
-        className="pf-section-header"
-        onClick={() => toggleSection(id)}
-      >
-        <span>{SECTION_LABELS[id]}</span>
-        {openSections[id] ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-      </button>
-      {openSections[id] && <div className="pf-section-body">{children}</div>}
-    </div>
-  );
-
-  const Field: React.FC<{
-    label: string; required?: boolean; hint?: string; children: React.ReactNode;
-  }> = ({ label, required, hint, children }) => (
-    <div className="pf-field">
-      <label className="pf-label">
-        {label}{required && <span className="pf-required"> *</span>}
-      </label>
-      {children}
-      {hint && <span className="pf-hint">{hint}</span>}
-    </div>
-  );
-
   return (
     <div className="admin-modal-overlay" onClick={onCancel}>
       <div
@@ -351,7 +356,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCan
           <div className="pf-form-scroll">
 
             {/* ── BASIC INFORMATION ── */}
-            <Section id="basic">
+            <Section id="basic" isOpen={openSections.basic} onToggle={toggleSection}>
               <div className="pf-row-2">
                 <Field label="Product Name" required>
                   <input
@@ -403,7 +408,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCan
             </Section>
 
             {/* ── PRODUCT GALLERY & MEDIA ── */}
-            <Section id="images">
+            <Section id="images" isOpen={openSections.images} onToggle={toggleSection}>
               <div style={{ marginBottom: '16px' }}>
                 <p style={{ fontSize: '0.85rem', color: 'var(--text-muted, #8E95A5)', marginBottom: '12px' }}>
                   Upload multiple product gallery views. The first image marked as <strong>Hero</strong> is used as the primary image across catalog cards.
@@ -455,7 +460,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCan
                       const isHero = img.viewType === 'hero' || idx === 0;
                       return (
                         <div
-                          key={idx}
+                          key={img.url || idx}
                           style={{
                             position: 'relative',
                             border: isHero ? '2px solid #D4AF37' : '1px solid #333',
@@ -467,11 +472,11 @@ export const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCan
                           }}
                         >
                           {/* Image preview */}
-                          <div style={{ width: '100%', height: '90px', background: '#0A0C10', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+                          <div style={{ width: '100%', height: '115px', background: '#0A0C10', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
                             <img
                               src={img.url}
                               alt={img.altText || `View ${idx + 1}`}
-                              style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+                              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }}
                               onError={e => {
                                 (e.target as HTMLElement).style.display = 'none';
                               }}
@@ -538,7 +543,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCan
             </Section>
 
             {/* ── PRICING & INVENTORY ── */}
-            <Section id="pricing">
+            <Section id="pricing" isOpen={openSections.pricing} onToggle={toggleSection}>
               <div className="pf-row-3">
                 <Field label="Price (₹)" required>
                   <input type="number" min="0" step="0.01" value={price} onChange={e => setPrice(e.target.value)} className="pf-input" placeholder="85000" />
@@ -569,7 +574,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCan
             </Section>
 
             {/* ── PROJECTOR SPECIFICATIONS ── */}
-            <Section id="specs">
+            <Section id="specs" isOpen={openSections.specs} onToggle={toggleSection}>
               <div className="pf-row-2">
                 <Field label="Resolution" hint="e.g. 4K UHD (3840×2160)">
                   <input type="text" value={resolution} onChange={e => setResolution(e.target.value)} className="pf-input" placeholder="4K UHD (3840×2160)" />
@@ -662,7 +667,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCan
             </Section>
 
             {/* ── FLAGS & BADGE ── */}
-            <Section id="flags">
+            <Section id="flags" isOpen={openSections.flags} onToggle={toggleSection}>
               <div className="pf-flags-grid">
                 {[
                   { label: 'Active (visible on storefront)', value: isActive, setter: setIsActive },
