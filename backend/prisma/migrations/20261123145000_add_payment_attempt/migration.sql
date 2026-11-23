@@ -1,7 +1,4 @@
--- Migration: 20261123_add_payment_attempts
--- Purpose: Support resilient multi-attempt Razorpay payment tracking with idempotency and audit trail
--- Run against database when deploying to production:
-
+-- CreateTable
 CREATE TABLE IF NOT EXISTS "payment_attempts" (
     "id" TEXT NOT NULL,
     "orderId" TEXT NOT NULL,
@@ -22,16 +19,18 @@ CREATE TABLE IF NOT EXISTS "payment_attempts" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "payment_attempts_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "payment_attempts_pkey" PRIMARY KEY ("id"),
+    CONSTRAINT "payment_attempts_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "orders"("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
--- Unique index for payment IDs captured by gateway
+-- CreateIndex
 CREATE UNIQUE INDEX IF NOT EXISTS "payment_attempts_razorpayPaymentId_key" ON "payment_attempts"("razorpayPaymentId");
 
--- Lookup indexes for high performance order and webhook resolution
+-- CreateIndex
 CREATE INDEX IF NOT EXISTS "payment_attempts_orderId_idx" ON "payment_attempts"("orderId");
-CREATE INDEX IF NOT EXISTS "payment_attempts_razorpayOrderId_idx" ON "payment_attempts"("razorpayOrderId");
-CREATE INDEX IF NOT EXISTS "payment_attempts_status_idx" ON "payment_attempts"("status");
 
--- Foreign key link to orders
-ALTER TABLE "payment_attempts" ADD CONSTRAINT "payment_attempts_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "orders"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+-- CreateIndex
+CREATE INDEX IF NOT EXISTS "payment_attempts_razorpayOrderId_idx" ON "payment_attempts"("razorpayOrderId");
+
+-- CreateIndex
+CREATE INDEX IF NOT EXISTS "payment_attempts_status_idx" ON "payment_attempts"("status");

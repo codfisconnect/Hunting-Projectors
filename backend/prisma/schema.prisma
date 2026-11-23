@@ -345,7 +345,7 @@ model OrderStatusHistory {
 model PaymentAttempt {
   id                 String        @id @default(uuid())
   orderId            String
-  order              Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  order              Order         @relation(fields: [orderId], references: [id], onDelete: Restrict)
   razorpayOrderId    String
   razorpayPaymentId  String?       @unique
   razorpaySignature  String?
