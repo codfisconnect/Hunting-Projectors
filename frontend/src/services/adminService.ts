@@ -83,6 +83,14 @@ class AdminService {
     return res.data;
   }
 
+  async updateOrderPaymentStatus(orderId: string, payload: { paymentStatus: string; transactionReference?: string; notes?: string }) {
+    const res = await fetchJson<{ success: boolean; data: any }>(`/admin/orders/${orderId}/payment`, {
+      method: 'PATCH',
+      body: JSON.stringify(payload)
+    });
+    return res.data;
+  }
+
   async getCustomers(filters?: AdminCustomerFilters): Promise<{ customers: any[]; pagination: { total: number; page: number; limit: number } }> {
     const params = new URLSearchParams();
     if (filters?.search) params.append('search', filters.search);

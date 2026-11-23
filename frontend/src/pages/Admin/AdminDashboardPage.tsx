@@ -116,6 +116,8 @@ export const AdminDashboardPage: React.FC = () => {
   const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
   const [selectedCustomer, setSelectedCustomer] = useState<any | null>(null);
   const [statusUpdateVal, setStatusUpdateVal] = useState<string>('');
+  const [paymentUpdateVal, setPaymentUpdateVal] = useState<string>('PENDING');
+  const [paymentRefVal, setPaymentRefVal] = useState<string>('');
   const [statusNotes, setStatusNotes] = useState<string>('');
   const [trackingNumber, setTrackingNumber] = useState<string>('');
   const [carrierName, setCarrierName] = useState<string>('');
@@ -326,13 +328,28 @@ export const AdminDashboardPage: React.FC = () => {
   const handleUpdateOrderStatus = async () => {
     if (!selectedOrder || !statusUpdateVal) return;
     try {
+      // 1. If payment status was updated, validate and execute payment reconciliation endpoint
+      if (paymentUpdateVal !== selectedOrder.paymentStatus) {
+        if (paymentUpdateVal === 'PAID' && !paymentRefVal.trim()) {
+          alert('Transaction reference (e.g. UTR / NEFT Ref / RZP Tx ID) is mandatory when marking an order as PAID.');
+          return;
+        }
+
+        await adminService.updateOrderPaymentStatus(selectedOrder.id, {
+          paymentStatus: paymentUpdateVal,
+          transactionReference: paymentRefVal.trim(),
+          notes: statusNotes.trim()
+        });
+      }
+
+      // 2. Update fulfillment status
       await adminService.updateOrderStatus(selectedOrder.id, {
         status: statusUpdateVal,
         notes: statusNotes,
         trackingCarrier: carrierName,
         trackingNumber: trackingNumber
       });
-      setActionSuccessMsg(`Order ${selectedOrder.orderNumber} updated to ${statusUpdateVal}`);
+      setActionSuccessMsg(`Order ${selectedOrder.orderNumber} updated successfully`);
       setSelectedOrder(null);
       loadDashboardData();
       if (activeTab === 'orders') {
@@ -971,6 +988,8 @@ export const AdminDashboardPage: React.FC = () => {
                                 onClick={() => {
                                   setSelectedOrder(o);
                                   setStatusUpdateVal(o.orderStatus);
+                                  setPaymentUpdateVal(o.paymentStatus || 'PENDING');
+                                  setPaymentRefVal('');
                                   setCarrierName(o.trackingCarrier || '');
                                   setTrackingNumber(o.trackingNumber || '');
                                 }}
@@ -3735,7 +3754,38 @@ export const AdminDashboardPage: React.FC = () => {
                 <p><strong>Address:</strong> {selectedOrder.addressLine}, {selectedOrder.city}, {selectedOrder.state} - {selectedOrder.pincode}</p>
                 <p><strong>Total Amount:</strong> ₹{Number(selectedOrder.totalAmount).toLocaleString('en-IN')}</p>
                 <p><strong>Current Status:</strong> <span className="status-badge">{selectedOrder.orderStatus}</span></p>
-                <p><strong>Payment Status:</strong> <span className="payment-badge">{selectedOrder.paymentStatus}</span></p>
+                <p><strong>Payment Status:</strong> <span className="payment-badge">{selectedOrder.paymentStatus}</span> ({selectedOrder.paymentMethod || 'Direct Bank/Online'})</p>
+              </div>
+
+              {/* Payment Reconciliation Control */}
+              <div style={{ background: '#131722', border: '1px solid #232938', padding: '14px', borderRadius: '6px', marginBottom: '16px' }}>
+                <h4 style={{ margin: '0 0 10px 0', fontSize: '13px', color: '#D4AF37', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  💳 Payment Reconciliation & Manual Verification
+                </h4>
+                <div className="modal-form-row">
+                  <div className="modal-form-group">
+                    <label>Reconcile Payment Status:</label>
+                    <select value={paymentUpdateVal} onChange={e => setPaymentUpdateVal(e.target.value)}>
+                      <option value="PENDING">Pending Verification</option>
+                      <option value="PAID">Mark as PAID (Direct Bank/NEFT/RTGS Verified)</option>
+                      <option value="FAILED">Mark as FAILED</option>
+                      <option value="REFUNDED">Mark as REFUNDED</option>
+                    </select>
+                  </div>
+                  <div className="modal-form-group">
+                    <label>
+                      Bank / UTR Transaction Ref:
+                      {paymentUpdateVal === 'PAID' && <span style={{ color: '#EF4444', marginLeft: '4px' }}>* (Required)</span>}
+                    </label>
+                    <input
+                      type="text"
+                      placeholder={paymentUpdateVal === 'PAID' ? "Required: e.g. UTR / NEFT Ref / RZP Tx ID" : "Optional: e.g. UTR / Tx ID"}
+                      value={paymentRefVal}
+                      onChange={e => setPaymentRefVal(e.target.value)}
+                      required={paymentUpdateVal === 'PAID'}
+                    />
+                  </div>
+                </div>
               </div>
 
               <div className="modal-form-group">

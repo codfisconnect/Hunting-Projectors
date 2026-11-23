@@ -58,13 +58,21 @@ router.patch('/orders/:id/payment', async (req, res, next) => {
       return sendError(res, `Invalid payment status. Allowed: ${validStatuses.join(', ')}`, 400);
     }
 
+    const trimmedReference = typeof transactionReference === 'string' ? transactionReference.trim() : '';
+
+    if (paymentStatus === 'PAID' && !trimmedReference) {
+      return sendError(res, 'Transaction reference is required when marking payment as PAID', 400);
+    }
+
+    const trimmedNotes = typeof notes === 'string' ? notes.trim() : '';
+
     const orderId = String(req.params.id);
     const updated = await prisma.$transaction(async (tx) => {
       const order = await tx.order.findUnique({ where: { id: orderId } });
       if (!order) throw new Error('Order not found');
 
-      const appendNote = notes || transactionReference
-        ? `[Payment Status changed to ${paymentStatus} by Admin${req.user?.email ? ` (${req.user.email})` : ''}${transactionReference ? ` - Ref: ${transactionReference}` : ''}${notes ? ` - Notes: ${notes}` : ''}]`
+      const appendNote = trimmedNotes || trimmedReference
+        ? `[Payment Status changed to ${paymentStatus} by Admin${req.user?.email ? ` (${req.user.email})` : ''}${trimmedReference ? ` - Ref: ${trimmedReference}` : ''}${trimmedNotes ? ` - Notes: ${trimmedNotes}` : ''}]`
         : null;
 
       const dataToUpdate: any = {

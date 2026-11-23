@@ -60,4 +60,10 @@ export const config = {
   nodeEnv: process.env.NODE_ENV || 'development',
   clientUrl: process.env.CLIENT_URL || 'http://localhost:5173',
   databaseUrl: process.env.DATABASE_URL || '',
+  razorpay: {
+    keyId: process.env.RAZORPAY_KEY_ID || '',
+    keySecret: process.env.RAZORPAY_KEY_SECRET || '',
+    webhookSecret: process.env.RAZORPAY_WEBHOOK_SECRET || '',
+    currency: process.env.PAYMENT_CURRENCY || 'INR',
+  }
 };

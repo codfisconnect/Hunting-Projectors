@@ -281,6 +281,57 @@ export class EmailService {
       html
     });
   }
+
+  // Template: Payment Failure Notification
+  public async sendPaymentFailureNotification(order: any, errorDescription?: string): Promise<{ success: boolean; error?: string }> {
+    const html = `
+      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background: #0A0C10; color: #FFFFFF; padding: 32px; border-radius: 8px;">
+        <div style="text-align: center; margin-bottom: 24px;">
+          <h2 style="color: #D4AF37; margin: 0; font-size: 24px; letter-spacing: 2px;">${BUSINESS_CONFIG.brandName.toUpperCase()}</h2>
+        </div>
+        <div style="background: #141721; padding: 24px; border-radius: 6px; border: 1px solid #FF5A79;">
+          <h3 style="color: #FF5A79; margin-top: 0;">Payment Incomplete or Declined</h3>
+          <p style="color: #A0AEC0; font-size: 14px;">Hello ${order.customerName},</p>
+          <p style="color: #A0AEC0; font-size: 14px;">We noticed an issue completing payment for order <strong>${order.orderNumber}</strong>.</p>
+          ${errorDescription ? `<p style="color: #CBD5E0; font-size: 13px; background: #0B0D12; padding: 10px; border-radius: 4px;">Reason: ${errorDescription}</p>` : ''}
+          <p style="color: #A0AEC0; font-size: 14px;">Your projector reservation is held for 30 minutes. You can retry payment directly from your orders dashboard or contact our specialists for alternate payment options.</p>
+        </div>
+        <p style="color: #718096; font-size: 12px; text-align: center; margin-top: 20px;">
+          Assistance: WhatsApp ${BUSINESS_CONFIG.phoneDisplay} | ${BUSINESS_CONFIG.email}
+        </p>
+      </div>
+    `;
+
+    return this.sendEmail({
+      to: order.customerEmail,
+      subject: `Payment Incomplete for Order #${order.orderNumber} | ${BUSINESS_CONFIG.brandName}`,
+      html
+    });
+  }
+
+  // Template: Refund / Reconciliation Notification
+  public async sendRefundNotification(order: any, refundDetails: { amount: number; reference?: string }): Promise<{ success: boolean; error?: string }> {
+    const html = `
+      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background: #0A0C10; color: #FFFFFF; padding: 32px; border-radius: 8px;">
+        <div style="text-align: center; margin-bottom: 24px;">
+          <h2 style="color: #D4AF37; margin: 0; font-size: 24px; letter-spacing: 2px;">${BUSINESS_CONFIG.brandName.toUpperCase()}</h2>
+        </div>
+        <div style="background: #141721; padding: 24px; border-radius: 6px; border: 1px solid #38EF7D;">
+          <h3 style="color: #38EF7D; margin-top: 0;">Refund Processed</h3>
+          <p style="color: #A0AEC0; font-size: 14px;">Hello ${order.customerName},</p>
+          <p style="color: #A0AEC0; font-size: 14px;">A refund of <strong>₹${Number(refundDetails.amount).toLocaleString('en-IN')}</strong> has been issued for order <strong>${order.orderNumber}</strong>.</p>
+          ${refundDetails.reference ? `<p style="color: #CBD5E0; font-size: 13px;">Reference / ARN: <strong>${refundDetails.reference}</strong></p>` : ''}
+          <p style="color: #718096; font-size: 12px;">Depending on your bank or payment method, the credit will reflect within 5-7 business days.</p>
+        </div>
+      </div>
+    `;
+
+    return this.sendEmail({
+      to: order.customerEmail,
+      subject: `Refund Processed for Order #${order.orderNumber} | ${BUSINESS_CONFIG.brandName}`,
+      html
+    });
+  }
 }
 
 export const emailService = new EmailService();

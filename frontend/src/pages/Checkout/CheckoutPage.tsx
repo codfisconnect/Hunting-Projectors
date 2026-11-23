@@ -14,6 +14,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
 import { addressService } from '../../services/addressService';
 import { orderService } from '../../services/orderService';
+import { paymentClient } from '../../services/paymentService';
 import { Address, AddressInput } from '../../types/address';
 import { CheckoutCalculation, Order } from '../../types/order';
 import './Checkout.css';
@@ -29,6 +30,7 @@ export const CheckoutPage: React.FC = () => {
   const [calculation, setCalculation] = useState<CheckoutCalculation | null>(null);
   const [isCalculating, setIsCalculating] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [completedOrder, setCompletedOrder] = useState<Order | null>(null);
 
@@ -111,13 +113,91 @@ export const CheckoutPage: React.FC = () => {
         ? { addressId: selectedAddressId }
         : { shippingAddress: newAddr };
 
+      // 1. Authoritative Order Creation in Database
       const order = await orderService.createOrder(payload);
-      setCompletedOrder(order);
-      await clearCart();
+
+      // 2. Authoritative Gateway Order Creation
+      setIsProcessingPayment(true);
+      const rzpData = await paymentClient.createPaymentOrder(order.id);
+
+      // Check if Razorpay Checkout SDK is available in window
+      const Razorpay = (window as any).Razorpay;
+      if (typeof Razorpay !== 'function') {
+        // Fallback if script blocked: Keep order reserved and let user view in orders
+        setCompletedOrder(order);
+        await clearCart();
+        return;
+      }
+
+      // 3. Launch Razorpay Standard Checkout
+      const options = {
+        key: rzpData.keyId,
+        amount: rzpData.amount,
+        currency: rzpData.currency,
+        name: 'Hunting Projector',
+        description: `Order #${order.orderNumber} Optical System`,
+        image: '/assets/hunting-projectors-og.png',
+        order_id: rzpData.razorpayOrderId,
+        prefill: {
+          name: rzpData.customer.name,
+          email: rzpData.customer.email,
+          contact: rzpData.customer.phone,
+        },
+        theme: {
+          color: '#12151D',
+        },
+        modal: {
+          ondismiss: () => {
+            setIsProcessingPayment(false);
+            setIsSubmitting(false);
+            setError(`Payment cancelled or paused. Your order #${order.orderNumber} is reserved. You can retry payment now or from your Orders page.`);
+          },
+        },
+        handler: async (response: any) => {
+          try {
+            // 4. Server-Side Cryptographic Signature Verification
+            const verifyRes = await paymentClient.verifyPayment({
+              orderId: order.id,
+              razorpayOrderId: response.razorpay_order_id,
+              razorpayPaymentId: response.razorpay_payment_id,
+              razorpaySignature: response.razorpay_signature,
+            });
+
+            if (verifyRes.verified) {
+              setCompletedOrder({
+                ...order,
+                paymentStatus: 'PAID',
+                orderStatus: 'CONFIRMED',
+              });
+              await clearCart();
+            } else {
+              setError('Payment verification pending. Our team will verify your transaction.');
+              setCompletedOrder(order);
+              await clearCart();
+            }
+          } catch (verErr: any) {
+            setError(verErr.message || 'Payment signature verification failed.');
+            setCompletedOrder(order);
+            await clearCart();
+          } finally {
+            setIsProcessingPayment(false);
+            setIsSubmitting(false);
+          }
+        },
+      };
+
+      const rzpInstance = new Razorpay(options);
+      rzpInstance.on('payment.failed', (resp: any) => {
+        setIsProcessingPayment(false);
+        setIsSubmitting(false);
+        setError(`Payment failed: ${resp.error?.description || 'Transaction declined by bank.'}`);
+      });
+      rzpInstance.open();
+
     } catch (err: any) {
       setError(err.message || 'Failed to place order. Please review your details.');
-    } finally {
       setIsSubmitting(false);
+      setIsProcessingPayment(false);
     }
   };
 
@@ -355,10 +435,10 @@ export const CheckoutPage: React.FC = () => {
               <div style={{ padding: '16px', background: 'var(--bg-surface-elevated)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--accent-ice-blue)', fontWeight: 700, marginBottom: '6px' }}>
                   <CreditCard size={18} />
-                  <span>Direct Bank / Razorpay Development Mode</span>
+                  <span>Razorpay Secure Checkout (UPI, Cards, Net Banking)</span>
                 </div>
                 <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0 }}>
-                  Live Razorpay gateway integration is reserved for the next milestone. Your order will be created with status PENDING, reserving your inventory directly.
+                  256-bit encrypted checkout powered by Razorpay. Supports UPI (Google Pay, PhonePe, Paytm), Credit/Debit Cards, Net Banking, and EMI.
                 </p>
               </div>
             </div>
@@ -415,9 +495,9 @@ export const CheckoutPage: React.FC = () => {
                 type="button"
                 className="checkout-place-btn"
                 onClick={handlePlaceOrder}
-                disabled={isSubmitting || isCalculating}
+                disabled={isSubmitting || isCalculating || isProcessingPayment}
               >
-                <span>{isSubmitting ? 'Placing Order...' : 'Place Order'}</span>
+                <span>{isProcessingPayment ? 'Connecting Gateway...' : isSubmitting ? 'Placing Order...' : 'Pay & Confirm Order'}</span>
                 <ArrowRight size={16} />
               </button>
 

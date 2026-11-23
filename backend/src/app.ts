@@ -71,7 +71,11 @@ export const createApp = () => {
     },
     credentials: true,
   }));
-  app.use(express.json());
+  app.use(express.json({
+    verify: (req: any, _res, buf) => {
+      req.rawBody = buf.toString();
+    }
+  }));
   app.use(express.urlencoded({ extended: true }));
 
   // Serve static assets / uploads if local directory exists
