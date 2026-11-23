@@ -45,12 +45,12 @@ export const IndiaDelivery: React.FC = () => {
             </h2>
 
             <p className="india-lead">
-              Hunting Projector operates as a direct brand entity by Nap Computers Electronicss, cutting out commercial layers to provide cutting-edge 4K optical projection at unmatched factory value.
+              Hunting Projector operates as a direct brand entity by Nap Computers Electronics, cutting out commercial layers to provide cutting-edge 4K optical projection at unmatched factory value.
             </p>
 
             <div className="india-entity-tag">
               <span className="entity-tag-label">BUSINESS ENTITY:</span>
-              <span className="entity-tag-val">{siteConfig.entity.owner} • {siteConfig.entity.locationLabel}</span>
+              <span className="entity-tag-val">Nap Computers Electronics • Chennai, Tamil Nadu</span>
             </div>
 
             <div className="india-action-row">
@@ -73,13 +73,13 @@ export const IndiaDelivery: React.FC = () => {
           <div className="india-map-pane">
             <div className="map-visual-box">
               <svg viewBox="0 0 400 480" className="abstract-india-svg" fill="none" xmlns="http://www.w3.org/2000/svg">
-                {/* Abstract Geometric India Map Outline */}
+                {/* Recognizable Geographical India Map Silhouette */}
                 <path 
-                  d="M 180 30 L 220 50 L 250 80 L 220 120 L 260 150 L 290 190 L 330 200 L 310 240 L 260 250 L 240 290 L 230 350 L 200 420 L 190 450 L 180 420 L 150 350 L 130 310 L 110 270 L 80 250 L 90 200 L 120 180 L 150 160 L 140 120 L 160 80 Z" 
-                  stroke="#262D3D" 
-                  strokeWidth="1.5" 
-                  strokeDasharray="4 4"
-                  fill="rgba(157, 220, 255, 0.02)"
+                  d="M 165 42 L 182 32 L 196 46 L 210 50 L 216 70 L 206 82 L 202 96 L 212 110 L 230 118 L 244 134 L 268 142 L 278 156 L 298 160 L 322 170 L 334 186 L 330 200 L 312 208 L 298 220 L 282 220 L 266 226 L 254 242 L 248 266 L 246 290 L 238 316 L 234 340 L 222 368 L 210 398 L 194 434 L 188 448 L 184 438 L 178 406 L 166 376 L 154 346 L 140 318 L 126 292 L 112 268 L 92 254 L 84 240 L 88 224 L 102 214 L 118 206 L 128 190 L 138 174 L 142 152 L 148 136 L 154 116 L 150 96 L 152 74 Z" 
+                  stroke="rgba(212, 175, 55, 0.45)" 
+                  strokeWidth="1.75" 
+                  strokeDasharray="5 3"
+                  fill="rgba(212, 175, 55, 0.03)"
                 />
 
                 {/* Hub: Chennai (HQ - Pulsing Strong) */}
@@ -91,7 +91,7 @@ export const IndiaDelivery: React.FC = () => {
                   <circle cx="0" cy="0" r="7" fill="#D4AF37" />
                   <circle cx="0" cy="0" r="3" fill="#0C0D10" />
                   <text x="14" y="4" fill="#E6CA65" fontFamily="Inter, sans-serif" fontSize="10" fontWeight="800" letterSpacing="1">CHENNAI HQ</text>
-                  <text x="14" y="16" fill="#9DA3AE" fontFamily="Inter, sans-serif" fontSize="8">Nap Computers Electronicss</text>
+                  <text x="14" y="16" fill="#9DA3AE" fontFamily="Inter, sans-serif" fontSize="8">Nap Computers Electronics</text>
                 </g>
 
                 {/* Dispatch Transit Lines from Chennai */}

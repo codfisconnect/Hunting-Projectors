@@ -36,8 +36,41 @@
 
 .featured-cards-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 28px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.featured-view-all-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.featured-view-all-cta {
+  padding: 14px 38px;
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.2);
+}
+
+@media (max-width: 1200px) {
+  .featured-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .featured-cards-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .featured-view-all-cta {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 /* Bottom Strip */

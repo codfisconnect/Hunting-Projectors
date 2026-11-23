@@ -158,9 +158,9 @@ export const Footer: React.FC = () => {
           </div>
 
           <div className="copyright-text" aria-label="Copyright and ownership">
-            <span>© 2026 Sadakka Tulla Moinuddeen. All rights reserved.</span>
+            <span>© 2026 Nap Computers Electronics. All rights reserved.</span>
             <span className="copyright-separator">|</span>
-            <span className="footer-highlight-gold">Nap Computers Electronicss</span>
+            <span className="footer-highlight-gold">Nap Computers Electronics</span>
             <span className="copyright-separator">|</span>
             <span>
               Web by{' '}

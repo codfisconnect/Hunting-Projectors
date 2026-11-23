@@ -15,11 +15,17 @@ export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ onOpenEnquir
 
   useEffect(() => {
     let isMounted = true;
-    getProducts({ limit: 6 })
+    getProducts({ limit: 12 })
       .then(res => {
         if (isMounted) {
-          const sorted = [...res.products].sort((a, b) => (b.isFlagship ? 1 : 0) - (a.isFlagship ? 1 : 0));
-          setFeaturedList(sorted.slice(0, 6));
+          // Strictly display exactly the 4 authentic consumer models: H900, H700, H500, H200 (exclude test fixtures)
+          const genuineProducts = res.products.filter(p => !p.slug.toLowerCase().includes('test'));
+          const sorted = [...genuineProducts].sort((a, b) => {
+            if (a.isFlagship && !b.isFlagship) return -1;
+            if (!a.isFlagship && b.isFlagship) return 1;
+            return b.price - a.price;
+          });
+          setFeaturedList(sorted.slice(0, 4));
         }
       })
       .catch(err => {
@@ -54,8 +60,8 @@ export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ onOpenEnquir
           </Link>
         </div>
 
-        {/* 3-Column Editorial Grid */}
-        <div className="featured-cards-grid">
+        {/* 4-Product Responsive Grid */}
+        <div className="featured-cards-grid featured-cards-grid-4">
           {featuredList.map(product => (
             <ProductCard
               key={product.id}
@@ -64,6 +70,14 @@ export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ onOpenEnquir
               onOpenEnquiry={onOpenEnquiry}
             />
           ))}
+        </div>
+
+        {/* View All Products Button */}
+        <div className="featured-view-all-center">
+          <Link to="/products" className="btn-primary featured-view-all-cta">
+            <span>VIEW ALL PRODUCTS</span>
+            <ArrowRight size={18} />
+          </Link>
         </div>
 
         {/* Bottom Comparative Strip */}
