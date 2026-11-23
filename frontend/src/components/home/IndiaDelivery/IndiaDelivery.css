@@ -113,32 +113,31 @@
   color: var(--text-muted);
 }
 
-/* 4 Pillars Grid */
+/* 3 Pillars Grid - Single Compact Row */
 .pillars-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
 }
 
 .pillar-card {
   background-color: rgba(255, 255, 255, 0.02);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: 28px 24px;
+  border-radius: var(--radius-sm);
+  padding: 20px 16px;
   display: flex;
   flex-direction: column;
-  transition: all var(--transition-medium);
+  transition: all var(--transition-fast);
 }
 
 .pillar-card:hover {
   background-color: rgba(255, 255, 255, 0.04);
-  border-color: var(--border-medium);
-  transform: translateY(-3px);
+  border-color: rgba(157, 220, 255, 0.3);
 }
 
 .pillar-icon-box {
-  width: 46px;
-  height: 46px;
+  width: 40px;
+  height: 40px;
   border-radius: var(--radius-sm);
   background-color: rgba(157, 220, 255, 0.08);
   border: 1px solid rgba(157, 220, 255, 0.2);
@@ -146,34 +145,29 @@
   align-items: center;
   justify-content: center;
   color: var(--accent-ice-blue);
-  margin-bottom: 20px;
+  margin-bottom: 14px;
 }
 
 .pillar-title {
   font-family: var(--font-display);
-  font-size: 1rem;
+  font-size: 0.92rem;
   font-weight: 800;
   color: var(--text-primary);
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
 .pillar-sub {
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: 0.65rem;
   color: var(--accent-ice-blue);
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .pillar-desc {
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   color: var(--text-secondary);
-  line-height: 1.5;
-}
-
-@media (max-width: 1080px) {
-  .pillars-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  line-height: 1.45;
+  margin: 0;
 }
 
 @media (max-width: 860px) {
@@ -182,7 +176,29 @@
     gap: 36px;
   }
   .pillars-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, 1fr); /* 1 row on mobile and tablet */
+    gap: 8px;
+  }
+  .pillar-card {
+    padding: 12px 6px;
+    align-items: center;
+    text-align: center;
+  }
+  .pillar-icon-box {
+    margin-bottom: 6px;
+    width: 32px;
+    height: 32px;
+  }
+  .pillar-title {
+    font-size: 0.72rem;
+    line-height: 1.2;
+    margin-bottom: 2px;
+  }
+  .pillar-sub {
+    display: none;
+  }
+  .pillar-desc {
+    display: none;
   }
   .india-action-row {
     flex-direction: column;
@@ -190,5 +206,22 @@
   }
   .india-action-row a {
     width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .pillars-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+  .pillar-card {
+    padding: 10px 4px;
+  }
+  .pillar-icon-box {
+    width: 28px;
+    height: 28px;
+  }
+  .pillar-title {
+    font-size: 0.64rem;
   }
 }

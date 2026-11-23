@@ -7,6 +7,8 @@ import {
   CreditCard, 
   ArrowRight, 
   Plus, 
+  Minus,
+  Trash2,
   ShoppingBag,
   Package,
   AlertCircle,
@@ -29,7 +31,7 @@ import './Checkout.css';
 
 export const CheckoutPage: React.FC = () => {
   const { user, isAuthenticated, isLoading: isAuthLoading } = useAuth();
-  const { cart, totalItems, clearCart } = useCart();
+  const { cart, totalItems, clearCart, updateQuantity, removeFromCart } = useCart();
   const navigate = useNavigate();
 
   const [addresses, setAddresses] = useState<Address[]>([]);
@@ -304,6 +306,13 @@ export const CheckoutPage: React.FC = () => {
     }
   };
 
+  // Scroll to top immediately when completedOrder is rendered
+  useEffect(() => {
+    if (completedOrder) {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    }
+  }, [completedOrder]);
+
   // 1. Order Confirmation View
   if (completedOrder) {
     return (
@@ -321,24 +330,49 @@ export const CheckoutPage: React.FC = () => {
               ORDER REFERENCE: #{completedOrder.orderNumber}
             </div>
 
-            <div style={{ textAlign: 'left', background: 'var(--bg-surface-elevated)', padding: '20px', borderRadius: 'var(--radius-sm)', margin: '24px 0' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
-                <span style={{ color: 'var(--text-secondary)' }}>Fulfillment Status:</span>
-                <span style={{ fontWeight: 700, color: 'var(--accent-ice-blue)' }}>{completedOrder.orderStatus}</span>
+            {/* Authoritative Details Box */}
+            <div className="confirmation-details-box">
+              <div className="confirmation-row">
+                <span className="confirmation-label">Fulfillment Status:</span>
+                <span className="confirmation-val" style={{ color: 'var(--accent-ice-blue)' }}>{completedOrder.orderStatus}</span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
-                <span style={{ color: 'var(--text-secondary)' }}>Payment Status:</span>
-                <span style={{ fontWeight: 700, color: 'var(--status-warning)' }}>{completedOrder.paymentStatus}</span>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
-                <span style={{ color: 'var(--text-secondary)' }}>Delivery Location:</span>
-                <span style={{ color: 'var(--text-primary)', textAlign: 'right' }}>
-                  {completedOrder.city}, {completedOrder.state} - {completedOrder.pincode}
+              <div className="confirmation-row">
+                <span className="confirmation-label">Payment Status:</span>
+                <span className="confirmation-val" style={{ color: completedOrder.paymentStatus === 'PAID' ? '#34C759' : 'var(--status-warning)' }}>
+                  {completedOrder.paymentStatus}
                 </span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid var(--border-subtle)', paddingTop: '12px' }}>
-                <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>Total Amount:</span>
-                <span style={{ fontWeight: 800, color: 'var(--accent-acid-lime)', fontFamily: 'var(--font-mono)' }}>
+              <div className="confirmation-row">
+                <span className="confirmation-label">Payment Method:</span>
+                <span className="confirmation-val" style={{ color: 'var(--text-primary)' }}>
+                  {completedOrder.paymentMethod || 'Online (Razorpay)'}
+                </span>
+              </div>
+              <div className="confirmation-row">
+                <span className="confirmation-label">Delivery Address:</span>
+                <span className="confirmation-val" style={{ color: 'var(--text-primary)', textAlign: 'right', maxWidth: '60%' }}>
+                  {completedOrder.customerName}<br />
+                  {completedOrder.shippingAddress || `${completedOrder.city}, ${completedOrder.state} - ${completedOrder.pincode}`}<br />
+                  📞 {completedOrder.customerPhone}
+                </span>
+              </div>
+
+              {/* Items List inside confirmation */}
+              {completedOrder.items && completedOrder.items.length > 0 && (
+                <div className="confirmation-items-summary">
+                  <div className="confirmation-items-title">Purchased Equipment:</div>
+                  {completedOrder.items.map((it: any) => (
+                    <div key={it.id || it.productId} className="confirmation-item-line">
+                      <span>{it.product?.name || it.productName || 'Optical Projection System'} × {it.quantity}</span>
+                      <span style={{ fontFamily: 'var(--font-mono)' }}>₹{(Number(it.unitPrice) * it.quantity).toLocaleString('en-IN')}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div className="confirmation-total-row">
+                <span>Total Amount Paid:</span>
+                <span className="confirmation-total-amount">
                   ₹{Number(completedOrder.totalAmount).toLocaleString('en-IN')}
                 </span>
               </div>
@@ -690,7 +724,7 @@ export const CheckoutPage: React.FC = () => {
                 Order Summary ({totalItems} {totalItems === 1 ? 'item' : 'items'})
               </h2>
 
-              {/* Items List */}
+              {/* Items List with Interactive Quantity and Remove Controls */}
               <div className="summary-items-list">
                 {cart.map(item => (
                   <div key={item.product.id} className="summary-item-row">
@@ -701,8 +735,55 @@ export const CheckoutPage: React.FC = () => {
                     />
                     <div className="summary-item-info">
                       <div className="summary-item-title">{item.product.name}</div>
-                      <div className="summary-item-qty">Qty: {item.quantity}</div>
+                      <div className="summary-item-unit-price">
+                        ₹{item.product.price.toLocaleString('en-IN')} / unit
+                      </div>
+                      
+                      {/* Interactive Quantity Controls */}
+                      <div className="summary-item-controls">
+                        <div className="summary-qty-selector">
+                          <button
+                            type="button"
+                            className="summary-qty-btn"
+                            onClick={() => {
+                              if (item.quantity > 1) {
+                                updateQuantity(item.product.id, item.quantity - 1);
+                              } else {
+                                removeFromCart(item.product.id);
+                              }
+                            }}
+                            aria-label={`Decrease quantity for ${item.product.name}`}
+                          >
+                            <Minus size={13} />
+                          </button>
+                          <span className="summary-qty-value">{item.quantity}</span>
+                          <button
+                            type="button"
+                            className="summary-qty-btn"
+                            disabled={typeof item.product.stock === 'number' && item.quantity >= item.product.stock}
+                            onClick={() => {
+                              if (typeof item.product.stock !== 'number' || item.quantity < item.product.stock) {
+                                updateQuantity(item.product.id, item.quantity + 1);
+                              }
+                            }}
+                            aria-label={`Increase quantity for ${item.product.name}`}
+                          >
+                            <Plus size={13} />
+                          </button>
+                        </div>
+
+                        <button
+                          type="button"
+                          className="summary-remove-btn"
+                          onClick={() => removeFromCart(item.product.id)}
+                          aria-label={`Remove ${item.product.name} from cart`}
+                        >
+                          <Trash2 size={13} />
+                          <span>Remove</span>
+                        </button>
+                      </div>
                     </div>
+
                     <div className="summary-item-price">
                       ₹{(item.product.price * item.quantity).toLocaleString('en-IN')}
                     </div>

@@ -6,28 +6,22 @@ import './IndiaDelivery.css';
 export const IndiaDelivery: React.FC = () => {
   const pillars = [
     {
-      icon: <Truck size={22} />,
+      icon: <Truck size={20} />,
       title: 'PAN-INDIA DELIVERY',
       sub: 'Insured Doorstep Dispatch',
-      desc: 'Reinforced protective transit cases engineered for delicate optical components. Dispatched directly from our Chennai central facility to all serviceable pin codes across India.',
+      desc: 'Protective transit cases direct from Chennai to all Indian PIN codes.',
     },
     {
-      icon: <Headphones size={22} />,
+      icon: <Headphones size={20} />,
       title: 'DIRECT BRAND SUPPORT',
       sub: 'Chennai Technical Team',
-      desc: 'No automated bots or outsourced call centers. Consult directly with optical projection specialists who know lens throw physics, screen gains, and room acoustic optimization.',
+      desc: 'Direct consultation with optical engineers for room throw & gain setup.',
     },
     {
-      icon: <Wrench size={22} />,
+      icon: <Wrench size={20} />,
       title: 'FACTORY SERVICE',
       sub: 'Genuine Optical Spares',
-      desc: 'Direct access to OEM optical engines, DMD chips, cooling fans, and laser phosphor units without relying on third-party gray market repair shops.',
-    },
-    {
-      icon: <ShieldCheck size={22} />,
-      title: 'OFFICIAL WARRANTY',
-      sub: 'Backed by Nap Computers Electronicss',
-      desc: 'Every Hunting projector includes an official direct warranty card operated and honored by Nap Computers Electronicss in Chennai, Tamil Nadu.',
+      desc: 'Direct OEM laser engines, DMD chips, and certified brand maintenance.',
     },
   ];
 

@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Phone, Mail, MapPin, MessageCircle, ShieldCheck, Truck, Headphones } from 'lucide-react';
+import { Phone, Mail, MapPin, MessageCircle, ShieldCheck, Truck, Headphones, ChevronDown } from 'lucide-react';
 import { siteConfig, getWhatsAppLink, getPhoneLink, getEmailLink } from '../../../data/siteContent';
 import './Footer.css';
 
 export const Footer: React.FC = () => {
+  const [openSection, setOpenSection] = useState<string | null>(null);
+
+  const toggleSection = (name: string) => {
+    setOpenSection(prev => prev === name ? null : name);
+  };
   return (
     <footer className="site-footer">
       {/* Streamlined Upper Value Proposition Bar */}
@@ -79,8 +84,16 @@ export const Footer: React.FC = () => {
 
           {/* Column 2: Shop & Categories */}
           <div className="footer-col">
-            <h4 className="footer-heading">PROJECTORS</h4>
-            <ul className="footer-links">
+            <button
+              type="button"
+              className="footer-accordion-header"
+              onClick={() => toggleSection('projectors')}
+              aria-expanded={openSection === 'projectors'}
+            >
+              <h4 className="footer-heading">PROJECTORS</h4>
+              <ChevronDown size={14} className={`footer-accordion-arrow ${openSection === 'projectors' ? 'open' : ''}`} />
+            </button>
+            <ul className={`footer-links ${openSection === 'projectors' ? 'expanded' : ''}`}>
               <li><Link to="/products">All Projectors</Link></li>
               <li><Link to="/products?category=home-cinema">Home Cinema</Link></li>
               <li><Link to="/products?category=gaming">Gaming & High Refresh</Link></li>
@@ -93,8 +106,16 @@ export const Footer: React.FC = () => {
 
           {/* Column 3: Customer Care & Policies */}
           <div className="footer-col">
-            <h4 className="footer-heading">CUSTOMER CARE</h4>
-            <ul className="footer-links">
+            <button
+              type="button"
+              className="footer-accordion-header"
+              onClick={() => toggleSection('care')}
+              aria-expanded={openSection === 'care'}
+            >
+              <h4 className="footer-heading">CUSTOMER CARE</h4>
+              <ChevronDown size={14} className={`footer-accordion-arrow ${openSection === 'care' ? 'open' : ''}`} />
+            </button>
+            <ul className={`footer-links ${openSection === 'care' ? 'expanded' : ''}`}>
               <li><Link to="/support">Support Hub</Link></li>
               <li><Link to="/contact">Contact Specialists</Link></li>
               <li><Link to="/faq">Frequently Asked Questions</Link></li>

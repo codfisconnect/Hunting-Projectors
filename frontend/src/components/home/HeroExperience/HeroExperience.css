@@ -237,44 +237,59 @@
 }
 
 @media (max-width: 768px) {
+  .hero-experience-section {
+    min-height: auto;
+    padding-bottom: 40px;
+  }
+  .hero-background-img {
+    object-fit: cover;
+    object-position: 70% center; /* Ensure the projector lens and hardware are kept within mobile viewport */
+  }
   .hero-card-panel {
-    top: 4%;
-    left: 5%;
-    width: calc(100% - 10%);
-    max-width: 380px;
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    max-width: 100%;
+    padding: 32px 20px 20px;
+    background: linear-gradient(180deg, rgba(8, 9, 11, 0.88) 0%, rgba(8, 9, 11, 0.45) 75%, transparent 100%);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: var(--radius-sm);
   }
   .hero-main-title {
-    font-size: 2rem;
+    font-size: 2.1rem;
     white-space: normal;
   }
   .hero-subtitle {
-    font-size: 0.88rem;
-    line-height: 1.45;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    max-width: 100%;
   }
   .hero-cta-group {
     flex-wrap: wrap;
     gap: 10px;
   }
   .hero-btn-main, .hero-btn-sub {
-    padding: 10px 18px;
-    font-size: 0.82rem;
+    padding: 12px 20px;
+    font-size: 0.85rem;
     min-height: 44px;
   }
 }
 
 @media (max-width: 480px) {
+  .hero-background-img {
+    object-position: 75% center;
+  }
   .hero-card-panel {
-    top: 3.5%;
-    left: 4%;
-    width: calc(100% - 8%);
-    max-width: 340px;
+    padding: 24px 16px 16px;
   }
   .hero-main-title {
-    font-size: 1.8rem;
+    font-size: 1.85rem;
   }
   .hero-subtitle {
-    font-size: 0.84rem;
-    line-height: 1.4;
+    font-size: 0.86rem;
+    line-height: 1.45;
   }
   .hero-cta-group {
     flex-direction: column;
