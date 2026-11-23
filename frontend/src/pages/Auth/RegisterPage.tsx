@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { User as UserIcon, Mail, Lock, Phone, ArrowRight, ShieldCheck } from 'lucide-react';
+import { User as UserIcon, Mail, Lock, Phone, ArrowRight, ShieldCheck, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import './Auth.css';
 
@@ -9,6 +9,7 @@ export const RegisterPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -116,7 +117,7 @@ export const RegisterPage: React.FC = () => {
               <Lock size={18} className="auth-input-icon" />
               <input
                 id="reg-password"
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 required
                 className="auth-input"
                 placeholder="At least 6 characters"
@@ -124,6 +125,14 @@ export const RegisterPage: React.FC = () => {
                 onChange={e => setPassword(e.target.value)}
                 autoComplete="new-password"
               />
+              <button
+                type="button"
+                className="auth-password-toggle"
+                onClick={() => setShowPassword(p => !p)}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
             </div>
           </div>
 

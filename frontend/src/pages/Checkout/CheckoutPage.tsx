@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
   CheckCircle, 
@@ -8,7 +8,9 @@ import {
   ArrowRight, 
   Plus, 
   ShoppingBag,
-  Package
+  Package,
+  AlertCircle,
+  ChevronDown
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
@@ -17,6 +19,12 @@ import { orderService } from '../../services/orderService';
 import { paymentClient } from '../../services/paymentService';
 import { Address, AddressInput } from '../../types/address';
 import { CheckoutCalculation, Order } from '../../types/order';
+import { 
+  INDIAN_STATES_AND_CITIES, 
+  ALL_INDIAN_STATES, 
+  validateIndianPincode, 
+  validateIndianPhone 
+} from '../../data/indianLocations';
 import './Checkout.css';
 
 export const CheckoutPage: React.FC = () => {
@@ -34,6 +42,7 @@ export const CheckoutPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [completedOrder, setCompletedOrder] = useState<Order | null>(null);
 
+  // Address Form State
   const [newAddr, setNewAddr] = useState<AddressInput>({
     fullName: '',
     phoneNumber: '',
@@ -47,6 +56,46 @@ export const CheckoutPage: React.FC = () => {
     addressType: 'HOME',
     isDefault: false,
   });
+
+  // Autocomplete UI states
+  const [stateSearch, setStateSearch] = useState('');
+  const [isStateOpen, setIsStateOpen] = useState(false);
+  const [citySearch, setCitySearch] = useState('');
+  const [isCityOpen, setIsCityOpen] = useState(false);
+
+  // Validation errors
+  const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string }>({});
+
+  const stateDropdownRef = useRef<HTMLDivElement>(null);
+  const cityDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdowns on outside click
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (stateDropdownRef.current && !stateDropdownRef.current.contains(e.target as Node)) {
+        setIsStateOpen(false);
+      }
+      if (cityDropdownRef.current && !cityDropdownRef.current.contains(e.target as Node)) {
+        setIsCityOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Filtered states list
+  const filteredStates = useMemo(() => {
+    if (!stateSearch) return ALL_INDIAN_STATES;
+    return ALL_INDIAN_STATES.filter(s => s.toLowerCase().includes(stateSearch.toLowerCase()));
+  }, [stateSearch]);
+
+  // Cities for currently selected state
+  const availableCities = useMemo(() => {
+    const found = INDIAN_STATES_AND_CITIES.find(item => item.state.toLowerCase() === newAddr.state.toLowerCase());
+    const list = found ? found.cities : [];
+    if (!citySearch) return list;
+    return list.filter(c => c.toLowerCase().includes(citySearch.toLowerCase()));
+  }, [newAddr.state, citySearch]);
 
   // Guard: Redirect to login if not authenticated
   useEffect(() => {
@@ -80,28 +129,82 @@ export const CheckoutPage: React.FC = () => {
           setCalculation(calc);
         })
         .catch(err => {
-          setError(err.message || 'Error calculating checkout totals.');
+          // If backend returns cart empty or invalid, clear calculation and show user-friendly message
+          if (err.message?.toLowerCase().includes('empty')) {
+            setCalculation(null);
+          } else {
+            setError(err.message || 'Error calculating checkout totals.');
+          }
         })
         .finally(() => setIsCalculating(false));
     }
   }, [isAuthenticated, cart.length, completedOrder]);
 
+  const validateAddressForm = (): boolean => {
+    const errors: { [key: string]: string } = {};
+
+    if (!newAddr.fullName.trim()) {
+      errors.fullName = 'Full Name is required.';
+    }
+
+    const phoneCheck = validateIndianPhone(newAddr.phoneNumber);
+    if (!phoneCheck.isValid) {
+      errors.phoneNumber = phoneCheck.message;
+    }
+
+    if (!newAddr.addressLine1.trim()) {
+      errors.addressLine1 = 'Address Line 1 is required.';
+    }
+
+    if (!newAddr.state.trim()) {
+      errors.state = 'Please select a State or Union Territory.';
+    }
+
+    if (!newAddr.city.trim()) {
+      errors.city = 'City is required.';
+    }
+
+    const pinCheck = validateIndianPincode(newAddr.pincode);
+    if (!pinCheck.isValid) {
+      errors.pincode = pinCheck.message;
+    }
+
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleCreateNewAddress = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    if (!validateAddressForm()) {
+      return;
+    }
+
     try {
       const added = await addressService.createAddress(newAddr);
       setAddresses(prev => [added, ...prev]);
       setSelectedAddressId(added.id);
       setIsAddingNewAddress(false);
+      setFieldErrors({});
     } catch (err: any) {
       setError(err.message || 'Could not save address.');
     }
   };
 
   const handlePlaceOrder = async () => {
+    if (cart.length === 0) {
+      setError('Your shopping cart is empty.');
+      return;
+    }
+
     if (!selectedAddressId && !isAddingNewAddress) {
       setError('Please select or enter a delivery address.');
+      return;
+    }
+
+    if (isAddingNewAddress && !validateAddressForm()) {
+      setError('Please correct the errors in the delivery address form.');
       return;
     }
 
@@ -150,7 +253,7 @@ export const CheckoutPage: React.FC = () => {
           ondismiss: () => {
             setIsProcessingPayment(false);
             setIsSubmitting(false);
-            setError(`Payment cancelled or paused. Your order #${order.orderNumber} is reserved. You can retry payment now or from your Orders page.`);
+            setError(`Payment was cancelled or closed. Your order #${order.orderNumber} is reserved in your account. You can complete payment at any time.`);
           },
         },
         handler: async (response: any) => {
@@ -256,7 +359,7 @@ export const CheckoutPage: React.FC = () => {
     );
   }
 
-  // 2. Empty Cart Guard
+  // 2. Consistent Empty Cart Guard: Never display checkout form if cart is empty
   if (cart.length === 0) {
     return (
       <div className="checkout-page-container text-center" style={{ padding: '120px 20px' }}>
@@ -272,6 +375,9 @@ export const CheckoutPage: React.FC = () => {
     );
   }
 
+  const calculatedSubtotal = calculation?.subtotal ?? cart.reduce((s, i) => s + i.product.price * i.quantity, 0);
+  const calculatedTotal = calculation?.total ?? calculatedSubtotal;
+
   return (
     <div className="checkout-page-container">
       <div className="container">
@@ -283,8 +389,9 @@ export const CheckoutPage: React.FC = () => {
         </div>
 
         {error && (
-          <div className="auth-error-banner" style={{ marginBottom: '24px' }}>
-            {error}
+          <div className="auth-error-banner" style={{ marginBottom: '24px' }} role="alert">
+            <AlertCircle size={18} style={{ flexShrink: 0, marginTop: '2px' }} />
+            <span>{error}</span>
           </div>
         )}
 
@@ -317,6 +424,9 @@ export const CheckoutPage: React.FC = () => {
                           <br />
                           {addr.city}, {addr.state} - {addr.pincode}
                         </div>
+                        <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                          📞 {addr.phoneNumber}
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -324,7 +434,10 @@ export const CheckoutPage: React.FC = () => {
                   <button 
                     type="button" 
                     className="btn-add-address" 
-                    onClick={() => setIsAddingNewAddress(true)}
+                    onClick={() => {
+                      setIsAddingNewAddress(true);
+                      setSelectedAddressId(null);
+                    }}
                   >
                     <Plus size={14} />
                     <span>Use a Different Address</span>
@@ -332,96 +445,212 @@ export const CheckoutPage: React.FC = () => {
                 </>
               )}
 
-              {/* New Address Form */}
+              {/* New Address Form with Indian State/City Search & 6-Digit PIN Code */}
               {(isAddingNewAddress || addresses.length === 0) && (
-                <form className="auth-form" onSubmit={handleCreateNewAddress}>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                <form className="auth-form" onSubmit={handleCreateNewAddress} noValidate>
+                  <div className="checkout-form-row two-col">
                     <div className="auth-field">
                       <label className="auth-label">Full Name *</label>
                       <input 
                         type="text" 
                         required 
-                        className="auth-input" 
+                        className={`auth-input ${fieldErrors.fullName ? 'input-error' : ''}`}
                         style={{ paddingLeft: '14px' }}
                         value={newAddr.fullName}
-                        onChange={e => setNewAddr(prev => ({ ...prev, fullName: e.target.value }))}
+                        onChange={e => {
+                          setNewAddr(prev => ({ ...prev, fullName: e.target.value }));
+                          if (fieldErrors.fullName) setFieldErrors(prev => ({ ...prev, fullName: '' }));
+                        }}
                         placeholder="Recipient Name"
                       />
+                      {fieldErrors.fullName && <span className="field-error-text">{fieldErrors.fullName}</span>}
                     </div>
+
                     <div className="auth-field">
-                      <label className="auth-label">Phone *</label>
+                      <label className="auth-label">Phone Number *</label>
                       <input 
                         type="tel" 
                         required 
-                        className="auth-input" 
+                        maxLength={10}
+                        className={`auth-input ${fieldErrors.phoneNumber ? 'input-error' : ''}`}
                         style={{ paddingLeft: '14px' }}
                         value={newAddr.phoneNumber}
-                        onChange={e => setNewAddr(prev => ({ ...prev, phoneNumber: e.target.value }))}
-                        placeholder="10-digit mobile"
+                        onChange={e => {
+                          const val = e.target.value.replace(/\D/g, '').slice(0, 10);
+                          setNewAddr(prev => ({ ...prev, phoneNumber: val }));
+                          if (fieldErrors.phoneNumber) setFieldErrors(prev => ({ ...prev, phoneNumber: '' }));
+                        }}
+                        placeholder="10-digit mobile number"
                       />
+                      {fieldErrors.phoneNumber && <span className="field-error-text">{fieldErrors.phoneNumber}</span>}
                     </div>
                   </div>
 
                   <div className="auth-field">
-                    <label className="auth-label">Address Line 1 *</label>
+                    <label className="auth-label">Address Line 1 (Flat / House / Street) *</label>
                     <input 
                       type="text" 
                       required 
-                      className="auth-input" 
+                      className={`auth-input ${fieldErrors.addressLine1 ? 'input-error' : ''}`}
                       style={{ paddingLeft: '14px' }}
                       value={newAddr.addressLine1}
-                      onChange={e => setNewAddr(prev => ({ ...prev, addressLine1: e.target.value }))}
-                      placeholder="House / Flat / Street"
+                      onChange={e => {
+                        setNewAddr(prev => ({ ...prev, addressLine1: e.target.value }));
+                        if (fieldErrors.addressLine1) setFieldErrors(prev => ({ ...prev, addressLine1: '' }));
+                      }}
+                      placeholder="e.g. 42 Optical Avenue, T. Nagar"
                     />
+                    {fieldErrors.addressLine1 && <span className="field-error-text">{fieldErrors.addressLine1}</span>}
                   </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '14px' }}>
-                    <div className="auth-field">
+                  <div className="checkout-form-row three-col">
+                    {/* Searchable State Dropdown */}
+                    <div className="auth-field dropdown-parent" ref={stateDropdownRef}>
+                      <label className="auth-label">State / UT *</label>
+                      <div className="autocomplete-input-wrapper">
+                        <input 
+                          type="text" 
+                          required 
+                          className={`auth-input ${fieldErrors.state ? 'input-error' : ''}`}
+                          style={{ paddingLeft: '14px', paddingRight: '36px' }}
+                          value={isStateOpen ? stateSearch : newAddr.state}
+                          onFocus={() => {
+                            setStateSearch('');
+                            setIsStateOpen(true);
+                          }}
+                          onChange={e => {
+                            setStateSearch(e.target.value);
+                            setNewAddr(prev => ({ ...prev, state: e.target.value }));
+                            if (fieldErrors.state) setFieldErrors(prev => ({ ...prev, state: '' }));
+                          }}
+                          placeholder="Search state..."
+                        />
+                        <ChevronDown 
+                          size={16} 
+                          className="dropdown-chevron"
+                          onClick={() => setIsStateOpen(prev => !prev)}
+                        />
+                      </div>
+
+                      {isStateOpen && (
+                        <ul className="autocomplete-dropdown-list">
+                          {filteredStates.map(st => (
+                            <li 
+                              key={st}
+                              className={`dropdown-item ${newAddr.state === st ? 'active' : ''}`}
+                              onClick={() => {
+                                setNewAddr(prev => ({ 
+                                  ...prev, 
+                                  state: st,
+                                  // Clear city if previously selected city does not belong to new state
+                                  city: '' 
+                                }));
+                                setIsStateOpen(false);
+                                if (fieldErrors.state) setFieldErrors(prev => ({ ...prev, state: '' }));
+                              }}
+                            >
+                              {st}
+                            </li>
+                          ))}
+                          {filteredStates.length === 0 && (
+                            <li className="dropdown-item no-match">No matching state</li>
+                          )}
+                        </ul>
+                      )}
+                      {fieldErrors.state && <span className="field-error-text">{fieldErrors.state}</span>}
+                    </div>
+
+                    {/* Searchable City Dropdown */}
+                    <div className="auth-field dropdown-parent" ref={cityDropdownRef}>
                       <label className="auth-label">City *</label>
-                      <input 
-                        type="text" 
-                        required 
-                        className="auth-input" 
-                        style={{ paddingLeft: '14px' }}
-                        value={newAddr.city}
-                        onChange={e => setNewAddr(prev => ({ ...prev, city: e.target.value }))}
-                      />
+                      <div className="autocomplete-input-wrapper">
+                        <input 
+                          type="text" 
+                          required 
+                          className={`auth-input ${fieldErrors.city ? 'input-error' : ''}`}
+                          style={{ paddingLeft: '14px', paddingRight: '36px' }}
+                          value={isCityOpen ? citySearch : newAddr.city}
+                          onFocus={() => {
+                            setCitySearch('');
+                            setIsCityOpen(true);
+                          }}
+                          onChange={e => {
+                            setCitySearch(e.target.value);
+                            setNewAddr(prev => ({ ...prev, city: e.target.value }));
+                            if (fieldErrors.city) setFieldErrors(prev => ({ ...prev, city: '' }));
+                          }}
+                          placeholder={newAddr.state ? "Search city..." : "Select state first..."}
+                        />
+                        <ChevronDown 
+                          size={16} 
+                          className="dropdown-chevron"
+                          onClick={() => setIsCityOpen(prev => !prev)}
+                        />
+                      </div>
+
+                      {isCityOpen && (
+                        <ul className="autocomplete-dropdown-list">
+                          {availableCities.map(ct => (
+                            <li 
+                              key={ct}
+                              className={`dropdown-item ${newAddr.city === ct ? 'active' : ''}`}
+                              onClick={() => {
+                                setNewAddr(prev => ({ ...prev, city: ct }));
+                                setIsCityOpen(false);
+                                if (fieldErrors.city) setFieldErrors(prev => ({ ...prev, city: '' }));
+                              }}
+                            >
+                              {ct}
+                            </li>
+                          ))}
+                          {availableCities.length === 0 && (
+                            <li className="dropdown-item fallback-notice">
+                              <span>Enter custom city above if not listed</span>
+                            </li>
+                          )}
+                        </ul>
+                      )}
+                      {fieldErrors.city && <span className="field-error-text">{fieldErrors.city}</span>}
                     </div>
-                    <div className="auth-field">
-                      <label className="auth-label">State *</label>
-                      <input 
-                        type="text" 
-                        required 
-                        className="auth-input" 
-                        style={{ paddingLeft: '14px' }}
-                        value={newAddr.state}
-                        onChange={e => setNewAddr(prev => ({ ...prev, state: e.target.value }))}
-                      />
-                    </div>
+
+                    {/* 6-Digit PIN Code */}
                     <div className="auth-field">
                       <label className="auth-label">PIN Code *</label>
                       <input 
                         type="text" 
                         required 
                         maxLength={6}
-                        className="auth-input" 
+                        className={`auth-input ${fieldErrors.pincode ? 'input-error' : ''}`}
                         style={{ paddingLeft: '14px' }}
                         value={newAddr.pincode}
-                        onChange={e => setNewAddr(prev => ({ ...prev, pincode: e.target.value }))}
+                        onChange={e => {
+                          const val = e.target.value.replace(/\D/g, '').slice(0, 6);
+                          setNewAddr(prev => ({ ...prev, pincode: val }));
+                          if (fieldErrors.pincode) setFieldErrors(prev => ({ ...prev, pincode: '' }));
+                        }}
+                        placeholder="6 digits (e.g. 600001)"
                       />
+                      {fieldErrors.pincode && <span className="field-error-text">{fieldErrors.pincode}</span>}
                     </div>
                   </div>
 
-                  {addresses.length > 0 && (
+                  <div style={{ display: 'flex', gap: '12px', marginTop: '8px' }}>
+                    {addresses.length > 0 && (
+                      <button 
+                        type="button" 
+                        className="btn-address-action" 
+                        onClick={() => setIsAddingNewAddress(false)}
+                      >
+                        ← Back to saved addresses
+                      </button>
+                    )}
                     <button 
-                      type="button" 
-                      className="btn-address-action" 
-                      style={{ alignSelf: 'flex-start' }}
-                      onClick={() => setIsAddingNewAddress(false)}
+                      type="submit" 
+                      className="btn-save-address"
                     >
-                      ← Back to saved addresses
+                      Save & Use This Address
                     </button>
-                  )}
+                  </div>
                 </form>
               )}
             </div>
@@ -430,16 +659,25 @@ export const CheckoutPage: React.FC = () => {
             <div className="checkout-step-card">
               <h2 className="step-card-title">
                 <span className="step-number-pip">2</span>
-                Payment Method
+                Payment Gateway
               </h2>
-              <div style={{ padding: '16px', background: 'var(--bg-surface-elevated)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--accent-ice-blue)', fontWeight: 700, marginBottom: '6px' }}>
-                  <CreditCard size={18} />
-                  <span>Razorpay Secure Checkout (UPI, Cards, Net Banking)</span>
+              <div className="payment-method-card">
+                <div className="payment-method-header">
+                  <div className="payment-badge-group">
+                    <CreditCard size={20} className="payment-icon" />
+                    <span className="payment-title">Razorpay Secure Checkout</span>
+                  </div>
+                  <span className="payment-secure-pill">256-BIT ENCRYPTION</span>
                 </div>
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0 }}>
-                  256-bit encrypted checkout powered by Razorpay. Supports UPI (Google Pay, PhonePe, Paytm), Credit/Debit Cards, Net Banking, and EMI.
+                <p className="payment-method-description">
+                  Official pan-India gateway supporting Instant UPI (Google Pay, PhonePe, Paytm, BHIM), all major Credit/Debit Cards (Visa, MasterCard, RuPay), Net Banking across 50+ banks, and Cardless EMI.
                 </p>
+                <div className="payment-channel-badges">
+                  <span className="channel-badge">⚡ UPI Auto-Pay & QR</span>
+                  <span className="channel-badge">💳 Credit & Debit Cards</span>
+                  <span className="channel-badge">🏦 Net Banking</span>
+                  <span className="channel-badge">🛡️ Fraud Protection</span>
+                </div>
               </div>
             </div>
 
@@ -449,7 +687,7 @@ export const CheckoutPage: React.FC = () => {
           <div>
             <div className="checkout-summary-card">
               <h2 className="step-card-title" style={{ fontSize: '1.15rem' }}>
-                Order Summary ({totalItems} items)
+                Order Summary ({totalItems} {totalItems === 1 ? 'item' : 'items'})
               </h2>
 
               {/* Items List */}
@@ -476,34 +714,38 @@ export const CheckoutPage: React.FC = () => {
               <div className="summary-price-lines">
                 <div className="summary-line">
                   <span>Subtotal</span>
-                  <span>₹{(calculation?.subtotal ?? cart.reduce((s, i) => s + i.product.price * i.quantity, 0)).toLocaleString('en-IN')}</span>
+                  <span>₹{calculatedSubtotal.toLocaleString('en-IN')}</span>
                 </div>
                 <div className="summary-line">
-                  <span>Shipping (Pan-India)</span>
-                  <span style={{ color: 'var(--accent-acid-lime)' }}>FREE</span>
+                  <span>Insured Shipping (Pan-India)</span>
+                  <span style={{ color: 'var(--accent-acid-lime)', fontWeight: 700 }}>FREE</span>
                 </div>
                 <div className="summary-line total">
-                  <span>Total Amount</span>
-                  <span style={{ color: 'var(--accent-acid-lime)' }}>
-                    ₹{(calculation?.total ?? cart.reduce((s, i) => s + i.product.price * i.quantity, 0)).toLocaleString('en-IN')}
+                  <span>Total Payable</span>
+                  <span style={{ color: 'var(--accent-acid-lime)', fontSize: '1.25rem' }}>
+                    ₹{calculatedTotal.toLocaleString('en-IN')}
                   </span>
                 </div>
               </div>
 
-              {/* Submit CTA */}
+              {/* High-Contrast Visible Submit CTA */}
               <button
                 type="button"
                 className="checkout-place-btn"
                 onClick={handlePlaceOrder}
                 disabled={isSubmitting || isCalculating || isProcessingPayment}
+                aria-label="Pay & Confirm Order"
               >
-                <span>{isProcessingPayment ? 'Connecting Gateway...' : isSubmitting ? 'Placing Order...' : 'Pay & Confirm Order'}</span>
-                <ArrowRight size={16} />
+                <span>
+                  {isProcessingPayment ? 'Connecting Gateway...' : isSubmitting ? 'Placing Order...' : 'Pay & Confirm Order'}
+                </span>
+                <ArrowRight size={18} />
               </button>
 
-              <p style={{ textAlign: 'center', fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '14px', marginBottom: 0 }}>
-                🔒 256-Bit SSL Secured Hardware Order & 2-Year Brand Warranty
-              </p>
+              <div className="checkout-assurance-box">
+                <ShieldCheck size={16} className="assurance-icon" />
+                <span>Authoritative 2-Year Direct Brand Warranty & Insured Transit</span>
+              </div>
             </div>
           </div>
 

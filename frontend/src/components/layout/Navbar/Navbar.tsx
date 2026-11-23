@@ -126,11 +126,12 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Account */}
           <Link
             to={user ? "/account" : "/login"}
-            className="action-btn"
-            aria-label={user ? "Client Account" : "Sign In"}
+            className={`action-btn action-btn-account ${user ? 'logged-in' : ''}`}
+            aria-label={user ? `Client Account (${user.fullName})` : "Client Sign In"}
             title={user ? `Signed in as ${user.fullName}` : "Client Sign In"}
           >
-            <UserIcon size={19} color={user ? "var(--accent-acid-lime)" : "currentColor"} />
+            <UserIcon size={20} className="account-icon-svg" />
+            {user && <span className="account-status-dot" />}
           </Link>
 
           {/* Direct Enquiry / WhatsApp CTA */}

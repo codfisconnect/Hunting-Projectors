@@ -130,17 +130,48 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  color: var(--text-secondary);
-  background-color: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #E2E8F0; /* High-contrast crisp light gray */
+  background-color: rgba(255, 255, 255, 0.08); /* Clearly visible frosted surface */
+  border: 1px solid rgba(255, 255, 255, 0.18); /* Defined outer border */
   transition: all var(--transition-fast);
 }
 
 .action-btn:hover {
-  color: var(--text-primary);
-  background-color: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
+  color: #FFFFFF;
+  background-color: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.12);
   transform: translateY(-1px);
+}
+
+/* Dedicated Account Icon Styling for Superior Visibility */
+.action-btn-account {
+  background: rgba(212, 175, 55, 0.08);
+  border-color: rgba(212, 175, 55, 0.28);
+  color: #F8FAFC;
+}
+
+.action-btn-account:hover {
+  background: rgba(212, 175, 55, 0.16);
+  border-color: var(--accent-gold);
+  color: #FFFFFF;
+}
+
+.action-btn-account.logged-in {
+  background: rgba(196, 248, 42, 0.12);
+  border-color: rgba(196, 248, 42, 0.4);
+  color: #C4F82A;
+}
+
+.account-status-dot {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #34C759;
+  border: 2px solid #08090B;
 }
 
 .action-badge {
