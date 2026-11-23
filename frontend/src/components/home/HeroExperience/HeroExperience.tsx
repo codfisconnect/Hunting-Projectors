@@ -82,15 +82,17 @@ export const HeroExperience: React.FC<HeroExperienceProps> = ({ onOpenEnquiry })
 
   return (
     <section ref={heroRef} className="hero-experience-section" aria-label="Hero Launch Experience">
-      {/* Full-bleed background image */}
+      {/* Full-bleed responsive background image */}
       <div className="hero-background">
         <picture>
-          <source media="(max-width: 768px)" srcSet="/assets/hero/hunting-luxury-home-cinema-hero-mobile.webp" type="image/webp" />
-          <source media="(max-width: 768px)" srcSet="/assets/hero/hunting-luxury-home-cinema-hero-mobile.jpg" type="image/jpeg" />
+          {/* Mobile-specific portrait hero: exact supplied cinematic projector home theater setup */}
+          <source media="(max-width: 768px)" srcSet="/images/mobile-hero-projector.webp" type="image/webp" />
+          <source media="(max-width: 768px)" srcSet="/images/mobile-hero-projector.png" type="image/png" />
+          {/* Desktop high-res cinematic hero */}
           <source srcSet="/assets/hero/hunting-luxury-home-cinema-hero-2400.webp" type="image/webp" />
           <img
             src="/assets/hero/hunting-luxury-home-cinema-hero-2400.jpg"
-            alt="Premium home cinema with projector and screen"
+            alt="Hunting Projectors cinematic 4K home theater setup"
             className="hero-background-img"
             fetchPriority="high"
             loading="eager"

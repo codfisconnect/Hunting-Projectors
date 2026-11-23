@@ -238,12 +238,17 @@
 
 @media (max-width: 768px) {
   .hero-experience-section {
-    min-height: auto;
-    padding-bottom: 40px;
+    min-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-bottom: 24px;
   }
   .hero-background-img {
     object-fit: cover;
-    object-position: 70% center; /* Ensure the projector lens and hardware are kept within mobile viewport */
+    object-position: center bottom; /* Shows the complete projector chassis, gold trim, lens beam and screen */
+    width: 100%;
+    height: 100%;
   }
   .hero-card-panel {
     position: relative;
@@ -251,55 +256,78 @@
     left: auto;
     width: 100%;
     max-width: 100%;
-    padding: 32px 20px 20px;
-    background: linear-gradient(180deg, rgba(8, 9, 11, 0.88) 0%, rgba(8, 9, 11, 0.45) 75%, transparent 100%);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border-radius: var(--radius-sm);
+    padding: 24px 18px 16px;
+    background: linear-gradient(180deg, rgba(8, 9, 11, 0.92) 0%, rgba(8, 9, 11, 0.7) 65%, transparent 100%);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
   }
   .hero-main-title {
-    font-size: 2.1rem;
+    font-size: 2rem;
     white-space: normal;
+    line-height: 1.15;
   }
   .hero-subtitle {
-    font-size: 0.92rem;
-    line-height: 1.5;
+    font-size: 0.88rem;
+    line-height: 1.45;
     max-width: 100%;
+    margin-bottom: 16px;
   }
   .hero-cta-group {
     flex-wrap: wrap;
     gap: 10px;
   }
   .hero-btn-main, .hero-btn-sub {
-    padding: 12px 20px;
-    font-size: 0.85rem;
-    min-height: 44px;
+    padding: 10px 18px;
+    font-size: 0.82rem;
+    min-height: 42px;
   }
 }
 
 @media (max-width: 480px) {
+  .hero-experience-section {
+    min-height: 82vh;
+  }
   .hero-background-img {
-    object-position: 75% center;
+    object-position: center bottom;
   }
   .hero-card-panel {
-    padding: 24px 16px 16px;
+    padding: 20px 14px 14px;
   }
   .hero-main-title {
-    font-size: 1.85rem;
+    font-size: 1.75rem;
   }
   .hero-subtitle {
-    font-size: 0.86rem;
-    line-height: 1.45;
+    font-size: 0.82rem;
+    line-height: 1.4;
+    margin-bottom: 14px;
   }
   .hero-cta-group {
-    flex-direction: column;
-    align-items: stretch;
-    width: 100%;
+    flex-direction: row;
     gap: 8px;
   }
   .hero-btn-main, .hero-btn-sub {
+    flex: 1;
     justify-content: center;
-    width: 100%;
+    padding: 10px 12px;
+    font-size: 0.78rem;
     text-align: center;
+  }
+}
+
+/* Mobile Landscape orientation */
+@media (max-width: 896px) and (orientation: landscape) {
+  .hero-experience-section {
+    min-height: 100vh;
+  }
+  .hero-background-img {
+    object-position: center center;
+  }
+  .hero-card-panel {
+    max-width: 360px;
+    position: absolute;
+    top: 10%;
+    left: 5%;
+    background: rgba(8, 9, 11, 0.85);
   }
 }
