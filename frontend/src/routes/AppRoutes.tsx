@@ -22,6 +22,8 @@ import { AccountPage } from '../pages/Account/AccountPage';
 import { CheckoutPage } from '../pages/Checkout/CheckoutPage';
 import { OrdersPage } from '../pages/Orders/OrdersPage';
 import { AdminDashboardPage } from '../pages/Admin/AdminDashboardPage';
+import { HomeProjectorsPage } from '../pages/Marketing/HomeProjectorsPage';
+import { BusinessProjectorsPage } from '../pages/Marketing/BusinessProjectorsPage';
 
 interface AppRoutesProps {
   onOpenEnquiry: (productName?: string) => void;
@@ -53,6 +55,10 @@ export const AppRoutes: React.FC<AppRoutesProps> = ({ onOpenEnquiry }) => {
       <Route path="/account" element={<AccountPage />} />
       <Route path="/checkout" element={<CheckoutPage />} />
       <Route path="/orders" element={<OrdersPage />} />
+
+      {/* Marketing Campaign Landing Pages */}
+      <Route path="/home-projectors" element={<HomeProjectorsPage onOpenEnquiry={onOpenEnquiry} />} />
+      <Route path="/business-projectors" element={<BusinessProjectorsPage onOpenEnquiry={onOpenEnquiry} />} />
 
       {/* Admin Command Center */}
       <Route path="/admin" element={<AdminDashboardPage />} />
