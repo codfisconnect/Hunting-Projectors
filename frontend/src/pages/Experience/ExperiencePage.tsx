@@ -1,48 +1,90 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Sparkles, 
   ArrowRight, 
-  Tv, 
-  Sun, 
-  Clock, 
-  BatteryCharging, 
-  ShieldCheck, 
-  Cpu, 
-  CheckCircle2, 
-  MapPin, 
-  Eye, 
-  SlidersHorizontal,
+  ChevronLeft,
   ChevronRight,
-  Maximize2
+  ShieldCheck, 
+  CheckCircle2, 
+  Layers,
+  Volume2,
+  Film,
+  Gamepad2,
+  Maximize,
+  Compass,
+  MessageSquare
 } from 'lucide-react';
-import { SHOWROOM_WARRIOR_MODELS, ShowroomProduct } from '../../data/showroomProducts';
 import { getProducts } from '../../services/productService';
 import { Product } from '../../types/product';
-import { siteConfig } from '../../data/siteContent';
-import { CinemaExperience } from '../../components/home/CinemaExperience/CinemaExperience';
 import { SEOHead } from '../../components/common/SEOHead/SEOHead';
+import { ProductCard } from '../../components/product/ProductCard/ProductCard';
 import './ExperiencePage.css';
 
 interface ExperiencePageProps {
   onOpenEnquiry: (productName?: string) => void;
 }
 
+// Curated dark cinematic lifestyle moments
+const CINEMATIC_LIFESTYLE_MOMENTS = [
+  {
+    id: 'home-theatre',
+    title: 'Private Home Theatre',
+    subtitle: 'Reference Cinema Immersion',
+    description: 'Transform any dedicated living room or media space into a private reference cinema with razor-sharp optics and deep contrast that draws you into every scene.',
+    badge: 'CINEMATIC PURITY',
+    image: 'https://images.unsplash.com/photo-1595769816263-9b910be24d5f?q=80&w=1600&auto=format&fit=crop',
+    icon: Film
+  },
+  {
+    id: 'movie-nights',
+    title: 'Intimate Movie Evenings',
+    subtitle: 'Moments That Bring People Together',
+    description: 'Crisp dialogue, vibrant colors, and ambient-light performance mean family and friends enjoy blockbuster streaming without turning off every lamp.',
+    badge: 'WARMTH & CLARITY',
+    image: 'https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?q=80&w=1600&auto=format&fit=crop',
+    icon: Volume2
+  },
+  {
+    id: 'gaming-sports',
+    title: 'Stadium Sports & High-FPS Gaming',
+    subtitle: 'Real-Time Reaction On A Massive Scale',
+    description: 'Ultra-low latency, fluid refresh handling, and stadium-sized canvas make match-days electrifying and competitive console gaming exceptionally responsive.',
+    badge: 'LOW LATENCY',
+    image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1600&auto=format&fit=crop',
+    icon: Gamepad2
+  },
+  {
+    id: 'grand-canvas',
+    title: 'Up to 300" Panoramic Canvas',
+    subtitle: 'Freedom Beyond Traditional Television',
+    description: 'Escape the visual boundaries and weight of rigid glass TVs. Project instantly from 60 inches up to 300 inches with versatile optical throw and electric focus correction.',
+    badge: 'UNCONSTRAINED SCALE',
+    image: 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?q=80&w=1600&auto=format&fit=crop',
+    icon: Maximize
+  }
+];
+
 export const ExperiencePage: React.FC<ExperiencePageProps> = ({ onOpenEnquiry }) => {
-  const [catalog, setCatalog] = useState<Product[]>([]);
-  const [activeModelId, setActiveModelId] = useState<string>('warrior-001');
-  const [viewMode, setViewMode] = useState<'clean' | 'poster'>('clean');
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [activeSlideIndex, setActiveSlideIndex] = useState<number>(0);
+  const slideTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
 
     let isMounted = true;
-    getProducts()
+    getProducts({ limit: 50 })
       .then(res => {
-        if (isMounted) setCatalog(res.products);
+        if (isMounted) {
+          setProducts(res.products || []);
+          setLoading(false);
+        }
       })
       .catch(err => {
-        console.warn('Experience page catalog fetch:', err);
+        console.warn('Experience page catalog fetch error:', err);
+        if (isMounted) setLoading(false);
       });
 
     return () => {
@@ -50,291 +92,315 @@ export const ExperiencePage: React.FC<ExperiencePageProps> = ({ onOpenEnquiry })
     };
   }, []);
 
-  const activeShowroomProduct: ShowroomProduct = 
-    SHOWROOM_WARRIOR_MODELS.find(p => p.id === activeModelId) || SHOWROOM_WARRIOR_MODELS[0];
+  // Filter ONLY active Warrior Series products dynamically from live catalog
+  const warriorProducts = useMemo(() => {
+    return products.filter(p => {
+      if (!p.isActive) return false;
+      const nameMatch = p.name.toLowerCase().includes('warrior');
+      const slugMatch = p.slug.toLowerCase().includes('warrior');
+      const categoryMatch = p.category?.toLowerCase?.().includes('warrior') || p.categoryLabel?.toLowerCase?.().includes('warrior');
+      return nameMatch || slugMatch || categoryMatch;
+    });
+  }, [products]);
 
-  // Matched API product data
-  const matchedCatalogProduct = catalog.find(p => p.slug === activeShowroomProduct.catalogSlug);
+  // Slideshow slides built directly from real Warrior product images and metadata
+  const heroSlides = useMemo(() => {
+    if (warriorProducts.length === 0) return [];
+    
+    return warriorProducts.map(p => ({
+      product: p,
+      image: p.images.hero || p.gallery?.[0] || '',
+      secondaryImage: p.gallery?.[1] || p.gallery?.[0] || p.images.hero || '',
+      name: p.name,
+      tagline: p.subtitle || p.tagline || 'Experience the Warrior optical difference',
+      slug: p.slug,
+      price: p.price,
+      mrp: p.mrp || p.compareAtPrice,
+      resolution: p.specifications?.resolution || 'Full HD 1080p',
+      brightness: p.specifications?.brightness || 'High Lumens',
+      canvas: p.specifications?.projectionSize || 'Up to 200"'
+    })).filter(s => !!s.image);
+  }, [warriorProducts]);
+
+  // Automatic slideshow transition timer: every 4.5 seconds
+  useEffect(() => {
+    if (heroSlides.length <= 1) return;
+
+    if (slideTimerRef.current) clearInterval(slideTimerRef.current);
+
+    slideTimerRef.current = setInterval(() => {
+      setActiveSlideIndex(prev => (prev + 1) % heroSlides.length);
+    }, 4500);
+
+    return () => {
+      if (slideTimerRef.current) clearInterval(slideTimerRef.current);
+    };
+  }, [heroSlides.length]);
+
+  const handlePrevSlide = () => {
+    if (heroSlides.length <= 1) return;
+    setActiveSlideIndex(prev => (prev - 1 + heroSlides.length) % heroSlides.length);
+  };
+
+  const handleNextSlide = () => {
+    if (heroSlides.length <= 1) return;
+    setActiveSlideIndex(prev => (prev + 1) % heroSlides.length);
+  };
+
+  const currentSlide = heroSlides[activeSlideIndex] || heroSlides[0];
 
   return (
     <div className="experience-page">
       <SEOHead
-        title="Experience Cinema Differently — Hunting Projector Scale & Lumens"
-        description="Explore 100-inch to 300-inch cinematic scale simulations, throw distance ratios, and ambient light optical performance with Hunting Projector."
+        title="Experience Cinema Differently — Hunting Projectors Warrior Series"
+        description="Discover the Hunting Projectors Warrior Series. Full-width cinematic slideshow, verified active lineup, true 1080p & 4K processing, and grand home entertainment scale."
         canonicalPath="/experience"
       />
 
-      {/* 1. HERO SECTION */}
-      <section className="experience-hero-cinematic">
-        <div className="hero-radial-backdrop" aria-hidden="true" />
-        <div className="container hero-content-grid">
-          
-          <div className="hero-text-block">
-            <span className="eyebrow hero-eyebrow">
+      {/* 1. HERO SECTION – FULL-WIDTH CINEMATIC SLIDESHOW */}
+      <section className="experience-hero-slideshow" aria-label="Cinematic Slideshow">
+        {/* Dynamic Background Slides with Zoom Crossfade */}
+        <div className="hero-slides-viewport">
+          {heroSlides.map((slide, idx) => {
+            const isActive = idx === activeSlideIndex;
+            return (
+              <div
+                key={slide.product.id || idx}
+                className={`hero-slide-layer ${isActive ? 'is-active' : ''}`}
+                aria-hidden={!isActive}
+              >
+                <div 
+                  className="hero-slide-bg-ambient"
+                  style={{ backgroundImage: `url(${slide.image})` }}
+                />
+                <div className="hero-slide-img-stage">
+                  <img
+                    src={slide.image}
+                    alt={slide.name}
+                    className="hero-slide-real-img"
+                    loading={idx === 0 ? 'eager' : 'lazy'}
+                  />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Cinematic atmospheric overlays for readability */}
+        <div className="hero-slides-overlay-vignette" aria-hidden="true" />
+        <div className="hero-slides-overlay-gradient" aria-hidden="true" />
+        <div className="hero-radial-glow" aria-hidden="true" />
+
+        {/* Foreground Content */}
+        <div className="container hero-slideshow-container">
+          <div className="hero-slideshow-content">
+            <div className="hero-eyebrow-pill">
               <Sparkles size={13} className="eyebrow-sparkle" />
-              THE HUNTING EXPERIENCE
-            </span>
-            <h1 className="hero-heading">Experience Cinema Differently.</h1>
-            <p className="hero-subtext">
-              Discover projectors designed to bring the big-screen experience home.
+              <span>THE WARRIOR CINEMA SHOWCASE</span>
+            </div>
+
+            <h1 className="hero-title-main">
+              EXPERIENCE CINEMA DIFFERENTLY.
+            </h1>
+
+            <p className="hero-lead-text">
+              Discover the Warrior Series. Bring the big-screen experience home.
             </p>
 
-            <div className="hero-cta-group">
-              <Link to="/products" className="btn-primary hero-primary-btn">
-                <span>Explore Projectors</span>
-                <ArrowRight size={16} />
-              </Link>
-              <button
-                type="button"
-                className="btn-secondary hero-secondary-btn"
-                onClick={() => {
-                  const target = document.getElementById('warrior-showcase');
-                  target?.scrollIntoView({ behavior: 'smooth' });
+            <div className="hero-actions-row">
+              <a
+                href="#warrior-collection"
+                className="btn-primary hero-btn-gold"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById('warrior-collection')?.scrollIntoView({ behavior: 'smooth' });
                 }}
               >
-                <span>View Warrior Series</span>
+                <span>Explore Warrior Series</span>
+                <ArrowRight size={16} />
+              </a>
+
+              <Link to="/projector-finder" className="btn-secondary hero-btn-outline">
+                <Compass size={16} />
+                <span>Find Your Projector</span>
+              </Link>
+            </div>
+
+            {/* Live Active Product Quick Badge (Synced with current slide) */}
+            {currentSlide && (
+              <div className="hero-active-product-pill">
+                <span className="live-pill-tag">ACTIVE SHOWCASE</span>
+                <Link to={`/products/${currentSlide.slug}`} className="live-pill-name">
+                  {currentSlide.name}
+                </Link>
+                <span className="live-pill-divider">•</span>
+                <span className="live-pill-price">₹{currentSlide.price.toLocaleString('en-IN')}</span>
+                <span className="live-pill-divider">•</span>
+                <span className="live-pill-spec">{currentSlide.resolution.split('(')[0].trim()}</span>
+              </div>
+            )}
+          </div>
+
+          {/* Slideshow Navigation Controls */}
+          {heroSlides.length > 1 && (
+            <div className="hero-slideshow-controls">
+              <button
+                type="button"
+                className="slide-arrow-btn"
+                onClick={handlePrevSlide}
+                aria-label="Previous projector"
+              >
+                <ChevronLeft size={20} />
+              </button>
+
+              <div className="slide-indicators">
+                {heroSlides.map((_, dotIdx) => (
+                  <button
+                    key={dotIdx}
+                    type="button"
+                    className={`slide-indicator-dot ${dotIdx === activeSlideIndex ? 'active' : ''}`}
+                    onClick={() => setActiveSlideIndex(dotIdx)}
+                    aria-label={`Jump to slide ${dotIdx + 1}`}
+                  />
+                ))}
+              </div>
+
+              <button
+                type="button"
+                className="slide-arrow-btn"
+                onClick={handleNextSlide}
+                aria-label="Next projector"
+              >
+                <ChevronRight size={20} />
               </button>
             </div>
-
-            <div className="hero-specs-strip">
-              <div className="hero-spec-item">
-                <span className="hero-spec-val">Up to 300"</span>
-                <span className="hero-spec-lbl">Screen Scale</span>
-              </div>
-              <div className="hero-spec-divider" />
-              <div className="hero-spec-item">
-                <span className="hero-spec-val">True 4K & HDR10</span>
-                <span className="hero-spec-lbl">Optical Engine</span>
-              </div>
-              <div className="hero-spec-divider" />
-              <div className="hero-spec-item">
-                <span className="hero-spec-val">Pan-India</span>
-                <span className="hero-spec-lbl">Doorstep Delivery</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="hero-visual-stage">
-            <div className="hero-projector-frame">
-              <img
-                src="/assets/products/hunting-cinema-x4-hero.svg"
-                alt="Hunting Flagship Cinema Projector"
-                className="hero-projector-img"
-                loading="eager"
-              />
-              <div className="hero-optical-beam" aria-hidden="true" />
-              <div className="hero-chassis-shadow" aria-hidden="true" />
-            </div>
-            <div className="hero-lens-badge">
-              <span className="lens-badge-dot" />
-              <span>Precision Optical Glass • Laser Clarified</span>
-            </div>
-          </div>
-
+          )}
         </div>
       </section>
 
-      {/* 2. FEATURED PROJECTOR SHOWCASE */}
-      <section id="warrior-showcase" className="showcase-section" aria-label="Featured Projector Showcase">
+      {/* 2. WARRIOR SERIES – DYNAMIC PRODUCT COLLECTION */}
+      <section id="warrior-collection" className="warrior-collection-section" aria-label="Warrior Series Lineup">
         <div className="container-wide">
-          
-          <div className="section-head-centered">
-            <span className="eyebrow">FEATURED LINEUP</span>
-            <h2 className="display-section">The Warrior Series Collection</h2>
-            <p className="section-lead-text">
-              Engineered with high-lumen optical engines, built-in battery options, and smart streaming capabilities.
+          <div className="section-header-editorial">
+            <span className="section-tag-gold">WARRIOR SERIES</span>
+            <h2 className="section-heading-lg">Precision Optics. Uncompromising Scale.</h2>
+            <p className="section-description-text">
+              Each Warrior model is powered by dedicated optical engines, high-lumen clarity, and smart streaming capabilities for unmatched immersion.
             </p>
           </div>
 
-          {/* Clean / Artwork Switcher */}
-          <div className="showcase-view-controls">
-            <span className="controls-label">Presentation View:</span>
-            <div className="view-toggle-pills" role="group" aria-label="View mode selection">
-              <button
-                type="button"
-                className={`toggle-pill-btn ${viewMode === 'clean' ? 'active' : ''}`}
-                onClick={() => setViewMode('clean')}
-              >
-                <Eye size={13} />
-                <span>Studio Hardware</span>
-              </button>
-              <button
-                type="button"
-                className={`toggle-pill-btn ${viewMode === 'poster' ? 'active' : ''}`}
-                onClick={() => setViewMode('poster')}
-              >
-                <Maximize2 size={13} />
-                <span>Campaign Artwork</span>
-              </button>
+          {/* Dynamic Grid: Uses exact existing ProductCard components & single source of truth */}
+          {loading ? (
+            <div className="warrior-loading-state">
+              <div className="loading-spinner-ring" />
+              <p>Loading the active Warrior Series collection...</p>
             </div>
+          ) : warriorProducts.length > 0 ? (
+            <div className="warrior-products-grid">
+              {warriorProducts.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  onOpenEnquiry={onOpenEnquiry}
+                  featured={product.isFlagship || product.isBestSeller}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="warrior-empty-state">
+              <p>No active Warrior Series models are currently available.</p>
+              <Link to="/products" className="btn-primary" style={{ marginTop: '16px' }}>
+                Browse All Projectors
+              </Link>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* 3. CINEMATIC LIFESTYLE SECTION */}
+      <section className="cinematic-lifestyle-section" aria-label="Cinematic Lifestyle Moments">
+        <div className="container-wide">
+          <div className="section-header-editorial">
+            <span className="section-tag-gold">HOME CINEMA LIFESTYLE</span>
+            <h2 className="section-heading-lg">Moments Elevated By Big-Screen Immersion</h2>
+            <p className="section-description-text">
+              Whether streaming film masterpieces, hosting match-day gatherings, or gaming on a panoramic scale, Hunting Projectors turn every room into an unforgettable venue.
+            </p>
           </div>
 
-          {/* Product Cards Grid */}
-          <div className="warrior-cards-grid">
-            {SHOWROOM_WARRIOR_MODELS.map((item) => {
-              const matched = catalog.find(p => p.slug === item.catalogSlug);
-              const price = matched?.price || (item.id === 'warrior-003' ? 55000 : 22000);
-              const compareAt = matched?.compareAtPrice || (item.id === 'warrior-003' ? 65000 : 28000);
-              const displayImg = viewMode === 'clean' ? item.cleanProductImage : item.posterArtwork;
-
+          <div className="lifestyle-mosaic-grid">
+            {CINEMATIC_LIFESTYLE_MOMENTS.map((moment) => {
+              const IconComponent = moment.icon;
               return (
-                <div 
-                  key={item.id} 
-                  className={`warrior-product-card ${activeModelId === item.id ? 'card-focused' : ''}`}
-                  onMouseEnter={() => setActiveModelId(item.id)}
-                  style={{
-                    '--card-theme': item.themeColor,
-                    '--card-glow': item.ambientGlow
-                  } as React.CSSProperties}
-                >
-                  <div className="card-badge-row">
-                    <span className="card-badge-pill" style={{ color: item.themeColor, borderColor: item.themeColor }}>
-                      {item.badge}
-                    </span>
-                    <span className="card-model-code">{item.code}</span>
-                  </div>
-
-                  {/* Product Visual Container with consistent dimensions */}
-                  <div className={`card-image-stage ${viewMode === 'poster' ? 'stage-poster-aspect' : ''}`}>
+                <div key={moment.id} className="lifestyle-card">
+                  <div className="lifestyle-card-visual">
                     <img
-                      src={displayImg}
-                      alt={item.name}
-                      className={`card-product-img ${viewMode === 'poster' ? 'img-poster' : 'img-clean'}`}
+                      src={moment.image}
+                      alt={moment.title}
+                      className="lifestyle-img"
                       loading="lazy"
                     />
-                    <div className="card-ambient-disc" aria-hidden="true" />
+                    <div className="lifestyle-card-scrim" />
+                    <span className="lifestyle-badge">
+                      <IconComponent size={12} />
+                      <span>{moment.badge}</span>
+                    </span>
                   </div>
 
-                  {/* Product Details Header */}
-                  <div className="card-body">
-                    <div className="card-header-meta">
-                      <h3 className="card-product-name">{item.name}</h3>
-                      <p className="card-tagline">{item.headline}</p>
-                    </div>
-
-                    {/* Price Block */}
-                    <div className="card-price-block">
-                      <div className="price-main-row">
-                        <span className="price-currency">₹</span>
-                        <span className="price-amount">{price.toLocaleString('en-IN')}</span>
-                        {compareAt && (
-                          <span className="price-compare-at">₹{compareAt.toLocaleString('en-IN')}</span>
-                        )}
-                      </div>
-                      <span className="price-inclusive-badge">Special Launch Price • Inc. GST</span>
-                    </div>
-
-                    {/* Verified Technical Specs Grid */}
-                    <div className="card-specs-matrix">
-                      <div className="spec-tile">
-                        <Tv size={14} className="tile-icon" />
-                        <div className="tile-info">
-                          <span className="tile-label">Resolution</span>
-                          <span className="tile-value">{item.specs.resolution.split('(')[0].trim()}</span>
-                        </div>
-                      </div>
-
-                      <div className="spec-tile">
-                        <Sun size={14} className="tile-icon" />
-                        <div className="tile-info">
-                          <span className="tile-label">Luminance</span>
-                          <span className="tile-value">{item.specs.brightness}</span>
-                        </div>
-                      </div>
-
-                      <div className="spec-tile">
-                        <SlidersHorizontal size={14} className="tile-icon" />
-                        <div className="tile-info">
-                          <span className="tile-label">Max Canvas</span>
-                          <span className="tile-value">{item.specs.screenScale}</span>
-                        </div>
-                      </div>
-
-                      <div className="spec-tile">
-                        <BatteryCharging size={14} className="tile-icon" />
-                        <div className="tile-info">
-                          <span className="tile-label">Runtime</span>
-                          <span className="tile-value">{item.specs.soundOrBattery}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Smart Feature Pills */}
-                    <div className="card-features-chips">
-                      {item.specs.smartFeatures.slice(0, 3).map((feat, fIdx) => (
-                        <span key={fIdx} className="feature-mini-pill">
-                          <CheckCircle2 size={11} className="pill-check" />
-                          <span>{feat}</span>
-                        </span>
-                      ))}
-                    </div>
-
-                    {/* Verified Warranty Label */}
-                    <div className="card-warranty-note">
-                      <ShieldCheck size={14} className="warranty-icon" />
-                      <span>{item.specs.warranty}</span>
-                    </div>
-
-                    {/* Action Buttons */}
-                    <div className="card-actions-row">
-                      <Link
-                        to={`/products/${item.catalogSlug}`}
-                        className="btn-primary card-details-btn"
-                      >
-                        <span>View Details</span>
-                        <ArrowRight size={14} />
-                      </Link>
-
-                      <button
-                        type="button"
-                        className="btn-secondary card-enquire-btn"
-                        onClick={() => onOpenEnquiry(item.name)}
-                      >
-                        Enquire
-                      </button>
-                    </div>
-
+                  <div className="lifestyle-card-body">
+                    <span className="lifestyle-subtitle">{moment.subtitle}</span>
+                    <h3 className="lifestyle-title">{moment.title}</h3>
+                    <p className="lifestyle-desc">{moment.description}</p>
                   </div>
                 </div>
               );
             })}
           </div>
-
         </div>
       </section>
 
-      {/* 3. CINEMA EXPERIENCE INTERACTIVE SCALE SECTION */}
-      <section className="experience-cinema-section">
-        <CinemaExperience onOpenEnquiry={() => onOpenEnquiry('Interactive Cinema Scale Consultation')} />
-      </section>
-
-      {/* 4. CHENNAI SHOWROOM & TRUST STRIP */}
-      <section className="experience-showroom-invite">
+      {/* 4. FINAL CALL TO ACTION */}
+      <section className="experience-final-cta-section" aria-label="Experience Call to Action">
         <div className="container">
-          <div className="invite-card">
-            <div className="invite-icon-wrapper">
-              <MapPin size={28} />
-            </div>
-            <div className="invite-info">
-              <span className="eyebrow invite-eyebrow">IN-PERSON SHOWROOM EXPERIENCE</span>
-              <h3 className="invite-title">Visit Our Chennai Experience Center</h3>
-              <p className="invite-desc">
-                Witness side-by-side optical projections on ambient light rejecting screens. Our technical specialists provide hands-on room throw assessments and sound matching.
-              </p>
-              <div className="invite-badge">
-                <ShieldCheck size={15} />
-                <span>{siteConfig.entity.owner} • {siteConfig.entity.locationLabel}</span>
-              </div>
-            </div>
-            <div className="invite-actions">
-              <button 
-                type="button" 
-                className="btn-primary invite-btn"
-                onClick={() => onOpenEnquiry('Chennai Showroom Private Appointment')}
+          <div className="final-cta-card">
+            <div className="final-cta-halo" aria-hidden="true" />
+            <span className="final-cta-tag">THE HUNTING GUARANTEE</span>
+            <h2 className="final-cta-title">READY TO EXPERIENCE THE DIFFERENCE?</h2>
+            <p className="final-cta-text">
+              Explore our full projector catalog or speak directly with our optics specialists for room throw recommendations and personalized quotes.
+            </p>
+
+            <div className="final-cta-buttons">
+              <Link to="/products" className="btn-primary final-btn-primary">
+                <span>Explore All Projectors</span>
+                <ArrowRight size={16} />
+              </Link>
+
+              <button
+                type="button"
+                className="btn-secondary final-btn-secondary"
+                onClick={() => onOpenEnquiry('Warrior Series Experience Inquiry')}
               >
-                <span>Schedule Visit</span>
-                <ChevronRight size={16} />
+                <MessageSquare size={16} />
+                <span>Enquire Now</span>
               </button>
+            </div>
+
+            <div className="final-trust-strip">
+              <div className="trust-item">
+                <CheckCircle2 size={15} className="trust-icon" />
+                <span>Pan-India Doorstep Delivery</span>
+              </div>
+              <div className="trust-dot">•</div>
+              <div className="trust-item">
+                <ShieldCheck size={15} className="trust-icon" />
+                <span>Official Brand Warranty</span>
+              </div>
+              <div className="trust-dot">•</div>
+              <div className="trust-item">
+                <Layers size={15} className="trust-icon" />
+                <span>Dedicated Technical Support</span>
+              </div>
             </div>
           </div>
         </div>
