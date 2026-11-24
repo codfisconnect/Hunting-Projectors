@@ -115,6 +115,32 @@
   border-radius: var(--radius-full);
 }
 
+/* Dedicated Admin Shortcut Icon Styling */
+.action-btn-admin {
+  background: rgba(212, 175, 55, 0.15);
+  border-color: rgba(212, 175, 55, 0.5);
+  color: var(--accent-gold, #D4AF37);
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+}
+
+.action-btn-admin:hover {
+  background: rgba(212, 175, 55, 0.28);
+  border-color: #FAD02C;
+  color: #FFFFFF;
+  box-shadow: 0 0 16px rgba(212, 175, 55, 0.4);
+}
+
+.admin-status-dot {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #FAD02C;
+  box-shadow: 0 0 6px #FAD02C;
+}
+
 /* Actions */
 .navbar-actions {
   display: flex;

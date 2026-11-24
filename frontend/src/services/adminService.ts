@@ -220,6 +220,13 @@ class AdminService {
     });
   }
 
+  /** Permanently delete a product (only allowed if not referenced by historical orders). */
+  async deleteProduct(id: string): Promise<void> {
+    await fetchJson<{ success: boolean; message?: string }>(`/admin/products/${id}?hard=true`, {
+      method: 'DELETE'
+    });
+  }
+
   /** Reactivate a previously deactivated product. */
   async reactivateProduct(id: string): Promise<Product> {
     const res = await fetchJson<{ success: boolean; data: any }>(`/admin/products/${id}/reactivate`, {

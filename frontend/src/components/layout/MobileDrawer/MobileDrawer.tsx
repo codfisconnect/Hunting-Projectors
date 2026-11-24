@@ -42,6 +42,7 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({
 
   const links = [
     { label: 'ALL PROJECTORS', path: '/products', tag: 'All Models' },
+    ...(user && user.role === 'ADMIN' ? [{ label: 'ADMIN DASHBOARD', path: '/admin', tag: 'Command' }] : []),
     { label: 'EXPERIENCE & SHOWROOM', path: '/experience', tag: 'Interactive' },
     { label: 'PROJECTOR FINDER', path: '/projector-finder', tag: 'Quiz' },
     { label: 'COMPARE SPECIFICATIONS', path: '/compare', tag: 'Side-by-side' },
