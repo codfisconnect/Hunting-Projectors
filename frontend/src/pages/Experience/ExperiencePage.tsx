@@ -103,23 +103,37 @@ export const ExperiencePage: React.FC<ExperiencePageProps> = ({ onOpenEnquiry })
     });
   }, [products]);
 
+  // Helper to ensure transparent cutout for projector showcase
+  const getCutoutImageUrl = (url: string) => {
+    if (!url) return '';
+    // If it's a Cloudinary image that isn't already png or doesn't have transparency param
+    if (url.includes('res.cloudinary.com') && url.includes('/image/upload/')) {
+      if (url.endsWith('.jpg') || url.endsWith('.jpeg')) {
+        return url.replace('/image/upload/', '/image/upload/e_make_transparent:20/').replace(/\.(jpg|jpeg)$/i, '.png');
+      }
+    }
+    return url;
+  };
+
   // Slideshow slides built directly from real Warrior product images and metadata
   const heroSlides = useMemo(() => {
     if (warriorProducts.length === 0) return [];
     
-    return warriorProducts.map(p => ({
-      product: p,
-      image: p.images.hero || p.gallery?.[0] || '',
-      secondaryImage: p.gallery?.[1] || p.gallery?.[0] || p.images.hero || '',
-      name: p.name,
-      tagline: p.subtitle || p.tagline || 'Experience the Warrior optical difference',
-      slug: p.slug,
-      price: p.price,
-      mrp: p.mrp || p.compareAtPrice,
-      resolution: p.specifications?.resolution || 'See product specifications',
-      brightness: p.specifications?.brightness || 'See product specifications',
-      canvas: p.specifications?.projectionSize || 'See product specifications'
-    })).filter(s => !!s.image);
+    return warriorProducts.map(p => {
+      const rawImg = p.images.hero || p.gallery?.[0] || '';
+      return {
+        product: p,
+        image: getCutoutImageUrl(rawImg),
+        name: p.name,
+        tagline: p.subtitle || p.tagline || 'Experience the Warrior optical difference',
+        slug: p.slug,
+        price: p.price,
+        mrp: p.mrp || p.compareAtPrice,
+        resolution: p.specifications?.resolution || 'See product specifications',
+        brightness: p.specifications?.brightness || 'See product specifications',
+        canvas: p.specifications?.projectionSize || 'See product specifications'
+      };
+    }).filter(s => !!s.image);
   }, [warriorProducts]);
 
   // Automatic slideshow transition timer: every 4.5 seconds
@@ -169,17 +183,17 @@ export const ExperiencePage: React.FC<ExperiencePageProps> = ({ onOpenEnquiry })
                 className={`hero-slide-layer ${isActive ? 'is-active' : ''}`}
                 aria-hidden={!isActive}
               >
-                <div 
-                  className="hero-slide-bg-ambient"
-                  style={{ backgroundImage: `url(${slide.image})` }}
-                />
                 <div className="hero-slide-img-stage">
+                  {/* Subtle warm radial spotlight behind the projector */}
+                  <div className="hero-projector-spotlight" aria-hidden="true" />
                   <img
                     src={slide.image}
                     alt={slide.name}
                     className="hero-slide-real-img"
                     loading={idx === 0 ? 'eager' : 'lazy'}
                   />
+                  {/* Subtle ground reflection / shadow */}
+                  <div className="hero-projector-shadow" aria-hidden="true" />
                 </div>
               </div>
             );
