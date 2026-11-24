@@ -87,12 +87,18 @@ export function validateProductInput(input: any, isUpdate = false): ValidationRe
   if (input.specifications) {
     if (typeof input.specifications !== 'object') {
       errors.push('Specifications must be a valid JSON object.');
-    } else if (!isUpdate) {
-      if (!input.specifications.resolution || typeof input.specifications.resolution !== 'string') {
-        errors.push('Specification resolution is required.');
-      }
-      if (!input.specifications.brightness || typeof input.specifications.brightness !== 'string') {
-        errors.push('Specification brightness (ANSI lumens) is required.');
+    } else {
+      // Check if specifications has any non-empty fields provided
+      const specVals = Object.values(input.specifications).filter(
+        v => v !== undefined && v !== null && (typeof v === 'string' ? v.trim() !== '' : Array.isArray(v) ? v.length > 0 : true)
+      );
+      if (specVals.length > 0) {
+        if (!input.specifications.resolution || typeof input.specifications.resolution !== 'string' || input.specifications.resolution.trim().length === 0) {
+          errors.push('Specification resolution is required when specifications are provided.');
+        }
+        if (!input.specifications.brightness || typeof input.specifications.brightness !== 'string' || input.specifications.brightness.trim().length === 0) {
+          errors.push('Specification brightness (ANSI lumens) is required when specifications are provided.');
+        }
       }
     }
   }

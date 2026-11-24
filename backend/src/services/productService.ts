@@ -255,13 +255,13 @@ export class ProductService {
         recommendedUse: rest.recommendedUse || [],
         subtitle: rest.subtitle || '',
         tagline: rest.tagline || '',
-        // Create nested specifications if provided
-        ...(specifications && {
+        // Create nested specifications if provided with non-empty fields
+        ...(specifications && Object.values(specifications).some(v => v !== undefined && v !== null && (typeof v === 'string' ? v.trim() !== '' : Array.isArray(v) ? v.length > 0 : true)) && {
           specifications: {
             create: {
-              resolution: specifications.resolution,
+              resolution: specifications.resolution || 'Not specified',
               supportedResolution: specifications.supportedResolution,
-              brightness: specifications.brightness,
+              brightness: specifications.brightness || 'Not specified',
               lightSource: specifications.lightSource || 'Solid-State LED/Laser',
               displayTechnology: specifications.displayTechnology || 'DLP Optical Engine',
               contrastRatio: specifications.contrastRatio || '1,000,000:1 Dynamic',

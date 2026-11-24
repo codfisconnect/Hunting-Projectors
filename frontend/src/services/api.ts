@@ -30,11 +30,13 @@ const API_BASE_URL = resolveApiBaseUrl();
 export class ApiError extends Error {
   public status: number;
   public isNetworkError: boolean;
+  public details?: any;
 
-  constructor(status: number, message: string, isNetworkError = false) {
+  constructor(status: number, message: string, isNetworkError = false, details?: any) {
     super(message);
     this.status = status;
     this.isNetworkError = isNetworkError;
+    this.details = details;
     this.name = 'ApiError';
   }
 }
@@ -58,14 +60,16 @@ export async function fetchJson<T>(endpoint: string, options?: RequestInit): Pro
 
     if (!response.ok) {
       let errorMsg = `Server returned status ${response.status} (${response.statusText})`;
+      let errorDetails: any = undefined;
       try {
         const errorText = await response.text();
         const errorJson = JSON.parse(errorText);
         errorMsg = errorJson.message || errorJson.error || errorMsg;
+        errorDetails = errorJson.details;
       } catch {
         // use default
       }
-      throw new ApiError(response.status, errorMsg);
+      throw new ApiError(response.status, errorMsg, false, errorDetails);
     }
 
     return (await response.json()) as T;

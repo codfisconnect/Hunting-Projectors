@@ -45,14 +45,23 @@ const Section: React.FC<{
 );
 
 const Field: React.FC<{
-  label: string; required?: boolean; hint?: string; children: React.ReactNode;
-}> = ({ label, required, hint, children }) => (
-  <div className="pf-field">
+  label: string;
+  required?: boolean;
+  hint?: string;
+  error?: string;
+  id?: string;
+  children: React.ReactNode;
+}> = ({ label, required, hint, error, id, children }) => (
+  <div className="pf-field" id={id}>
     <label className="pf-label">
       {label}{required && <span className="pf-required"> *</span>}
     </label>
     {children}
-    {hint && <span className="pf-hint">{hint}</span>}
+    {error ? (
+      <span className="pf-field-error">{error}</span>
+    ) : hint ? (
+      <span className="pf-hint">{hint}</span>
+    ) : null}
   </div>
 );
 
@@ -60,6 +69,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCan
   const isEdit = !!product;
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [categories, setCategories] = useState<Category[]>([]);
   const [openSections, setOpenSections] = useState<Record<SectionKey, boolean>>({
     basic: true,
@@ -247,21 +257,110 @@ export const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCan
     });
   };
 
+  const scrollToFirstError = (errors: Record<string, string>) => {
+    const errorKeys = Object.keys(errors);
+    if (errorKeys.length === 0) return;
+    const firstKey = errorKeys[0];
+
+    // Ensure containing section is expanded
+    if (['name', 'slug', 'sku', 'categoryId', 'subtitle', 'tagline', 'shortDescription', 'description'].includes(firstKey)) {
+      setOpenSections(prev => ({ ...prev, basic: true }));
+    } else if (['price', 'mrp', 'compareAtPrice', 'stock', 'availability', 'warranty'].includes(firstKey)) {
+      setOpenSections(prev => ({ ...prev, pricing: true }));
+    } else if (firstKey.startsWith('specs.') || ['resolution', 'brightness'].includes(firstKey)) {
+      setOpenSections(prev => ({ ...prev, specs: true }));
+    }
+
+    setTimeout(() => {
+      const el = document.getElementById(`field-${firstKey}`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        const input = el.querySelector('input, select, textarea') as HTMLElement | null;
+        if (input && typeof input.focus === 'function') {
+          input.focus();
+        }
+      }
+    }, 100);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setFieldErrors({});
 
-    if (!name.trim()) { setError('Product name is required.'); return; }
-    if (!slug.trim()) { setError('Slug is required.'); return; }
-    if (!categoryId) { setError('Category is required.'); return; }
+    const newFieldErrors: Record<string, string> = {};
+
+    if (!name.trim()) {
+      newFieldErrors.name = 'Product name is required (at least 2 characters).';
+    } else if (name.trim().length < 2) {
+      newFieldErrors.name = 'Product name must be at least 2 characters.';
+    }
+
+    if (!slug.trim()) {
+      newFieldErrors.slug = 'Slug is required.';
+    } else if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug.trim())) {
+      newFieldErrors.slug = 'Slug must contain only lowercase letters, numbers, and hyphens (e.g. hy-320).';
+    }
+
+    if (!categoryId) {
+      newFieldErrors.categoryId = 'Category selection is required.';
+    }
+
     if (!price || isNaN(Number(price)) || Number(price) <= 0) {
-      setError('A valid price is required.'); return;
+      newFieldErrors.price = 'A valid positive price is required.';
+    }
+
+    if (mrp && (isNaN(Number(mrp)) || Number(mrp) < 0)) {
+      newFieldErrors.mrp = 'MRP must be a positive number.';
+    } else if (mrp && price && Number(mrp) < Number(price)) {
+      newFieldErrors.mrp = 'MRP cannot be less than selling price.';
+    }
+
+    if (stock && (isNaN(Number(stock)) || !Number.isInteger(Number(stock)) || Number(stock) < 0)) {
+      newFieldErrors.stock = 'Stock must be a non-negative whole number.';
+    }
+
+    if (Object.keys(newFieldErrors).length > 0) {
+      setFieldErrors(newFieldErrors);
+      setError('Please resolve the highlighted validation errors below.');
+      scrollToFirstError(newFieldErrors);
+      return;
     }
 
     const connectivityArr = connectivity
       .split(',')
       .map((s: string) => s.trim())
       .filter(Boolean);
+
+    // Build specifications object only if non-empty fields are present
+    const specEntries: Record<string, any> = {
+      resolution: resolution.trim() || undefined,
+      brightness: brightness.trim() || undefined,
+      projectionSize: projectionSize.trim() || undefined,
+      supportedResolution: supportedResolution.trim() || undefined,
+      displayTechnology: displayTechnology.trim() || undefined,
+      lightSource: lightSource.trim() || undefined,
+      contrastRatio: contrastRatio.trim() || undefined,
+      throwRatio: throwRatio.trim() || undefined,
+      operatingSystem: operatingSystem.trim() || undefined,
+      audio: audio.trim() || undefined,
+      connectivity: connectivityArr.length ? connectivityArr : undefined,
+      refreshRate: refreshRate.trim() || undefined,
+      inputLag: inputLag.trim() || undefined,
+      hdr: hdr.trim() || undefined,
+      ram: ram.trim() || undefined,
+      storage: storage.trim() || undefined,
+      lampLifeHours: lampLifeHours.trim() || undefined,
+      dimensions: dimensions.trim() || undefined,
+      weight: weight.trim() || undefined,
+      powerConsumption: powerConsumption.trim() || undefined,
+      noiseLevel: noiseLevel.trim() || undefined,
+      focusType: focusType.trim() || undefined,
+      keystoneCorrection: keystoneCorrection.trim() || undefined,
+    };
+
+    const hasAnySpecField = Object.values(specEntries).some(v => v !== undefined);
+    const specificationsPayload = hasAnySpecField ? specEntries : undefined;
 
     const payload: Record<string, any> = {
       name: name.trim(),
@@ -290,31 +389,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCan
       isFlagship,
       isBestSeller,
       badge: badge.trim() || undefined,
-      specifications: {
-        resolution: resolution.trim(),
-        brightness: brightness.trim(),
-        projectionSize: projectionSize.trim(),
-        supportedResolution: supportedResolution.trim() || undefined,
-        displayTechnology: displayTechnology.trim(),
-        lightSource: lightSource.trim(),
-        contrastRatio: contrastRatio.trim(),
-        throwRatio: throwRatio.trim(),
-        operatingSystem: operatingSystem.trim(),
-        audio: audio.trim(),
-        connectivity: connectivityArr.length ? connectivityArr : undefined,
-        refreshRate: refreshRate.trim() || undefined,
-        inputLag: inputLag.trim() || undefined,
-        hdr: hdr.trim() || undefined,
-        ram: ram.trim() || undefined,
-        storage: storage.trim() || undefined,
-        lampLifeHours: lampLifeHours.trim() || undefined,
-        dimensions: dimensions.trim() || undefined,
-        weight: weight.trim() || undefined,
-        powerConsumption: powerConsumption.trim() || undefined,
-        noiseLevel: noiseLevel.trim() || undefined,
-        focusType: focusType.trim() || undefined,
-        keystoneCorrection: keystoneCorrection.trim() || undefined,
-      },
+      ...(specificationsPayload ? { specifications: specificationsPayload } : {}),
     };
 
     setSaving(true);
@@ -327,7 +402,37 @@ export const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCan
       }
       onSave(saved);
     } catch (err: any) {
-      setError(err.message || 'Failed to save product.');
+      const serverDetails = err.details;
+      const backendFieldErrors: Record<string, string> = {};
+
+      if (Array.isArray(serverDetails) && serverDetails.length > 0) {
+        serverDetails.forEach((msg: string) => {
+          const lower = msg.toLowerCase();
+          if (lower.includes('name')) backendFieldErrors.name = msg;
+          else if (lower.includes('slug')) backendFieldErrors.slug = msg;
+          else if (lower.includes('sku')) backendFieldErrors.sku = msg;
+          else if (lower.includes('category')) backendFieldErrors.categoryId = msg;
+          else if (lower.includes('price')) backendFieldErrors.price = msg;
+          else if (lower.includes('mrp')) backendFieldErrors.mrp = msg;
+          else if (lower.includes('stock')) backendFieldErrors.stock = msg;
+          else if (lower.includes('resolution')) backendFieldErrors.resolution = msg;
+          else if (lower.includes('brightness')) backendFieldErrors.brightness = msg;
+        });
+        setFieldErrors(backendFieldErrors);
+        setError(`Validation failed: ${serverDetails.join(' ')}`);
+        scrollToFirstError(backendFieldErrors);
+      } else {
+        const msg = err.message || 'Failed to save product.';
+        const lower = msg.toLowerCase();
+        if (lower.includes('slug')) backendFieldErrors.slug = msg;
+        if (lower.includes('sku')) backendFieldErrors.sku = msg;
+        if (lower.includes('category')) backendFieldErrors.categoryId = msg;
+        if (Object.keys(backendFieldErrors).length > 0) {
+          setFieldErrors(backendFieldErrors);
+          scrollToFirstError(backendFieldErrors);
+        }
+        setError(msg);
+      }
     } finally {
       setSaving(false);
     }
@@ -358,34 +463,38 @@ export const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCan
             {/* ── BASIC INFORMATION ── */}
             <Section id="basic" isOpen={openSections.basic} onToggle={toggleSection}>
               <div className="pf-row-2">
-                <Field label="Product Name" required>
+                <Field label="Product Name" required id="field-name" error={fieldErrors.name}>
                   <input
                     type="text" value={name}
-                    onChange={e => setName(e.target.value)}
+                    onChange={e => { setName(e.target.value); setFieldErrors(prev => ({ ...prev, name: '' })); }}
                     placeholder="e.g. Hunting Vision X1 Pro"
-                    className="pf-input"
+                    className={`pf-input ${fieldErrors.name ? 'pf-input-error' : ''}`}
                   />
                 </Field>
-                <Field label="Slug" required hint="Auto-generated; lowercase, hyphens only">
+                <Field label="Slug" required id="field-slug" error={fieldErrors.slug} hint="Auto-generated; lowercase, hyphens only">
                   <input
                     type="text" value={slug}
-                    onChange={e => { setSlug(e.target.value); setSlugTouched(true); }}
+                    onChange={e => { setSlug(e.target.value); setSlugTouched(true); setFieldErrors(prev => ({ ...prev, slug: '' })); }}
                     placeholder="hunting-vision-x1-pro"
-                    className="pf-input"
+                    className={`pf-input ${fieldErrors.slug ? 'pf-input-error' : ''}`}
                   />
                 </Field>
               </div>
               <div className="pf-row-2">
-                <Field label="SKU" hint="Optional — must be unique if provided">
+                <Field label="SKU" id="field-sku" error={fieldErrors.sku} hint="Optional — must be unique if provided">
                   <input
                     type="text" value={sku}
-                    onChange={e => setSku(e.target.value)}
+                    onChange={e => { setSku(e.target.value); setFieldErrors(prev => ({ ...prev, sku: '' })); }}
                     placeholder="HP-VX1-PRO"
-                    className="pf-input"
+                    className={`pf-input ${fieldErrors.sku ? 'pf-input-error' : ''}`}
                   />
                 </Field>
-                <Field label="Category" required>
-                  <select value={categoryId} onChange={e => setCategoryId(e.target.value)} className="pf-input">
+                <Field label="Category" required id="field-categoryId" error={fieldErrors.categoryId}>
+                  <select
+                    value={categoryId}
+                    onChange={e => { setCategoryId(e.target.value); setFieldErrors(prev => ({ ...prev, categoryId: '' })); }}
+                    className={`pf-input ${fieldErrors.categoryId ? 'pf-input-error' : ''}`}
+                  >
                     <option value="">— Select Category —</option>
                     {categories.map(c => (
                       <option key={c.id} value={c.id}>{c.name}</option>
@@ -545,19 +654,39 @@ export const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCan
             {/* ── PRICING & INVENTORY ── */}
             <Section id="pricing" isOpen={openSections.pricing} onToggle={toggleSection}>
               <div className="pf-row-3">
-                <Field label="Price (₹)" required>
-                  <input type="number" min="0" step="0.01" value={price} onChange={e => setPrice(e.target.value)} className="pf-input" placeholder="85000" />
+                <Field label="Price (₹)" required id="field-price" error={fieldErrors.price}>
+                  <input
+                    type="number" min="0" step="0.01" value={price}
+                    onChange={e => { setPrice(e.target.value); setFieldErrors(prev => ({ ...prev, price: '' })); }}
+                    className={`pf-input ${fieldErrors.price ? 'pf-input-error' : ''}`}
+                    placeholder="85000"
+                  />
                 </Field>
-                <Field label="MRP (₹)" hint="Manufacturer's listed price">
-                  <input type="number" min="0" step="0.01" value={mrp} onChange={e => setMrp(e.target.value)} className="pf-input" placeholder="95000" />
+                <Field label="MRP (₹)" id="field-mrp" error={fieldErrors.mrp} hint="Manufacturer's listed price">
+                  <input
+                    type="number" min="0" step="0.01" value={mrp}
+                    onChange={e => { setMrp(e.target.value); setFieldErrors(prev => ({ ...prev, mrp: '' })); }}
+                    className={`pf-input ${fieldErrors.mrp ? 'pf-input-error' : ''}`}
+                    placeholder="95000"
+                  />
                 </Field>
-                <Field label="Compare-at Price (₹)" hint="Strikethrough price on storefront">
-                  <input type="number" min="0" step="0.01" value={compareAtPrice} onChange={e => setCompareAtPrice(e.target.value)} className="pf-input" placeholder="95000" />
+                <Field label="Compare-at Price (₹)" id="field-compareAtPrice" error={fieldErrors.compareAtPrice} hint="Strikethrough price on storefront">
+                  <input
+                    type="number" min="0" step="0.01" value={compareAtPrice}
+                    onChange={e => { setCompareAtPrice(e.target.value); setFieldErrors(prev => ({ ...prev, compareAtPrice: '' })); }}
+                    className={`pf-input ${fieldErrors.compareAtPrice ? 'pf-input-error' : ''}`}
+                    placeholder="95000"
+                  />
                 </Field>
               </div>
               <div className="pf-row-3">
-                <Field label="Stock (units)">
-                  <input type="number" min="0" value={stock} onChange={e => setStock(e.target.value)} className="pf-input" placeholder="10" />
+                <Field label="Stock (units)" id="field-stock" error={fieldErrors.stock}>
+                  <input
+                    type="number" min="0" value={stock}
+                    onChange={e => { setStock(e.target.value); setFieldErrors(prev => ({ ...prev, stock: '' })); }}
+                    className={`pf-input ${fieldErrors.stock ? 'pf-input-error' : ''}`}
+                    placeholder="10"
+                  />
                 </Field>
                 <Field label="Availability">
                   <select value={availability} onChange={e => setAvailability(e.target.value)} className="pf-input">
@@ -576,16 +705,26 @@ export const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCan
             {/* ── PROJECTOR SPECIFICATIONS ── */}
             <Section id="specs" isOpen={openSections.specs} onToggle={toggleSection}>
               <div className="pf-row-2">
-                <Field label="Resolution" hint="e.g. 4K UHD (3840×2160)">
-                  <input type="text" value={resolution} onChange={e => setResolution(e.target.value)} className="pf-input" placeholder="4K UHD (3840×2160)" />
+                <Field label="Resolution" id="field-resolution" error={fieldErrors.resolution} hint="e.g. 4K UHD (3840×2160)">
+                  <input
+                    type="text" value={resolution}
+                    onChange={e => { setResolution(e.target.value); setFieldErrors(prev => ({ ...prev, resolution: '' })); }}
+                    className={`pf-input ${fieldErrors.resolution ? 'pf-input-error' : ''}`}
+                    placeholder="4K UHD (3840×2160)"
+                  />
                 </Field>
                 <Field label="Supported Resolution">
                   <input type="text" value={supportedResolution} onChange={e => setSupportedResolution(e.target.value)} className="pf-input" placeholder="Up to 8K" />
                 </Field>
               </div>
               <div className="pf-row-2">
-                <Field label="Brightness / Lumens" hint="Maps to brightness field">
-                  <input type="text" value={brightness} onChange={e => setBrightness(e.target.value)} className="pf-input" placeholder="2,500 ANSI Lumens" />
+                <Field label="Brightness / Lumens" id="field-brightness" error={fieldErrors.brightness} hint="Maps to brightness field">
+                  <input
+                    type="text" value={brightness}
+                    onChange={e => { setBrightness(e.target.value); setFieldErrors(prev => ({ ...prev, brightness: '' })); }}
+                    className={`pf-input ${fieldErrors.brightness ? 'pf-input-error' : ''}`}
+                    placeholder="2,500 ANSI Lumens"
+                  />
                 </Field>
                 <Field label="Max Screen Size" hint="Maps to projectionSize field">
                   <input type="text" value={projectionSize} onChange={e => setProjectionSize(e.target.value)} className="pf-input" placeholder='40" – 200" Diagonal' />
