@@ -1,0 +1,219 @@
+/* Marketing Enquiry Form Styling */
+.mkt-enquiry-form {
+  background: rgba(18, 22, 30, 0.85);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  border-radius: var(--radius-lg, 12px);
+  padding: 28px 24px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
+}
+
+.mkt-form-error-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: rgba(239, 68, 68, 0.12);
+  border-left: 3px solid #ef4444;
+  color: #fca5a5;
+  font-size: 0.85rem;
+  margin-bottom: 18px;
+  border-radius: 4px;
+}
+
+.mkt-form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.mkt-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.mkt-form-row-2 .mkt-input-group {
+  margin-bottom: 0;
+}
+
+.mkt-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #d1d5db;
+  letter-spacing: 0.02em;
+}
+
+.mkt-req {
+  color: #ef4444;
+}
+
+.mkt-opt {
+  font-size: 0.74rem;
+  color: #9ca3af;
+  font-weight: normal;
+}
+
+.mkt-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.mkt-field-icon {
+  position: absolute;
+  left: 12px;
+  color: #9ca3af;
+  pointer-events: none;
+}
+
+.mkt-textarea-icon {
+  top: 12px;
+}
+
+.mkt-input {
+  width: 100%;
+  padding: 10px 12px 10px 36px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  color: #ffffff;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.mkt-input:focus {
+  outline: none;
+  border-color: var(--accent-gold, #d4af37);
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+}
+
+.mkt-input-error {
+  border-color: #ef4444 !important;
+  background: rgba(239, 68, 68, 0.05) !important;
+}
+
+.mkt-select {
+  padding-left: 14px;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d4af37' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 14px;
+}
+
+.mkt-select option {
+  background: #0f131a;
+  color: #ffffff;
+}
+
+.mkt-textarea {
+  min-height: 80px;
+  resize: vertical;
+  font-family: inherit;
+  line-height: 1.4;
+}
+
+.mkt-error-text {
+  font-size: 0.74rem;
+  color: #f87171;
+  font-weight: 500;
+}
+
+.mkt-submit-btn {
+  width: 100%;
+  padding: 13px 24px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+  cursor: pointer;
+}
+
+.mkt-privacy-note {
+  font-size: 0.72rem;
+  color: #9ca3af;
+  text-align: center;
+  margin-top: 14px;
+  line-height: 1.4;
+}
+
+/* Success Card */
+.mkt-enquiry-success-card {
+  text-align: center;
+  padding: 36px 20px;
+  background: rgba(22, 28, 38, 0.9);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: var(--radius-lg, 12px);
+}
+
+.mkt-success-icon-wrap {
+  display: inline-flex;
+  padding: 12px;
+  border-radius: 50%;
+  background: rgba(34, 197, 94, 0.15);
+  margin-bottom: 14px;
+}
+
+.mkt-success-icon {
+  color: #22c55e;
+}
+
+.mkt-success-title {
+  color: #ffffff;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.mkt-success-desc {
+  color: #d1d5db;
+  font-size: 0.92rem;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.mkt-success-ref {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  color: #f3f4f6;
+  margin-bottom: 16px;
+}
+
+.mkt-success-ref strong {
+  color: var(--accent-gold, #d4af37);
+  letter-spacing: 0.05em;
+}
+
+.mkt-success-hint {
+  font-size: 0.78rem;
+  color: #9ca3af;
+  line-height: 1.4;
+}
+
+@media (max-width: 640px) {
+  .mkt-form-row-2 {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .mkt-form-row-2 .mkt-input-group {
+    margin-bottom: 16px;
+  }
+  .mkt-enquiry-form {
+    padding: 20px 16px;
+  }
+}
