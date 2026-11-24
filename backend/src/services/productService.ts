@@ -388,21 +388,35 @@ export class ProductService {
       });
     }
 
-    // Safety check: verify no historical orders reference this product
-    const orderItemsCount = await prisma.orderItem.count({
-      where: { productId: id }
-    });
+    // Preserve all historical and operational records before allowing permanent deletion.
+    // These references may not all be enforced by a database foreign key, so check explicitly.
+    const [orderItemsCount, enquiriesCount, warrantiesCount, inventoryMovementsCount, quotationItemsCount] = await Promise.all([
+      prisma.orderItem.count({ where: { productId: id } }),
+      prisma.enquiry.count({ where: { productId: id } }),
+      prisma.warrantyRecord.count({ where: { productId: id } }),
+      prisma.inventoryMovement.count({ where: { productId: id } }),
+      prisma.quotationItem.count({ where: { productId: id } }),
+    ]);
 
-    if (orderItemsCount > 0) {
+    const historyReferences = [
+      { label: 'order item(s)', count: orderItemsCount },
+      { label: 'enquiry record(s)', count: enquiriesCount },
+      { label: 'warranty record(s)', count: warrantiesCount },
+      { label: 'inventory movement(s)', count: inventoryMovementsCount },
+      { label: 'quotation item(s)', count: quotationItemsCount },
+    ].filter(reference => reference.count > 0);
+
+    if (historyReferences.length > 0) {
+      const details = historyReferences.map(reference => `${reference.count} ${reference.label}`).join(', ');
       const err = new Error(
-        `Cannot permanently delete product because it is referenced in ${orderItemsCount} order(s). To preserve historical order and financial records, you can deactivate the product instead.`
+        `Cannot permanently delete this product because it is referenced by historical records: ${details}. Deactivate the product instead to preserve business records.`
       );
       (err as any).statusCode = 400;
-      (err as any).code = 'PRODUCT_HAS_ORDERS';
+      (err as any).code = 'PRODUCT_HAS_HISTORY';
       throw err;
     }
 
-    // If safe, execute permanent deletion (cascades specifications, reviews, cart/wishlist items)
+    // Product images, specifications, reviews, cart and wishlist rows are removed by configured cascades.
     return prisma.product.delete({
       where: { id },
     });
