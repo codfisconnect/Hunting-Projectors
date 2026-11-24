@@ -387,6 +387,22 @@ export class ProductService {
         data: { isActive: false },
       });
     }
+
+    // Safety check: verify no historical orders reference this product
+    const orderItemsCount = await prisma.orderItem.count({
+      where: { productId: id }
+    });
+
+    if (orderItemsCount > 0) {
+      const err = new Error(
+        `Cannot permanently delete product because it is referenced in ${orderItemsCount} order(s). To preserve historical order and financial records, you can deactivate the product instead.`
+      );
+      (err as any).statusCode = 400;
+      (err as any).code = 'PRODUCT_HAS_ORDERS';
+      throw err;
+    }
+
+    // If safe, execute permanent deletion (cascades specifications, reviews, cart/wishlist items)
     return prisma.product.delete({
       where: { id },
     });

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Search, Heart, ShoppingBag, Menu, X, MessageSquare, User as UserIcon } from 'lucide-react';
+import { Search, Heart, ShoppingBag, Menu, X, MessageSquare, User as UserIcon, ShieldAlert } from 'lucide-react';
 import { useCart } from '../../../context/CartContext';
 import { useWishlist } from '../../../context/WishlistContext';
 import { useAuth } from '../../../context/AuthContext';
@@ -133,6 +133,19 @@ export const Navbar: React.FC<NavbarProps> = ({
             <UserIcon size={20} className="account-icon-svg" />
             {user && <span className="account-status-dot" />}
           </Link>
+
+          {/* Admin Dashboard Shortcut for Authenticated Admins */}
+          {user && user.role === 'ADMIN' && (
+            <Link
+              to="/admin"
+              className="action-btn action-btn-admin"
+              aria-label="Admin Command Center"
+              title="Return to Admin Dashboard"
+            >
+              <ShieldAlert size={19} className="admin-icon-svg" />
+              <span className="admin-status-dot" />
+            </Link>
+          )}
 
           {/* Direct Enquiry / WhatsApp CTA */}
           <button

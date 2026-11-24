@@ -163,7 +163,14 @@ export async function deleteProduct(req: Request, res: Response, next: NextFunct
     }
 
     const hardDelete = req.query.hard === 'true';
-    await productService.deleteProduct(id, !hardDelete);
+    try {
+      await productService.deleteProduct(id, !hardDelete);
+    } catch (err: any) {
+      if (err.statusCode === 400 || err.code === 'PRODUCT_HAS_ORDERS' || err.code === 'PRODUCT_HAS_WARRANTIES') {
+        return sendError(res, err.message, 400);
+      }
+      throw err;
+    }
 
     const message = hardDelete
       ? 'Product permanently deleted successfully'

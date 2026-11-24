@@ -102,6 +102,9 @@ export const AdminDashboardPage: React.FC = () => {
   const [productStatusFilter, setProductStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [isProductFormOpen, setIsProductFormOpen] = useState(false);
+  const [deletingProduct, setDeletingProduct] = useState<Product | null>(null);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
+  const [deleteErrorMessage, setDeleteErrorMessage] = useState<string | null>(null);
 
   // Categories / Collections Management
   const [categoriesList, setCategoriesList] = useState<any[]>([]);
@@ -395,6 +398,24 @@ export const AdminDashboardPage: React.FC = () => {
       setProductsList(prodsRes.products);
     } catch (err: any) {
       alert(`Failed to reactivate product: ${err.message}`);
+    }
+  };
+
+  const handleConfirmDeleteProduct = async () => {
+    if (!deletingProduct) return;
+    setIsDeleting(true);
+    setDeleteErrorMessage(null);
+    try {
+      await adminService.deleteProduct(deletingProduct.id);
+      setActionSuccessMsg(`Product '${deletingProduct.name}' permanently deleted.`);
+      setDeletingProduct(null);
+      const prodsRes = await adminService.getAdminProducts({ limit: 100 });
+      setProductsList(prodsRes.products);
+      loadDashboardData();
+    } catch (err: any) {
+      setDeleteErrorMessage(err.message || 'Failed to permanently delete product.');
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -1176,6 +1197,18 @@ export const AdminDashboardPage: React.FC = () => {
                               <Link to={`/products/${p.slug}`} target="_blank" className="table-btn-icon view" title="View Storefront Page">
                                 <ExternalLink size={14} />
                               </Link>
+
+                              <button
+                                type="button"
+                                className="table-btn-icon deactivate"
+                                title="Delete Product"
+                                onClick={() => {
+                                  setDeletingProduct(p);
+                                  setDeleteErrorMessage(null);
+                                }}
+                              >
+                                <Trash2 size={14} />
+                              </button>
                             </div>
                           </td>
                         </tr>
@@ -1810,6 +1843,91 @@ export const AdminDashboardPage: React.FC = () => {
                   </table>
                 </div>
               )}
+            </div>
+          </div>
+        )}
+
+        {/* CONFIRM PERMANENT PRODUCT DELETION MODAL */}
+        {deletingProduct && (
+          <div className="admin-modal-overlay" onClick={() => !isDeleting && setDeletingProduct(null)}>
+            <div className="admin-modal-card" style={{ maxWidth: '480px' }} onClick={e => e.stopPropagation()}>
+              <div className="modal-head" style={{ borderBottom: '1px solid rgba(239, 68, 68, 0.3)' }}>
+                <h3 style={{ color: '#EF4444', display: 'flex', alignItems: 'center', gap: '8px', margin: 0 }}>
+                  <Trash2 size={20} />
+                  <span>Delete Product</span>
+                </h3>
+                <button
+                  type="button"
+                  className="modal-close"
+                  disabled={isDeleting}
+                  onClick={() => setDeletingProduct(null)}
+                >
+                  ✕
+                </button>
+              </div>
+
+              <div className="modal-body" style={{ padding: '20px 0' }}>
+                <p style={{ margin: '0 0 12px 0', fontSize: '1rem', lineHeight: '1.5' }}>
+                  Are you sure you want to permanently delete <strong>{deletingProduct.name}</strong>?
+                </p>
+                <div style={{
+                  background: 'rgba(239, 68, 68, 0.1)',
+                  border: '1px solid rgba(239, 68, 68, 0.25)',
+                  borderRadius: '6px',
+                  padding: '12px',
+                  marginBottom: '16px',
+                  fontSize: '0.85rem',
+                  color: '#FCA5A5'
+                }}>
+                  <strong>Notice:</strong> This operation will permanently remove the product specifications and images. If this product was purchased in past orders or has warranty records, permanent deletion will be blocked by system integrity rules to safeguard financial records.
+                </div>
+
+                {deleteErrorMessage && (
+                  <div style={{
+                    background: 'rgba(220, 38, 38, 0.15)',
+                    border: '1px solid rgba(220, 38, 38, 0.5)',
+                    borderRadius: '6px',
+                    padding: '12px',
+                    marginBottom: '16px',
+                    color: '#F87171',
+                    fontSize: '0.88rem'
+                  }}>
+                    {deleteErrorMessage}
+                  </div>
+                )}
+
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '16px' }}>
+                  <button
+                    type="button"
+                    className="btn-secondary"
+                    disabled={isDeleting}
+                    onClick={() => setDeletingProduct(null)}
+                    style={{ padding: '8px 16px', borderRadius: '4px' }}
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    type="button"
+                    disabled={isDeleting}
+                    onClick={handleConfirmDeleteProduct}
+                    style={{
+                      background: '#DC2626',
+                      color: '#FFF',
+                      border: 'none',
+                      padding: '8px 18px',
+                      borderRadius: '4px',
+                      fontWeight: 600,
+                      cursor: isDeleting ? 'not-allowed' : 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '8px'
+                    }}
+                  >
+                    {isDeleting ? 'Deleting...' : 'Delete Permanently'}
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         )}
