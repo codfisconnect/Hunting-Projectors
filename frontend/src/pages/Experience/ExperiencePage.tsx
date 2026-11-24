@@ -38,28 +38,28 @@ const CINEMATIC_LIFESTYLE_MOMENTS = [
   },
   {
     id: 'movie-nights',
-    title: 'Intimate Movie Evenings',
+    title: 'Movie Nights Together',
     subtitle: 'Moments That Bring People Together',
-    description: 'Crisp dialogue, vibrant colors, and ambient-light performance mean family and friends enjoy blockbuster streaming without turning off every lamp.',
+    description: 'Bring family and friends together for movie nights, favourite shows, and shared moments on a bigger screen.',
     badge: 'WARMTH & CLARITY',
     image: 'https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?q=80&w=1600&auto=format&fit=crop',
     icon: Volume2
   },
   {
     id: 'gaming-sports',
-    title: 'Stadium Sports & High-FPS Gaming',
-    subtitle: 'Real-Time Reaction On A Massive Scale',
-    description: 'Ultra-low latency, fluid refresh handling, and stadium-sized canvas make match-days electrifying and competitive console gaming exceptionally responsive.',
-    badge: 'LOW LATENCY',
+    title: 'Sports & Gaming Nights',
+    subtitle: 'Bring Everyone Into The Action',
+    description: 'Gather around for live matches, tournaments, and gaming sessions with a large-screen viewing experience.',
+    badge: 'GAME & MATCH NIGHTS',
     image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1600&auto=format&fit=crop',
     icon: Gamepad2
   },
   {
     id: 'grand-canvas',
-    title: 'Up to 300" Panoramic Canvas',
+    title: 'A Bigger-Screen Experience',
     subtitle: 'Freedom Beyond Traditional Television',
-    description: 'Escape the visual boundaries and weight of rigid glass TVs. Project instantly from 60 inches up to 300 inches with versatile optical throw and electric focus correction.',
-    badge: 'UNCONSTRAINED SCALE',
+    description: 'Enjoy a flexible big-screen setup at home. Check each projector model’s specifications for its supported projection size and setup requirements.',
+    badge: 'BIG-SCREEN VIEWING',
     image: 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?q=80&w=1600&auto=format&fit=crop',
     icon: Maximize
   }
@@ -116,9 +116,9 @@ export const ExperiencePage: React.FC<ExperiencePageProps> = ({ onOpenEnquiry })
       slug: p.slug,
       price: p.price,
       mrp: p.mrp || p.compareAtPrice,
-      resolution: p.specifications?.resolution || 'Full HD 1080p',
-      brightness: p.specifications?.brightness || 'High Lumens',
-      canvas: p.specifications?.projectionSize || 'Up to 200"'
+      resolution: p.specifications?.resolution || 'See product specifications',
+      brightness: p.specifications?.brightness || 'See product specifications',
+      canvas: p.specifications?.projectionSize || 'See product specifications'
     })).filter(s => !!s.image);
   }, [warriorProducts]);
 
@@ -153,7 +153,7 @@ export const ExperiencePage: React.FC<ExperiencePageProps> = ({ onOpenEnquiry })
     <div className="experience-page">
       <SEOHead
         title="Experience Cinema Differently — Hunting Projectors Warrior Series"
-        description="Discover the Hunting Projectors Warrior Series. Full-width cinematic slideshow, verified active lineup, true 1080p & 4K processing, and grand home entertainment scale."
+        description="Explore the active Hunting Projectors Warrior Series lineup through a cinematic product showcase and discover the models available in our catalogue."
         canonicalPath="/experience"
       />
 
