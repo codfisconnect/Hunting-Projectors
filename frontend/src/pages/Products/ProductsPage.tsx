@@ -356,7 +356,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ onOpenEnquiry }) => 
 
             {/* NAP Direct Warranty Badge */}
             <div className="sidebar-warranty-notice">
-              <span className="notice-heading">NAP COMPUTERS DIRECT</span>
+              <span className="notice-heading">NAP COMPUTERS ELECTRONICSS DIRECT</span>
               <p>Direct supply from Chennai. Official brand warranty and pan-India insured dispatch on every model.</p>
             </div>
           </aside>

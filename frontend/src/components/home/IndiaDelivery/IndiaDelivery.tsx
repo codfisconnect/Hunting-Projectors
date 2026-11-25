@@ -45,12 +45,12 @@ export const IndiaDelivery: React.FC = () => {
             </h2>
 
             <p className="india-lead">
-              Hunting Projector operates as a direct brand entity by Nap Computers Electronics, cutting out commercial layers to provide cutting-edge 4K optical projection at unmatched factory value.
+              Hunting Projector operates as a direct brand entity by Nap Computers Electronicss, cutting out commercial layers to provide cutting-edge 4K optical projection at unmatched factory value.
             </p>
 
             <div className="india-entity-tag">
               <span className="entity-tag-label">BUSINESS ENTITY:</span>
-              <span className="entity-tag-val">Nap Computers Electronics • Chennai, Tamil Nadu</span>
+              <span className="entity-tag-val">Nap Computers Electronicss • Chennai, Tamil Nadu</span>
             </div>
 
             <div className="india-action-row">
@@ -91,7 +91,7 @@ export const IndiaDelivery: React.FC = () => {
                   <circle cx="0" cy="0" r="7" fill="#D4AF37" />
                   <circle cx="0" cy="0" r="3" fill="#0C0D10" />
                   <text x="14" y="4" fill="#E6CA65" fontFamily="Inter, sans-serif" fontSize="10" fontWeight="800" letterSpacing="1">CHENNAI HQ</text>
-                  <text x="14" y="16" fill="#9DA3AE" fontFamily="Inter, sans-serif" fontSize="8">Nap Computers Electronics</text>
+                  <text x="14" y="16" fill="#9DA3AE" fontFamily="Inter, sans-serif" fontSize="8">Nap Computers Electronicss</text>
                 </g>
 
                 {/* Dispatch Transit Lines from Chennai */}

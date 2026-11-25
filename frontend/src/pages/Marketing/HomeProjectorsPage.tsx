@@ -305,7 +305,7 @@ export const HomeProjectorsPage: React.FC<HomeProjectorsPageProps> = () => {
               <CheckCircle size={22} className="text-gold" />
               <div>
                 <h4>Direct Brand Supply</h4>
-                <p>Fulfilled directly by Nap Computers Electronics, cutting out extra distributor tiers to deliver factory value.</p>
+                <p>Fulfilled directly by Nap Computers Electronicss, cutting out extra distributor tiers to deliver factory value.</p>
               </div>
             </div>
 
@@ -346,7 +346,7 @@ export const HomeProjectorsPage: React.FC<HomeProjectorsPageProps> = () => {
             <div className="mkt-warranty-info">
               <h3>OFFICIAL HARDWARE WARRANTY & CHENNAI SERVICE DESK</h3>
               <p>
-                Every projector includes official warranty protection as specified on its product record. Replacement guarantees and service terms are fulfilled directly by Nap Computers Electronics from our Chennai technical headquarters (remote controls excluded).
+                Every projector includes official warranty protection as specified on its product record. Replacement guarantees and service terms are fulfilled directly by Nap Computers Electronicss from our Chennai technical headquarters (remote controls excluded).
               </p>
             </div>
           </div>

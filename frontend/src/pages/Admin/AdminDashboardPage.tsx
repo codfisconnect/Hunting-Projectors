@@ -3630,7 +3630,7 @@ export const AdminDashboardPage: React.FC = () => {
               <div className="panel-card-head">
                 <div>
                   <h3 className="panel-card-title">Official Brand Warranty & Service Coverage</h3>
-                  <p className="text-muted text-sm">Standard 2-3 Year NAP Computers warranty policies and customer support SLAs.</p>
+                  <p className="text-muted text-sm">Standard 2-3 Year Nap Computers Electronicss warranty policies and customer support SLAs.</p>
                 </div>
               </div>
 

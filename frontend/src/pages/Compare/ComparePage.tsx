@@ -84,7 +84,7 @@ export const ComparePage: React.FC<ComparePageProps> = ({ onOpenEnquiry }) => {
     { label: 'NOISE LEVEL', getValue: (p: Product) => p.specifications.noiseLevel || 'Not specified' },
     { label: 'DIMENSIONS', getValue: (p: Product) => p.specifications.dimensions || 'Not specified' },
     { label: 'WEIGHT', getValue: (p: Product) => p.specifications.weight || 'Not specified' },
-    { label: 'DIRECT WARRANTY', getValue: () => 'Official Brand Warranty (NAP Computers)' },
+    { label: 'DIRECT WARRANTY', getValue: () => 'Official Brand Warranty (Nap Computers Electronicss)' },
   ];
 
   return (

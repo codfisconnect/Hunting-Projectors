@@ -41,7 +41,7 @@ export const ProductPurchasePanel: React.FC<ProductPurchasePanelProps> = ({
       {/* Brand & Category Heading */}
       <div className="purchase-header">
         <div className="purchase-badge-row">
-          <span className="purchase-brand-name">HUNTING PROJECTORS BY NAP COMPUTERS ELECTRONICS</span>
+          <span className="purchase-brand-name">HUNTING PROJECTORS BY NAP COMPUTERS ELECTRONICSS</span>
           <span className="purchase-category-badge">{product.categoryLabel}</span>
           {product.badge && <span className="purchase-model-badge">{product.badge}</span>}
         </div>

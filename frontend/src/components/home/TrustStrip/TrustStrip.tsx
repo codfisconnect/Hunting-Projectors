@@ -27,7 +27,7 @@ export const TrustStrip: React.FC = () => {
   ];
 
   return (
-    <section className="trust-strip-section" aria-label="NapComputers Trust and Assurances">
+    <section className="trust-strip-section" aria-label="Nap Computers Electronicss Trust and Assurances">
       <div className="container-wide trust-strip-container">
         <div className="trust-grid">
           {trustItems.map((item, index) => (
