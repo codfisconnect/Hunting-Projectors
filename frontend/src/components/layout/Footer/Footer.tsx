@@ -19,7 +19,7 @@ export const Footer: React.FC = () => {
             <ShieldCheck size={18} className="prop-icon" />
             <div className="prop-text-group">
               <span className="prop-title">DIRECT HUNTING WARRANTY</span>
-              <span className="prop-sub">Official 2-Year brand warranty by Nap Computers Electronicsss</span>
+              <span className="prop-sub">Official 2-Year brand warranty by Nap Computers Electronicss</span>
             </div>
           </div>
           <div className="prop-item">
@@ -55,7 +55,7 @@ export const Footer: React.FC = () => {
               />
               <div className="footer-brand-text">
                 <span className="brand-primary">HUNTING PROJECTOR</span>
-                <span className="brand-secondary">by Nap Computers Electronicsss</span>
+                <span className="brand-secondary">by Nap Computers Electronicss</span>
               </div>
             </div>
             <p className="footer-brand-desc">
