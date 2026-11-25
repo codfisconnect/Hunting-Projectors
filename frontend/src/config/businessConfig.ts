@@ -1,11 +1,11 @@
 /**
  * Centralized Business Contact & Identity Configuration
- * NAP Computers & Electronics / Hunting Projector
+ * NAP Computers Electronicss / Hunting Projector
  */
 export const BUSINESS_CONFIG = {
   brandName: 'Hunting Projector',
-  companyName: 'Nap Computers Electronicss',
-  brandAttribution: 'Hunting Projector by Nap Computers Electronicss',
+  companyName: 'Nap Computers Electronicsss',
+  brandAttribution: 'Hunting Projector by Nap Computers Electronicsss',
   shortBrand: 'Hunting Projector',
   subname: 'Electronicss',
   tagline: 'See Beyond. Light Changes Everything.',
@@ -19,7 +19,7 @@ export const BUSINESS_CONFIG = {
   adminEmail: 'huntingprojectors@gmail.com',
   location: 'Chennai, Tamil Nadu, India',
   address: {
-    line1: 'Nap Computers Electronicss',
+    line1: 'Nap Computers Electronicsss',
     line2: 'Mount Road / Electronics District',
     city: 'Chennai',
     state: 'Tamil Nadu',
@@ -28,7 +28,7 @@ export const BUSINESS_CONFIG = {
   },
   supportHours: 'Monday – Saturday: 10:00 AM – 7:30 PM IST',
   panIndiaCoverage: 'Direct brand supply and doorstep delivery across all Indian pin codes',
-  ownershipStatement: 'Hunting Projector is the customer-facing projector brand. All orders, warranties, and after-sales support are fulfilled directly by Nap Computers Electronicss.'
+  ownershipStatement: 'Hunting Projector is the customer-facing projector brand. All orders, warranties, and after-sales support are fulfilled directly by Nap Computers Electronicsss.'
 } as const;
 
 export type BusinessConfig = typeof BUSINESS_CONFIG;
