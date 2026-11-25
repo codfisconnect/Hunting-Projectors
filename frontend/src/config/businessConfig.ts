@@ -1,6 +1,6 @@
 /**
  * Centralized Business Contact & Identity Configuration
- * NAP Computers & Electronics / Hunting Projector
+ * NAP Computers Electronicss / Hunting Projector
  */
 export const BUSINESS_CONFIG = {
   brandName: 'Hunting Projector',

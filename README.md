@@ -3,7 +3,7 @@
 
 > **Brand Identity:** HUNTING PROJECTORS  
 > **Brand Position:** Direct Projector Brand & Manufacturer-side Technology Business  
-> **Owned, Supplied & Operated by:** NAP Computers & Electronics, Chennai, Tamil Nadu, India  
+> **Owned, Supplied & Operated by:** NAP Computers Electronicss, Chennai, Tamil Nadu, India  
 > **Aesthetic Direction:** Automotive Luxury + Editorial Cinema + Interactive Digital Showroom (Deep Graphite, Product Silver, Warm White, Subtle Ice Blue)
 
 ---
@@ -123,7 +123,7 @@ Hunting-Projectors/
 
 8. **Brand & Supplier Transparency:**
    - Primary brand: **HUNTING PROJECTORS**.
-   - Operating entity: **NAP Computers & Electronics**, Chennai, Tamil Nadu, India — prominently and respectfully attributed in the footer, company info, and Pan-India delivery sections.
+   - Operating entity: **NAP Computers Electronicss**, Chennai, Tamil Nadu, India — prominently and respectfully attributed in the footer, company info, and Pan-India delivery sections.
 
 ---
 
@@ -205,13 +205,13 @@ All company details, contact information, phone numbers, and WhatsApp numbers ar
 export const siteConfig = {
   company: {
     brandName: 'Hunting Projectors',
-    supplier: 'NAP Computers & Electronics',
+    supplier: 'NAP Computers Electronicss',
     tagline: 'See Beyond.',
     city: 'Chennai',
     state: 'Tamil Nadu',
     country: 'India',
     address: 'Chennai, Tamil Nadu, India',
-    operatingNote: 'Supplied, Owned and Operated by NAP Computers & Electronics',
+    operatingNote: 'Supplied, Owned and Operated by NAP Computers Electronicss',
   },
   contact: {
     phone: '+91 90422 92929',
