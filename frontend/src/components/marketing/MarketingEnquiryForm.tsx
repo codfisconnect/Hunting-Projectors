@@ -325,7 +325,7 @@ export const MarketingEnquiryForm: React.FC<MarketingEnquiryFormProps> = ({
       </button>
 
       <p className="mkt-privacy-note">
-        Direct brand contact by Nap Computers Electronics, Chennai. Zero spam. Your phone number is strictly used for product consultation.
+        Direct brand contact by Nap Computers Electronicss, Chennai. Zero spam. Your phone number is strictly used for product consultation.
       </p>
     </form>
   );

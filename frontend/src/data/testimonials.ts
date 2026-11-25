@@ -21,7 +21,7 @@ export const testimonials: Testimonial[] = [
     projectorModel: 'Hunting Vision X1 4K',
     rating: 5,
     reviewTitle: 'Astonishing 4K optical sharpness — replaced our 75" TV',
-    comment: 'Visited the Chennai showroom to witness the demo before purchasing. The optical focus and deep black levels on a 120-inch ALR screen are unbelievable. The direct support from NAP Computers gave complete peace of mind.',
+    comment: 'Visited the Chennai showroom to witness the demo before purchasing. The optical focus and deep black levels on a 120-inch ALR screen are unbelievable. The direct support from Nap Computers Electronicss gave complete peace of mind.',
     date: 'Demo Review • Verified Purchaser',
     environment: 'Living Room',
     isDemoReview: true,

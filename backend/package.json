@@ -21,7 +21,7 @@
     "express",
     "prisma"
   ],
-  "author": "Hunting Projectors / NAP Computers & Electronics",
+  "author": "Hunting Projectors / Nap Computers Electronicss",
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^5.22.0",

@@ -80,7 +80,7 @@ export const BusinessProjectorsPage: React.FC<BusinessProjectorsPageProps> = () 
   const faqs = [
     {
       q: 'Do you issue commercial purchase invoices for businesses and institutions?',
-      a: 'Yes. All purchases are supplied with commercial purchase invoices issued by Nap Computers Electronics, Chennai.'
+      a: 'Yes. All purchases are supplied with commercial purchase invoices issued by Nap Computers Electronicss, Chennai.'
     },
     {
       q: 'Can we request a quote for multiple units or institutional requirements?',
@@ -306,7 +306,7 @@ export const BusinessProjectorsPage: React.FC<BusinessProjectorsPageProps> = () 
               <CheckCircle size={22} className="text-gold" />
               <div>
                 <h4>Direct Brand Supply</h4>
-                <p>Nap Computers Electronics supplies hardware directly from Chennai, backed by dedicated technical support.</p>
+                <p>Nap Computers Electronicss supplies hardware directly from Chennai, backed by dedicated technical support.</p>
               </div>
             </div>
 
