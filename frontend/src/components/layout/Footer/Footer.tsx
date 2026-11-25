@@ -19,7 +19,7 @@ export const Footer: React.FC = () => {
             <ShieldCheck size={18} className="prop-icon" />
             <div className="prop-text-group">
               <span className="prop-title">DIRECT HUNTING WARRANTY</span>
-              <span className="prop-sub">Official 2-Year brand warranty by Nap Computers Electronicss</span>
+              <span className="prop-sub">Official 2-Year brand warranty by Nap Computers Electronicsss</span>
             </div>
           </div>
           <div className="prop-item">
@@ -55,7 +55,7 @@ export const Footer: React.FC = () => {
               />
               <div className="footer-brand-text">
                 <span className="brand-primary">HUNTING PROJECTOR</span>
-                <span className="brand-secondary">by Nap Computers Electronicss</span>
+                <span className="brand-secondary">by Nap Computers Electronicsss</span>
               </div>
             </div>
             <p className="footer-brand-desc">
@@ -158,9 +158,9 @@ export const Footer: React.FC = () => {
           </div>
 
           <div className="copyright-text" aria-label="Copyright and ownership">
-            <span>© 2026 Nap Computers Electronics. All rights reserved.</span>
+            <span>© 2026 Nap Computers Electronicss. All rights reserved.</span>
             <span className="copyright-separator">|</span>
-            <span className="footer-highlight-gold">Nap Computers Electronics</span>
+            <span className="footer-highlight-gold">Nap Computers Electronicss</span>
             <span className="copyright-separator">|</span>
             <span>
               Web by{' '}
